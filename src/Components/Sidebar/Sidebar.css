@@ -1,0 +1,22 @@
+.sidebar .nav-link {
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    transition: background 0.3s, color 0.3s;
+  }
+  
+  .sidebar .nav-link:hover {
+    background-color: #495057;
+    color: #fff;
+  }
+  
+  .sidebar .nav-link.active {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .sidebar .nav-link i {
+    font-size: 18px;
+  }
+  
+

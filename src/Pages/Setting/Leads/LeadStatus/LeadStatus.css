@@ -1,0 +1,42 @@
+:root{
+    --backgroundColor-inputLeads : rgb(241,108,41);
+    --borderColor-inputLeads : rgb(241,108,41);
+}
+
+.lead-status-container {
+    width: 100%;
+    margin: auto;
+    /* text-align: center; */
+  }
+  
+  .add-status input {
+    margin-right: 10px;
+    padding: 5px;
+  }
+  
+  .status-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+  }
+  
+  .status-table th,
+  .status-table td {
+    padding: 10px;
+    text-align: left;
+  }
+  
+  button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+
+  .addLeadsinput{
+    background-color: var(--backgroundColor-inputLeads);
+    border-color: var(--borderColor-inputLeads);
+  }
+
+  .addLeadscontainer{
+    border-color: var(--borderColor-inputLeads);
+  }

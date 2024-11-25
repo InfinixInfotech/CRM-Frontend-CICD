@@ -1,0 +1,4 @@
+.card:hover {
+    background-color: var(--card-hover);
+    transition: all ease 0.7s;
+  }
