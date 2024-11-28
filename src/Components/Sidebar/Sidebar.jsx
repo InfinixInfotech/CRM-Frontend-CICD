@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 const Sidebar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState({
@@ -22,7 +22,7 @@ const Sidebar = () => {
   return (
     <div
       className="d-flex mt-5 flex-column bg-dark text-white pt-4"
-      style={{ width: '250px', minHeight:'100vh', overflowY: 'auto' }}
+      style={{ width: "250px", minHeight: "100vh", overflowY: "auto" }}
     >
       <nav className="flex-grow-1">
         <ul className="nav flex-column p-0">
@@ -44,7 +44,9 @@ const Sidebar = () => {
                 style={{ transition: "transform 0.2s" }}
               ></i>
             </Link>
-            <div className={`collapse ${isDropdownOpen.dashboard ? "show" : ""}`}>
+            <div
+              className={`collapse ${isDropdownOpen.dashboard ? "show" : ""}`}
+            >
               <ul className="nav flex-column bg-dark ps-4">
                 <li className="nav-item">
                   <Link
@@ -71,6 +73,8 @@ const Sidebar = () => {
               </ul>
             </div>
           </li>
+
+         
 
           {/* Leads dropdown */}
           <li className="nav-item">
@@ -113,33 +117,84 @@ const Sidebar = () => {
                   >
                     View Leads
                   </Link>
-                
                 </li>
+                <li className="nav-item"></li>
                 <li>
-                  <Link to='/uploadleads'
-                 className={`nav-link text-white ${
-                  activeItem === "leadDetails" ? "bg-primary" : ""
-                }`} onClick={() => handleItemClick("leadsPage")}>
-
-                  </Link>
+                  <Link
+                    to="/uploadleads"
+                    className={`nav-link text-white ${
+                      activeItem === "leadDetails" ? "bg-primary" : ""
+                    }`}
+                    onClick={() => handleItemClick("leadsPage")}
+                  ></Link>
                 </li>
               </ul>
             </div>
           </li>
 
-          {/* Regular menu items */}
+        
           {[
-            { icon: "calendar-check", text: "Follow up", id: "followUp", link: "/follow-up" },
-            { icon: "pencil-alt", text: "Free Trial", id: "freeTrial", link: "/free-trial" },
-            { icon: "user-circle", text: "Client", id: "client", link: "/client" },
-            { icon: "file-invoice", text: "Sales Order", id: "salesOrder", link: "/sales-order" },
-            { icon: "rupee-sign", text: "Payment", id: "payment", link: "/payment" },
-            { icon: "shield-alt", text: "Compliance", id: "compliance", link: "/compliance" },
-            { icon: "microphone", text: "Voice Box", id: "voiceBox", link: "/voice-box" },
-            { icon: "book", text: "Policies", id: "policies", link: "/policies" },
-            { icon: "chart-line", text: "Forecast", id: "forecast", link: "/forecast" },
+            {
+              icon: "calendar-check",
+              text: "Follow up",
+              id: "followUp",
+              link: "/follow-up",
+            },
+            {
+              icon: "pencil-alt",
+              text: "Free Trial",
+              id: "freeTrial",
+              link: "/free-trial",
+            },
+            {
+              icon: "user-circle",
+              text: "Client",
+              id: "client",
+              link: "/client",
+            },
+            {
+              icon: "file-invoice",
+              text: "salesorder",
+              id: "salesorder",
+              link: "/salesorder",
+            },
+            {
+              icon: "rupee-sign",
+              text: "Payment",
+              id: "payment",
+              link: "/payment",
+            },
+            {
+              icon: "shield-alt",
+              text: "Compliance",
+              id: "compliance",
+              link: "/compliance",
+            },
+            {
+              icon: "microphone",
+              text: "Voice Box",
+              id: "voiceBox",
+              link: "/voice-box",
+            },
+            {
+              icon: "book",
+              text: "Policies",
+              id: "policies",
+              link: "/policies",
+            },
+            {
+              icon: "chart-line",
+              text: "Forecast",
+              id: "forecast",
+              link: "/forecast",
+            },
             { icon: "clock", text: "EOD", id: "eod", link: "/eod" },
-            { icon: "chart-pie", text: "Reports", id: "reports", link: "/reports" },
+            {
+              icon: "chart-pie",
+              text: "Reports",
+              id: "reports",
+              link: "/reports",
+            },
           ].map((item) => (
             <li key={item.id} className="nav-item">
               <Link
@@ -159,5 +214,5 @@ const Sidebar = () => {
     </div>
   );
 };
-     
+
 export default Sidebar;

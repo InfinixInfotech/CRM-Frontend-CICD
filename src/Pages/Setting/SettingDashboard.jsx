@@ -1,25 +1,65 @@
-import React from 'react'
-import NavigationButton from '../../Components/Button/NavigateButton/NavigationButton'
+import React from "react";
+import NavigationButton from "../../Components/Button/NavigateButton/NavigationButton";
 
-
-export default function settingdashboard() {
+export default function SettingDashboard() {
   return (
     <div>
-        <center className='mt-5 '>Setting </center>
+      <h1>
+        <center className="mt-5 bg-white rounded p-2">Setting Dashboard</center>
+      </h1>
 
-
-       <div className=' d-flex gap-2'>
-        <NavigationButton label='Add Groups' to='/addgroups'/>
-        <NavigationButton label='View Groups' to='/viewgroups'/>
-        <NavigationButton label='Lead Status' to='/leadstatus'/>
-        <NavigationButton label='Department' to='/department'/>
-        <NavigationButton label='Designation' to='/designation' />
-        <NavigationButton label='Lead Source' to='/leadsource'/>
-        <NavigationButton label='Qualification' to='/qualification'/>
-        <NavigationButton label='Segment Plans' to='/segmentplans'/>
-        <NavigationButton label='Setting Data' to='/settingdata'/>
-       </div>
+      <div className="w-100 mt-4 px-4">
+        {/* Grid container */}
+        <div
+          className="d-grid gap-4"
+          style={{
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+          }}
+        >
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Add Groups" to="/addgroups" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="View Groups" to="/viewgroups" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Lead Status" to="/leadstatus" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Department" to="/department" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Designation" to="/designation" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Lead Source" to="/leadsource" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Qualification" to="/qualification" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Segment Plans" to="/segmentplans" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Setting Data" to="/settingdata" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Add User" to="/adduser" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="View User" to="/viewuser" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="User Operation" to="/useroperation" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Sip Trunck" to="/siptrunck" />
+          </div>
+          <div className="container bg-secondary text-white text-center">
+            <NavigationButton label="Segment List" to="/segmentlist" />
+          </div>
+        </div>
+      </div>
     </div>
-  )
+  );
 }
-

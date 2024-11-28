@@ -11,7 +11,7 @@ export default function NavigationButton({ label, to }) {
     NavigationButton.handleNavigate = handleNavigate;
 
     return (
-        <button type="button" className="btn btn-primary" onClick={handleNavigate}>
+        <button type="button" className="btn" onClick={handleNavigate}>
             {label}
         </button>
     );

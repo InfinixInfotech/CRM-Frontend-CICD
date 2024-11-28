@@ -28,7 +28,7 @@ const Navbar = () => {
             <option value="" disabled>
               --Admin--
             </option>
-            <option value="/profile">Profile</option>
+            <option value="/profiledashbord">Profile</option>
             <option value="/settingdashboard">Setting</option>
           </select>
         </li>

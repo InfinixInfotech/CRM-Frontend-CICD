@@ -1,9 +1,4 @@
-// import './LeadStatus.css'
-// import BackButton from '../../../Components/Button/BackButton/BackButton';
-// import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
-// import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
-// import { PdfButton } from "../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
-// import { CopyButton } from "../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
+
 import React, { useState } from "react";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
 import { DeleteButton } from "../../../Components/Button/DeleteButton/DeleteButton";
@@ -26,19 +21,6 @@ const Qualification = () => {
     }
   };
 
-  // // Delete a status
-  // const handleDeleteStatus = (index) => {
-  //   const updatedStatuses = statuses.filter((_, i) => i !== index);
-  //   setStatuses(updatedStatuses);
-  // };
-
-  // // Start editing a status
-  // const handleEditStatus = (index) => {
-  //   setEditingIndex(index);
-  //   setEditingValue(statuses[index]);
-  // };
-
-  // Save the edited status
   const handleSaveEdit = () => {
     const updatedStatuses = statuses.map((status, index) =>
       index === editingIndex ? editingValue.trim() : status
@@ -48,13 +30,12 @@ const Qualification = () => {
     setEditingValue("");
   };
 
+  
   return (
-    <div className="lead-status-container mt-5">
-      <BackButton />
-      <h2 className="bg-white p-2 border border-gray border-2 rounded mt-2">
-        Qualification
-      </h2>
-
+    <>
+    <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">Qualification</h2>
+    <BackButton/>
+    <div className="lead-status-container mt-2">
       {/* Add New Status */}
       <div className="addLeadscontainer add-status p-2 mb-2">
         <h4 className="addLeadsinput border border-black p-2 mb-2 text-white ">
@@ -66,44 +47,11 @@ const Qualification = () => {
           onChange={(e) => setNewStatus(e.target.value)}
           placeholder="Qualification Name"
         />
-        <button onClick={handleAddStatus} className="btn btn-primary">
+        <button onClick={handleAddStatus} className="btn btn-primary mt-2">
           Create
         </button>
       </div>
-      {/* View and Manage Statuses */}
-      {/* <table border="1" className="status-table">
-        <thead>
-          <tr>
-            <th>Status Name</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {statuses.map((status, index) => (
-            <tr key={index}>
-              <td>
-                {editingIndex === index ? (
-                  <input
-                    type="text"
-                    value={editingValue}
-                    onChange={(e) => setEditingValue(e.target.value)}
-                  />
-                ) : (
-                  status
-                )}
-              </td>
-              <td>
-                {editingIndex === index ? (
-                  <button onClick={handleSaveEdit}>Save</button>
-                ) : (
-                 <div> <EditButton /></div>
-                )}
-                 <div> <DeleteButton/></div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
+      
       <div className="bg-white p-4 rounded border border-4 border-gray">
         <h5>View Qualification</h5>
         <div className=" mb-4 ">
@@ -141,6 +89,7 @@ const Qualification = () => {
         </table>
       </div>
     </div>
+    </>
   );
 };
 
