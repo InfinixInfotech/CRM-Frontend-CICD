@@ -238,281 +238,359 @@ export default function AddGroups() {
     });
   };
 
+  // style={{background:"rgb(227,227,227)"}}
+
   return (
-    <div className="  " style={{ marginTop: "4rem" }}>
-      <h2 className="mb-4 text-center bg-dark text-white py-2 ">Add Groups</h2>
-      <BackButton />
-      <form
-        className="row g-3 bg-light py-4 container-flued"
-        onSubmit={handleSubmit}
-      >
-        {/* Dashboard */}
-        <div className="row">
-          <div className="col-12 mb-2">
-            <label htmlFor="groupName" className="form-label ">
-              <h4>Group Name</h4>
-            </label>
-            <input
-              type="text"
-              id="groupName"
-              className="form-control border border-dark "
-              value={data.GroupName}
-              onChange={(e) =>
-                handleChange("GroupName", null, null, e.target.value)
-              }
-              placeholder="Enter Group Name"
-            />
-          </div>
+    <>
+      <div style={{ marginTop: "4rem" }}>
+        <h2 className="mb-1 text-center bg-dark text-white py-2 ">
+          Add Groups
+        </h2>
+        <BackButton />
+        <div className="container-fluid border border-2 border-gray mt-0 w-100 mt-3 ">
+          <div style={{ paddingLeft: "24px", paddingTop: "32px" }}>
+            <form className="row g-3 container-flued" onSubmit={handleSubmit}>
+              {/* Dashboard */}
+              <div className="row" style={{ background: "rgb(227,227,227)" }}>
+                <div className="col-12 mb-4">
+                  <label htmlFor="groupName" className="form-label mt-2">
+                    <h4>Group Name</h4>
+                  </label>
 
-          <div className="col-md-6">
-            <fieldset className="border border-dark bg-white p-3 rounded flex-wrap d-flex gap-2">
-              <legend className="float-none w-auto px-2">Dashboard</legend>
-              {renderFields("Dashboard", data.Dashboard)}
-            </fieldset>
-          </div>
-          <div className="col-md-6">
-            {/* Free Trial */}
-            <fieldset className="col-12 border border-dark bg-white p-3 rounded flex-wrap d-flex gap-2 ">
-              <legend className="float-none w-auto px-2 ">Free Trial</legend>
-              {renderFields("FreeTrial", data.FreeTrial)}
-            </fieldset>
-          </div>
+                  <input
+                    style={{ border: "1px solid #A6AEBF", margin: "0" }}
+                    type="text"
+                    id="groupName"
+                    className="form-control"
+                    value={data.GroupName}
+                    onChange={(e) =>
+                      handleChange("GroupName", null, null, e.target.value)
+                    }
+                    placeholder="Enter Group Name"
+                  />
+                </div>
 
-          <div className="col-md-6">
-            {/* Contact */}
-            <fieldset className="col-12 border border-dark bg-white p-3 rounded flex-wrap d-flex gap-2">
-              <legend className="float-none w-auto px-2 ">Contact</legend>
-              {renderFields("Contact", data.Contact)}
-            </fieldset>
-          </div>
-          <div className="col-md-6">
-            {/* Mutual Fund */}
-            <fieldset className="col-12 border border-dark bg-white p-3 rounded flex-wrap d-flex gap-2">
-              <legend className="float-none w-auto px-2">Mutual Fund</legend>
-              {renderFields("MutualFund", data.MutualFund)}
-            </fieldset>
-          </div>
-          <div className="col-md-6">
-            {/* Leads */}
-            <fieldset
-              className=" border border-dark p-2 rounded bg-white d-flex flex-wrap gap-2 "
-              style={{ fontSize: "14px" }}
-            >
-              <legend className="float-none w-auto px-2 fs-8">Leads</legend>
-              {renderFields("Leads", data.Leads)}
-            </fieldset>
-          </div>
+                <div className="col-md-6">
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Dashboard
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className=" bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2">Dashboard</legend> */}
+                    {renderFields("Dashboard", data.Dashboard)}
+                  </fieldset>
+                </div>
+                <div className="col-md-6">
+                  {/* Free Trial */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Free Trial
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12  bg-white p-3 rounded flex-wrap d-flex gap-2 "
+                  >
+                    {/* <legend className="float-none w-auto px-2 ">Free Trial</legend> */}
+                    {renderFields("FreeTrial", data.FreeTrial)}
+                  </fieldset>
+                </div>
 
-          <div className="col-md-6">
-            {/* SO */}
-            <fieldset className=" border border-dark p-2  bg-white rounded d-flex flex-wrap gap-2">
-              <legend className="float-none w-auto px-2">SO</legend>
-              {renderFields("SO", data.SO)}
-            </fieldset>
-          </div>
-          <div className="col-md-6">
-            {/* Compliance */}
-            <fieldset className=" border border-dark p-2 bg-white rounded d-flex flex-wrap gap-2">
-              <legend className="float-none w-auto px-2">Compliance</legend>
-              {renderFields("Compliance", data.Compliance)}
-            </fieldset>
-          </div>
+                <div className="col-md-6">
+                  {/* Contact */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Contact
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12  bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2 ">Contact</legend> */}
+                    {renderFields("Contact", data.Contact)}
+                  </fieldset>
+                </div>
+                <div className="col-md-6">
+                  {/* Mutual Fund */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Mutual Fund
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2">Mutual Fund</legend> */}
+                    {renderFields("MutualFund", data.MutualFund)}
+                  </fieldset>
+                </div>
+                <div className="col-md-6">
+                  {/* Leads */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Leads
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2 fs-8">Leads</legend> */}
+                    {renderFields("Leads", data.Leads)}
+                  </fieldset>
+                </div>
 
-          <div className="col-md-6">
-            {/* Export */}
-            <fieldset
-              className=" border border-dark p-2 rounded bg-white d-flex flex-wrap gap-2 "
-              style={{ fontSize: "14px" }}
-            >
-              <legend className="float-none w-auto px-2 fs-8">Export</legend>
-              {renderFields("Export", data.Export)}
-            </fieldset>
-          </div>
-          <div className="col-md-6 mb-2">
-            {/* Export */}
-            <fieldset
-              className=" border border-dark p-2 rounded bg-white d-flex flex-wrap gap-2 "
-              style={{ fontSize: "14px" }}
-            >
-              <legend className="float-none w-auto px-2 fs-8">Logs</legend>
-              {renderFields("Logs", data.Logs)}
-            </fieldset>
-          </div>
+                <div className="col-md-6">
+                  {/* SO */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    SO
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2">SO</legend> */}
+                    {renderFields("SO", data.SO)}
+                  </fieldset>
+                </div>
+                <div className="col-md-6">
+                  {/* Compliance */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Compliance
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2">Compliance</legend> */}
+                    {renderFields("Compliance", data.Compliance)}
+                  </fieldset>
+                </div>
 
-          <div className="col-md-6 mb-2">
-            {/* Export */}
-            <fieldset
-              className=" border border-dark p-2 rounded bg-white d-flex flex-wrap gap-2 "
-              style={{ fontSize: "14px" }}
-            >
-              <legend className="float-none w-auto px-2 fs-8">HR Extra</legend>
-              {renderFields("HRExtra", data.HRExtra)}
-            </fieldset>
-          </div>
-          <div className="col-md-6">
-            {/* Export */}
-            <fieldset
-              className=" border border-dark p-2 rounded bg-white d-flex flex-wrap gap-2 "
-              style={{ fontSize: "14px" }}
-            >
-              <legend className="float-none w-auto px-2 fs-8">
+                <div className="col-md-6">
+                  {/* Export */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Export
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2 fs-8">Export</legend> */}
+                    {renderFields("Export", data.Export)}
+                  </fieldset>
+                </div>
+                <div className="col-md-6 mb-2">
+                  {/* Logs */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Logs
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2 fs-8">Logs</legend> */}
+                    {renderFields("Logs", data.Logs)}
+                  </fieldset>
+                </div>
+
+                <div className="col-md-6 mb-2">
+                  {/* Export */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    HR Extra
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2 fs-8">HR Extra</legend> */}
+                    {renderFields("HRExtra", data.HRExtra)}
+                  </fieldset>
+                </div>
+                <div className="col-md-6">
+                  {/* Export */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Support Module
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2 fs-8">
                 Support Module
-              </legend>
-              {renderFields("SupportModule", data.SupportModule)}
-            </fieldset>
-          </div>
-          <div className="col-md-6 mb-2">
-            <fieldset
-              className=" border border-dark p-2 rounded bg-white d-flex flex-wrap gap-2 "
-              style={{ fontSize: "14px" }}
-            >
-              <legend className="float-none w-auto px-2 fs-8">
+              </legend> */}
+                    {renderFields("SupportModule", data.SupportModule)}
+                  </fieldset>
+                </div>
+                <div className="col-md-6 mb-2">
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    WhatsApp Module
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2 fs-8">
                 WhatsApp Module
-              </legend>
-              {renderFields("WhatsApp", data.Whatsapp)}
-            </fieldset>
-          </div>
-          <div className="col-md-6">
-            {/* Export */}
-            <fieldset
-              className=" border border-dark p-2 rounded bg-white d-flex flex-wrap gap-2 "
-              style={{ fontSize: "14px" }}
-            >
-              <legend className="float-none w-auto px-2 fs-8">Reports</legend>
-              {renderFields("Reports", data.Reports)}
-            </fieldset>
-          </div>
-          <div className="col-md-6">
-            {/* Export */}
-            <fieldset
-              className=" border border-dark p-2 rounded bg-white d-flex flex-wrap gap-2 "
-              style={{ fontSize: "14px" }}
-            >
-              <legend className="float-none w-auto px-2 fs-8">Extra</legend>
-              {renderFields("Extra", data.Extra)}
-            </fieldset>
-          </div>
+              </legend> */}
+                    {renderFields("WhatsApp", data.Whatsapp)}
+                  </fieldset>
+                </div>
+                <div className="col-md-6">
+                  {/* Export */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Reports
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2 fs-8">Reports</legend> */}
+                    {renderFields("Reports", data.Reports)}
+                  </fieldset>
+                </div>
+                <div className="col-md-6">
+                  {/* Export */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Extra
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2 fs-8">Extra</legend> */}
+                    {renderFields("Extra", data.Extra)}
+                  </fieldset>
+                </div>
 
-          <div className="col-md-6">
-            {/* Numeric Fields */}
-            <fieldset className=" border border-dark p-2 bg-white rounded d-flex flex-wrap gap-4">
-              <legend className="float-none w-auto px-2">Other Settings</legend>
-              <div className="mb-3">
-                <label htmlFor="freeTrialDays" className="form-label">
-                  Free Trial Days
-                </label>
-                <input
-                  type="number"
-                  id="freeTrialDays"
-                  className="form-control"
-                  value={data.FreeTrialDays}
-                  onChange={(e) =>
-                    handleChange(
-                      null,
-                      "FreeTrialDays",
-                      null,
-                      parseInt(e.target.value) || 0
-                    )
-                  }
-                />
+                <div className="col-md-6">
+                  {/* Numeric Fields */}
+                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
+                    Other Settings
+                  </label>
+                  <fieldset
+                    style={{ border: "1px solid #A6AEBF" }}
+                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
+                  >
+                    {/* <legend className="float-none w-auto px-2">Other Settings</legend> */}
+                    <div className="mb-3">
+                      <label htmlFor="freeTrialDays" className="form-label">
+                        Free Trial Days
+                      </label>
+                      <input
+                        type="number"
+                        id="freeTrialDays"
+                        className="form-control"
+                        value={data.FreeTrialDays}
+                        onChange={(e) =>
+                          handleChange(
+                            null,
+                            "FreeTrialDays",
+                            null,
+                            parseInt(e.target.value) || 0
+                          )
+                        }
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label
+                        htmlFor="freeTrialPerContact"
+                        className="form-label"
+                      >
+                        Free Trial Per Contact
+                      </label>
+                      <input
+                        type="number"
+                        id="freeTrialPerContact"
+                        className="form-control"
+                        value={data.FreeTrialPerContact}
+                        onChange={(e) =>
+                          handleChange(
+                            null,
+                            "FreeTrialPerContact",
+                            null,
+                            parseInt(e.target.value) || 0
+                          )
+                        }
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="crmLeadLimit" className="form-label">
+                        Total CRM Lead Limit
+                      </label>
+                      <input
+                        type="number"
+                        id="crmLeadLimit"
+                        className="form-control"
+                        value={data.TotalCRMLeadLimit}
+                        onChange={(e) =>
+                          handleChange(
+                            null,
+                            "TotalCRMLeadLimit",
+                            null,
+                            parseInt(e.target.value) || 0
+                          )
+                        }
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="crmLeadLimit" className="form-label">
+                        Total CRM Lead Limit
+                      </label>
+                      <select
+                        className="form-select form-control form-select-sm"
+                        onChange={handleDropdownChange}
+                      >
+                        <option selected>Select Some Option</option>
+                        <option>fresh pool</option>
+                        <option>Diamond pool HNI pool</option>
+                      </select>
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor=""> Lead Fetch Ratio</label>
+                      <input
+                        type="number"
+                        id="crmLeadLimit"
+                        className="form-control"
+                        value={data.TotalCRMLeadLimit}
+                        // onChange={(e) =>
+                        //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
+                        // }
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="">Client Fetch Ratio</label>
+                      <input
+                        type="number"
+                        id="clientfetch"
+                        className="form-control"
+                        value={data.TotalCRMLeadLimit}
+                        // onChange={(e) =>
+                        //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
+                        // }
+                      />
+                    </div>
+                    <div className="mb-3">
+                      <label htmlFor="">Unread Fetch </label>
+                      <input
+                        type="number"
+                        id="unreadtfetch"
+                        className="form-control"
+                        value={data.TotalCRMLeadLimit}
+                        // onChange={(e) =>
+                        //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
+                        // }
+                      />
+                    </div>
+                  </fieldset>
+                </div>
               </div>
-              <div className="mb-3">
-                <label htmlFor="freeTrialPerContact" className="form-label">
-                  Free Trial Per Contact
-                </label>
-                <input
-                  type="number"
-                  id="freeTrialPerContact"
-                  className="form-control"
-                  value={data.FreeTrialPerContact}
-                  onChange={(e) =>
-                    handleChange(
-                      null,
-                      "FreeTrialPerContact",
-                      null,
-                      parseInt(e.target.value) || 0
-                    )
-                  }
-                />
+              {/* Submit Button */}
+              <div className="col-12 text-center">
+                <button type="submit" className="btn btn-primary">
+                  Submit
+                </button>
               </div>
-              <div className="mb-3">
-                <label htmlFor="crmLeadLimit" className="form-label">
-                  Total CRM Lead Limit
-                </label>
-                <input
-                  type="number"
-                  id="crmLeadLimit"
-                  className="form-control"
-                  value={data.TotalCRMLeadLimit}
-                  onChange={(e) =>
-                    handleChange(
-                      null,
-                      "TotalCRMLeadLimit",
-                      null,
-                      parseInt(e.target.value) || 0
-                    )
-                  }
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="crmLeadLimit" className="form-label">
-                  Total CRM Lead Limit
-                </label>
-                <select
-                  className="form-select form-control form-select-sm"
-                  onChange={handleDropdownChange}
-                >
-                  <option selected>Select Some Option</option>
-                  <option>fresh pool</option>
-                  <option>Diamond pool HNI pool</option>
-                </select>
-              </div>
-              <div className="mb-3">
-                <label htmlFor=""> Lead Fetch Ratio</label>
-                <input
-                  type="number"
-                  id="crmLeadLimit"
-                  className="form-control"
-                  value={data.TotalCRMLeadLimit}
-                  // onChange={(e) =>
-                  //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
-                  // }
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="">Client Fetch Ratio</label>
-                <input
-                  type="number"
-                  id="clientfetch"
-                  className="form-control"
-                  value={data.TotalCRMLeadLimit}
-                  // onChange={(e) =>
-                  //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
-                  // }
-                />
-              </div>
-              <div className="mb-3">
-                <label htmlFor="">Unread Fetch </label>
-                <input
-                  type="number"
-                  id="unreadtfetch"
-                  className="form-control"
-                  value={data.TotalCRMLeadLimit}
-                  // onChange={(e) =>
-                  //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
-                  // }
-                />
-              </div>
-            </fieldset>
+            </form>
           </div>
         </div>
-        {/* Submit Button */}
-        <div className="col-12 text-center">
-          <button type="submit" className="btn btn-primary">
-            Submit
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
+    </>
   );
 }

@@ -1,4 +1,5 @@
 import React from "react";
+import "./AddLeads.css";
 
 const AddLeads = () => {
   return (
@@ -8,7 +9,7 @@ const AddLeads = () => {
   </h2>
     <div className="container-fluid border border-2 border-gray mt-1 ">
       {/* Personal Details Section */}
-      <div className=" mt-5 border border-1 border-gray p-3 rounded bg-white  mb-4">
+      <div className=" field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded   mb-4" style={{background:"rgb(227,227,227)"}}>
         <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-1 text-white tw-bold fs-5">Personal Details</div>
         <div >
           <div className="row g-3">
@@ -65,7 +66,7 @@ const AddLeads = () => {
       </div>
 
       {/* Investment Details Section */}
-      <div className=" mb-4 border border-1 border-gray p-3 rounded bg-white  mb-4">
+      <div className=" field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded   mb-4" style={{background:"rgb(227,227,227)"}}>
         <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5">Investment Detail</div>
         <div className="card-body">
           <div className="row g-3">
@@ -144,7 +145,7 @@ const AddLeads = () => {
       </div>
 
       {/* Followup Details Section */}
-      <div className="border border-1 border-gray p-3 rounded bg-white  mb-4">
+      <div className=" field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded   mb-4" style={{background:"rgb(227,227,227)"}}>
         <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5">Followup Detail</div>
         <div className="card-body">
           <div className="row g-3">

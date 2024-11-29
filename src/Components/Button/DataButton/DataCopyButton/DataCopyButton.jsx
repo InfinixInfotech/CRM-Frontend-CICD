@@ -22,14 +22,14 @@ const handleCopy = (tableId) => {
     const rowData = Array.from(cells)
       .map(cell => cell.textContent.trim()) // Get the text content from each cell
       .join("\t"); // Join cells with tab for separation (to mimic CSV)
-    copiedContent += rowData + "\n"; // Add a new line after each row
+    copiedContent += rowData + "\n"; 
   });
 
   // Copy the content to the clipboard
   navigator.clipboard.writeText(copiedContent)
     .then(() => {
       console.log("Table data copied to clipboard!");
-      alert("Table data copied to clipboard!"); // Show success message
+      alert("Table data copied to clipboard!"); 
     })
     .catch((err) => {
       console.error("Failed to copy table data: ", err);
@@ -38,16 +38,19 @@ const handleCopy = (tableId) => {
 };
 
 export const CopyButton = ({
-  tableId = "table-data", // Default to "table-data" if no tableId is provided
+  tableId = "table-data", 
   onClick = () => handleCopy(tableId),
-  className = "Copy-btn btn-primary mt-3 no-print",
+  // className = "btn btn-secondary btn-sm px-3 py-1 fw-light mt-3 no-print",
+  className = "btn dataCopyButton btn-secondary btn-sm px-2 py-0 me-1 mt-3 no-print text-center",
+
 }) => {
   return (
     <button
-      onClick={() => handleCopy(tableId)} // Call handleCopy with the dynamic tableId
+      onClick={() => handleCopy(tableId)} 
       className={className}
+      style={{fontWeight:"600" , borderRadius: "0" , backgroundColor:"rgb(166, 174, 191)" }}
     >
-      Copy to Clipboard
+      Copy
     </button>
   );
 };

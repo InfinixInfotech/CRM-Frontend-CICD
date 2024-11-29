@@ -123,16 +123,28 @@ const Sidebar = () => {
                   <Link
                     to="/uploadleads"
                     className={`nav-link text-white ${
-                      activeItem === "leadDetails" ? "bg-primary" : ""
+                      activeItem === "leadsUpload" ? "bg-primary" : ""
                     }`}
-                    onClick={() => handleItemClick("leadsPage")}
-                  ></Link>
+                    onClick={() => handleItemClick("leadsUpload")}
+                  >
+                    Upload Leads
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/viewmarketingleads"
+                    className={`nav-link text-white ${
+                      activeItem === "leadsViewMarketing" ? "bg-primary" : ""
+                    }`}
+                    onClick={() => handleItemClick("leadsViewMarketing")}
+                  >
+                    View Marketing Leads
+                  </Link>
                 </li>
               </ul>
             </div>
           </li>
 
-        
           {[
             {
               icon: "calendar-check",

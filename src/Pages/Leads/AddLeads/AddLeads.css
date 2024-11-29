@@ -1,0 +1,9 @@
+:root{
+    --fontWeight-lables : 600;
+    /* --bgColor-fields : "rgb(227,227,227)"; */
+}
+
+.form-label{
+    font-weight: var(--fontWeight-lables);
+}
+

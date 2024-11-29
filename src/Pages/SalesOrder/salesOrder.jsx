@@ -13,7 +13,7 @@ const SalesOrder = () => {
         Sales Orders
       </h2>
 
-      <div className="container">
+      <div className="container fw-normal">
         {/* Filters */}
         <div className="row mb-4">
           {[
@@ -46,7 +46,7 @@ const SalesOrder = () => {
         <div>
           <table className="table table-bordered table-striped table-hover text-center" id="table-data">
             <thead>
-              <tr className="table-primary font-weight-bold">
+              <tr className="table-primary font-weight-bold fs-6">
                 <th>Client ID</th>
                 <th>Load ID</th>
                 <th>Payment Date</th>
@@ -105,10 +105,10 @@ const SalesOrder = () => {
                   <td>Notes...</td>
                   <td>
                     <div className="d-flex flex-column gap-2">
-                      <button className="btn btn-success btn-sm">Status</button>
-                      <button className="btn btn-info btn-sm">Invoice</button>
-                      <DeleteButton />
-                      <EditButton />
+                      <button className="btn btn-success btn-sm mr-1 py-0 px-2">Status</button>
+                      <button className="btn btn-info btn-sm mr-1  py-0 px-2 ">Invoice</button>
+                      <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2 "/>
+                      <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2"/>
                     </div>
                   </td>
                 </tr>

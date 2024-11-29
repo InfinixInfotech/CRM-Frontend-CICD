@@ -25,6 +25,8 @@ import SalesOrder from './Pages/SalesOrder/salesOrder'
 import Payment from './Pages/Payment/Payment'
 import ViewLeads from './Pages/Leads/ViewLeads/ViewLeads'
 import AddLeads from './Pages/Leads/AddLeads/AddLeads'
+import UploadLeads from './Pages/Leads/UploadLeads/UploadLeads'
+import ViewMarketingLeads from './Pages/Leads/ViewMarketingLeads/ViewMarketingLeads'
 
 export default function App() {
   
@@ -58,6 +60,8 @@ export default function App() {
             <Route path='/payment' element={<Payment/>}/>
             <Route path='/viewleads' element={<ViewLeads/>} />
             <Route path='/addleads' element={<AddLeads/>}/>
+            <Route path='/uploadleads' element={<UploadLeads/>}/>
+            <Route path='/viewmarketingleads' element={<ViewMarketingLeads/>} />
           </Routes>   
         </div>
       </div>

@@ -43,10 +43,22 @@ const handlePrint = (tableId) => {
   }
 };
 
-export const PrintButton = ({ tableId, className = "Print-btn btn-primary mt-3 me-0 ms-0 no-print" }) => {
+export const PrintButton = ({ 
+  tableId, 
+  className = "btn dataCopyButton btn-secondary btn-sm px-2 py-0 mt-3 me-1 ms-0 no-print" 
+}) => {
   return (
-    <button onClick={() => handlePrint(tableId)} className={className}>
-      Print Table
+    <button 
+      onClick={() => handlePrint(tableId)} 
+      className={className} 
+      style={{
+        fontWeight: "600", 
+        borderRadius: "0" ,
+        backgroundColor:"rgb(166, 174, 191)" 
+      }}
+    >
+      Print
     </button>
   );
 };
+

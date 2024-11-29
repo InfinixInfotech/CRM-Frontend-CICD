@@ -6,10 +6,17 @@ const handleSend = ()=>{
 }
 export const SendButton = ({
     onClick = handleSend ,
-    className = "Send-btn"
+    className = "Send-btn btn px-0 py-0"
 })=>{
    return(
-    <button onClick={onClick} className={className}>
+    <button onClick={onClick} className={className} style={{
+      fontWeight: "600",
+      borderRadius: "0",
+      backgroundColor: "#758694",
+      fontSize: "12px",
+        border: "1px solid grey",
+        color : "white"
+    }}>
        Send
     </button>
    )

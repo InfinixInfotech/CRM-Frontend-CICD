@@ -13,7 +13,7 @@ export default function SettingDashboard() {
         <div
           className="d-grid gap-4"
           style={{
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))",
           }}
         >
           <div className="container bg-secondary text-white text-center">

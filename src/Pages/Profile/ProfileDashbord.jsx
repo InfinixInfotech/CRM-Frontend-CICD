@@ -2,16 +2,19 @@ import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
 
 const ProfileDashbord = () => {
+
+  
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
         View Profile
       </h2>
-      <div className="container mt-3">
+      <div className="container-fluid border border-2 border-gray mt-0 w-75 py-3" >
+      <div className="container mt-0" style={{width:"100%"}} >
         <div className="row">
           {/* Personal Details Section */}
           <div className="col-md-6">
-            <div className="bg-white border rounded p-3 mb-3">
+            <div className=" rounded p-3 mb-1" style={{background:"rgb(227,227,227)" , border :"2px solid grey" , height:"100%" }}>
               <h5 className="fw-bold text-dark mb-3 border-bottom pb-2">Personal Details</h5>
               <form>
                 {[
@@ -43,8 +46,8 @@ const ProfileDashbord = () => {
 
           {/* Official Details Section */}
           <div className="col-md-6">
-            <div className="bg-white border rounded p-3 mb-3">
-              <h5 className="fw-bold text-dark mb-3 border-bottom pb-2">Official Details</h5>
+            <div className=" rounded px-3 mb-1" style={{background:"rgb(227,227,227)" , border :"2px solid grey" , height:"100%" }}>
+              <h5 className="fw-bold text-dark mt-3 mb-1 border-bottom pb-2">Official Details</h5>
               <form>
                 {[
                   { label: "Reporting To", placeholder: "Fresh Pool" },
@@ -65,13 +68,16 @@ const ProfileDashbord = () => {
                     <input type="text" className="form-control" placeholder={placeholder} />
                   </div>
                 ))}
-                <button type="submit" className="btn btn-primary">
+               <div className="d-flex justify-content-end">
+               <button type="submit" className="btn btn-primary">
                   Update
                 </button>
+               </div>
               </form>
             </div>
           </div>
         </div>
+      </div>
       </div>
     </>
   );
