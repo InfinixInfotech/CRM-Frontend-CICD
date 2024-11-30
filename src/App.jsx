@@ -27,12 +27,16 @@ import ViewLeads from './Pages/Leads/ViewLeads/ViewLeads'
 import AddLeads from './Pages/Leads/AddLeads/AddLeads'
 import UploadLeads from './Pages/Leads/UploadLeads/UploadLeads'
 import ViewMarketingLeads from './Pages/Leads/ViewMarketingLeads/ViewMarketingLeads'
+import store from './Redux/Storage/store'
+import { Provider } from 'react-redux'
+
 
 export default function App() {
   
 
   return (
-    <BrowserRouter>
+ <Provider store={store}>
+     <BrowserRouter>
      <Navbar/>
       <div className="d-flex">
         <Sidebar />
@@ -66,5 +70,6 @@ export default function App() {
         </div>
       </div>
     </BrowserRouter>
+ </Provider>
   )
 }

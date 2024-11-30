@@ -1,7 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import NavigationButton from "../../Components/Button/NavigateButton/NavigationButton";
+import { apiGetCallWithoutAuth } from "../../Utils/apiUtils";
 
 export default function SettingDashboard() {
+
+
+  // Function to fetch all the data and group by title
+  const fetchData = async () => {
+      try {
+          const getCardResponse = await apiGetCallWithoutAuth(cardDetailsApiUrl);
+          console.log(getCardResponse);
+      } catch (error) {
+          console.error(error);
+      }
+  };
+
+  useEffect(() => {
+      fetchData();
+  }, []);
+
+
   return (
     <div>
       <h1>

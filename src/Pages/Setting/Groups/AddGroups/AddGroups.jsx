@@ -258,7 +258,7 @@ export default function AddGroups() {
                   </label>
 
                   <input
-                    style={{ border: "1px solid #A6AEBF", margin: "0" }}
+                    style={{ border: "1px solid #A6AEBF"}}
                     type="text"
                     id="groupName"
                     className="form-control"

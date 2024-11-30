@@ -1,7 +1,7 @@
 import React from "react";
 import "./AddLeads.css";
 
-const AddLeads = () => {
+const AddLeads = () => { 
   return (
    <>
     <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-0">
