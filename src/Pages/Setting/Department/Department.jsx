@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
 import { DeleteButton } from "../../../Components/Button/DeleteButton/DeleteButton";
 import BackButton from "../../../Components/Button/BackButton/BackButton";
@@ -6,35 +6,58 @@ import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButt
 import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
+import {postDepartmentThunk} from "../../../Redux/Services/thunks/DepartmentThunk"
+import { useDispatch, useSelector } from "react-redux";
 
 const Department = () => {
-  const [statuses, setStatuses] = useState([
+  const [addDepartment, setAddDepartment] = useState([
     "HR",
     "Sales",
     "Operation",
     "Training",
   ]);
-  const [newStatus, setNewStatus] = useState("");
-  const [editingIndex, setEditingIndex] = useState(null);
-  const [editingValue, setEditingValue] = useState("");
+  const [newDept, setNewDept] = useState("");
+  const [msg, setMsg] = useState("");
+  const dispatch = useDispatch();
+
+  const { data, loading, error } = useSelector((state) => state.department);
+
+  useEffect(() => {
+    if (data && data.data) {
+      setQualification(data.data);
+    } else {
+      console.warn("API Data is null or undefined.");
+    }
+  }, [data]);
 
   // Add a new status
-  const handleAddStatus = () => {
-    if (newStatus.trim() !== "" && !statuses.includes(newStatus.trim())) {
-      setStatuses([...statuses, newStatus.trim()]);
-      setNewStatus("");
+  const handleAddDepartment = () => {
+    console.log("status");
+    
+    if (newDept.trim() !== "" && !addDepartment.includes(newDept.trim())) {
+        
+        // FormData could be replaced with an object if no files are involved
+        const formData = new FormData();
+        formData.append('departmentName', newDept);
+
+        // Dispatch the action and update state once the response is received
+        dispatch(postDepartmentThunk(formData)).then((response) => {
+            const message = response?.payload?.message || "Added successfully";
+            setMsg(message);
+            
+            // Use functional state update for addDepartment
+            setAddDepartment(prevDepartments => [...prevDepartments, newDept.trim()]);
+            setNewDept("");  // Reset the input field
+        }).catch((error) => {
+            // Handle error if needed
+            setMsg("Error occurred while adding department");
+        });
+    } else {
+        setMsg("Invalid or duplicate department");
     }
-  };
+};
 
 
-  const handleSaveEdit = () => {
-    const updatedStatuses = statuses.map((status, index) =>
-      index === editingIndex ? editingValue.trim() : status
-    );
-    setStatuses(updatedStatuses);
-    setEditingIndex(null);
-    setEditingValue("");
-  };
  
   return (
    <>
@@ -48,11 +71,11 @@ const Department = () => {
         </h4>
         <input
           type="text"
-          value={newStatus}
-          onChange={(e) => setNewStatus(e.target.value)}
+          value={newDept}
+          onChange={(e) => setNewDept(e.target.value)}
           placeholder="Department Name"
         />
-        <button onClick={handleAddStatus} className="btn btn-primary mt-2">
+        <button onClick={handleAddDepartment} className="btn btn-primary mt-2">
           Create
         </button>
       </div>
@@ -73,9 +96,9 @@ const Department = () => {
             </tr>
           </thead>
           <tbody>
-            {statuses.map((status, index) => (
+            {addDepartment.map((departObj, index) => (
               <tr key={index}>
-                <td>{status}</td>
+                <td>{departObj.departmentName}</td>
                 <td className="text-center">
                   <div className="d-flex justify-content-center align-items-center gap-2 ">
                     <EditButton />

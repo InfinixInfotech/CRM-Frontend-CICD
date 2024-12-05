@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
+import { useDispatch, useSelector } from "react-redux";
+import { postGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
 
 export default function AddGroups() {
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.adduser);
+  useEffect(() => {
+    if (data && data.data) {
+      console.log("API Data:", data.data);
+      setUser(data.data);
+    } else {
+      console.log("API Data is null or undefined.");
+    }
+  }, [data]);
+
   const handleDropdownChange = (event) => {
     const selectedValue = event.target.value;
-
     // Navigate to the route based on the selected value
     if (selectedValue === "Profile") {
     } else if (selectedValue === "Setting") {
     }
   };
-  const [data, setData] = useState({
+  const [groupData, setGroupData] = useState({
     GroupName: "",
     Dashboard: {
       SalesDashboard: false,
@@ -175,7 +187,7 @@ export default function AddGroups() {
 
   // Update State
   const handleChange = (category, key, subKey, value) => {
-    setData((prev) => {
+    setGroupData((prev) => {
       const updated = { ...prev };
       if (subKey) {
         updated[category][key][subKey] = value;
@@ -191,10 +203,212 @@ export default function AddGroups() {
   // Form Submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form Data Submitted:", data);
+  
+    const AddGroups = {
+      id: 0,  // Replace with actual ID value
+      groupName: "string",  // Replace with actual group name
+      groupId: "string",  // Replace with actual group ID
+      dashboard: {
+        salesDashboard: true,
+        callingDashboard: true,
+      },
+      leads: {
+        create: true,
+        view: true,
+        marketingLeads: true,
+        edit: true,
+        delete: true,
+        dispose: true,
+        disposeClients: true,
+        upload: true,
+        internalAssign: true,
+        outerAssign: true,
+        globalAssign: true,
+        viewFollowUp: true,
+        deleteFollowUp: true,
+        followAssign: true,
+        bulkLeadOperation: true,
+        leadAction: true,
+        leadActionAssign: true,
+        createAgreement: true,
+        addRPM: true,
+      },
+      contact: {
+        create: true,
+        view: true,
+        contactAssign: true,
+        contactAction: true,
+        contactActionAssign: true,
+      },
+      mutualFund: {
+        create: true,
+        view: true,
+        mutualFundAssign: true,
+        mutualFundAction: true,
+        mutualFundActionAssign: true,
+      },
+      freeTrial: {
+        create: true,
+        view: true,
+        edit: true,
+        outerAssign: true,
+      },
+      so: {
+        create: true,
+        view: true,
+        edit: true,
+        approveSO: true,
+        invoice: true,
+        paymentPortal: true,
+        paymentApproval: true,
+        paymentEdit: true,
+        delete: true,
+        serviceActivation: true,
+        paidClientAssign: true,
+        paidClientAction: true,
+        paidClientActionAssign: true,
+      },
+      compliance: {
+        kyc: true,
+        riskProfile: true,
+        agreement: true,
+        agreementApproved: true,
+        viewRPM: true,
+        editRPM: true,
+        invoice: true,
+        soReport: true,
+        taxReport: true,
+      },
+      leadTemplate: {
+        sendSMSLead: true,
+        sendWhatsappLead: true,
+        sendEmailLead: true,
+      },
+      clientTemplate: {
+        sendSMSClient: true,
+        sendWhatsappClient: true,
+        sendEmailClient: true,
+      },
+      hrExtra: {
+        orgChart: true,
+        scrapBook: true,
+        holiday: true,
+      },
+      supportModule: {
+        itAdmin: true,
+        hrAdmin: true,
+        complianceAdmin: true,
+        admin: true,
+      },
+      teamMembers: {
+        list: true,
+        data: true,
+      },
+      smsModule: {
+        sendSMS: true,
+        viewSMS: true,
+      },
+      callingModule: {
+        monitoring: true,
+        reports: true,
+        sendSMSViaGateway: true,
+        viewSMSViaGateway: true,
+        missCall: true,
+        liveCall: true,
+      },
+      reports: {
+        generalReport: true,
+        ftReport: true,
+        paidClientReport: true,
+        expiredPaidClientReport: true,
+        userReport: true,
+        callingReport: true,
+        messageReport: true,
+        smsReport: true,
+        dndReport: true,
+        tracksheet: true,
+        researchReport: true,
+      },
+      logs: {
+        client: true,
+        sms: true,
+        chat: true,
+        whatsapp: true,
+        login: true,
+        extension: true,
+      },
+      extra: {
+        callingModule: true,
+        userModule: true,
+        groupModule: true,
+        poolsModule: true,
+        leadStatusModule: true,
+        segmentModule: true,
+        soModule: true,
+        fetchingReport: true,
+        mailDelete: true,
+        forecast: true,
+        brokerage: true,
+        liveUpdates: true,
+        policy: true,
+        leadApproval: true,
+        groupDesignation: true,
+        groupDepartment: true,
+        groupHierarchy: true,
+        customSMS: true,
+        notification: true,
+        notificationUpdate: true,
+        leaderDashboardUpdate: true,
+        groupChat: true,
+      },
+      mis: {
+        employee: true,
+        lead: true,
+        client: true,
+        sales: true,
+        disposeLeads: true,
+        preSales: true,
+      },
+      whatsapp: {
+        showWhatsapp: true,
+        sendAttachment: true,
+      },
+      export: {
+        leads: true,
+        contacts: true,
+        freeTrial: true,
+        followUp: true,
+        clients: true,
+        salesOrder: true,
+        smsLogs: true,
+        chatLogs: true,
+      },
+      freeTrialDays: 0,  // Set the actual free trial days
+      freeTrialPerContact: 0,  // Set the actual value
+      totalCRMLeadLimit: 0,  // Set the actual limit
+      leadFetch: {
+        active: true,
+        from: ["string"], // Replace with actual sources
+        ratio: "string", // Provide the actual ratio
+      },
+      clientFetch: {
+        active: true,
+        from: ["string"], // Replace with actual sources
+        ratio: "string", // Provide the actual ratio
+      },
+      unreadFetch: 0,  // Set the actual unread fetch value
+    };
+  
+    dispatch(postGroupsThunk(AddGroups))
+      .then((response) => {
+        console.log("Group added successfully:", response);
+      })
+      .catch((error) => {
+        console.error("Error adding group:", error);
+      });
   };
+  
 
-  // Render Form Fields Dynamically
   const renderFields = (category, fields) => {
     return Object.keys(fields).map((key) => {
       const value = fields[key];
@@ -258,11 +472,11 @@ export default function AddGroups() {
                   </label>
 
                   <input
-                    style={{ border: "1px solid #A6AEBF"}}
+                    style={{ border: "1px solid #A6AEBF" }}
                     type="text"
                     id="groupName"
                     className="form-control"
-                    value={data.GroupName}
+                    value={groupData.GroupName}
                     onChange={(e) =>
                       handleChange("GroupName", null, null, e.target.value)
                     }
@@ -279,7 +493,7 @@ export default function AddGroups() {
                     className=" bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2">Dashboard</legend> */}
-                    {renderFields("Dashboard", data.Dashboard)}
+                    {renderFields("Dashboard", groupData.Dashboard)}
                   </fieldset>
                 </div>
                 <div className="col-md-6">
@@ -292,7 +506,7 @@ export default function AddGroups() {
                     className="col-12  bg-white p-3 rounded flex-wrap d-flex gap-2 "
                   >
                     {/* <legend className="float-none w-auto px-2 ">Free Trial</legend> */}
-                    {renderFields("FreeTrial", data.FreeTrial)}
+                    {renderFields("FreeTrial", groupData.FreeTrial)}
                   </fieldset>
                 </div>
 
@@ -306,7 +520,7 @@ export default function AddGroups() {
                     className="col-12  bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2 ">Contact</legend> */}
-                    {renderFields("Contact", data.Contact)}
+                    {renderFields("Contact", groupData.Contact)}
                   </fieldset>
                 </div>
                 <div className="col-md-6">
@@ -319,7 +533,7 @@ export default function AddGroups() {
                     className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2">Mutual Fund</legend> */}
-                    {renderFields("MutualFund", data.MutualFund)}
+                    {renderFields("MutualFund", groupData.MutualFund)}
                   </fieldset>
                 </div>
                 <div className="col-md-6">
@@ -332,7 +546,7 @@ export default function AddGroups() {
                     className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2 fs-8">Leads</legend> */}
-                    {renderFields("Leads", data.Leads)}
+                    {renderFields("Leads", groupData.Leads)}
                   </fieldset>
                 </div>
 
@@ -346,7 +560,7 @@ export default function AddGroups() {
                     className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2">SO</legend> */}
-                    {renderFields("SO", data.SO)}
+                    {renderFields("SO", groupData.SO)}
                   </fieldset>
                 </div>
                 <div className="col-md-6">
@@ -359,7 +573,7 @@ export default function AddGroups() {
                     className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2">Compliance</legend> */}
-                    {renderFields("Compliance", data.Compliance)}
+                    {renderFields("Compliance", groupData.Compliance)}
                   </fieldset>
                 </div>
 
@@ -373,7 +587,7 @@ export default function AddGroups() {
                     className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2 fs-8">Export</legend> */}
-                    {renderFields("Export", data.Export)}
+                    {renderFields("Export", groupData.Export)}
                   </fieldset>
                 </div>
                 <div className="col-md-6 mb-2">
@@ -386,7 +600,7 @@ export default function AddGroups() {
                     className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2 fs-8">Logs</legend> */}
-                    {renderFields("Logs", data.Logs)}
+                    {renderFields("Logs", groupData.Logs)}
                   </fieldset>
                 </div>
 
@@ -400,7 +614,7 @@ export default function AddGroups() {
                     className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2 fs-8">HR Extra</legend> */}
-                    {renderFields("HRExtra", data.HRExtra)}
+                    {renderFields("HRExtra", groupData.HRExtra)}
                   </fieldset>
                 </div>
                 <div className="col-md-6">
@@ -415,7 +629,7 @@ export default function AddGroups() {
                     {/* <legend className="float-none w-auto px-2 fs-8">
                 Support Module
               </legend> */}
-                    {renderFields("SupportModule", data.SupportModule)}
+                    {renderFields("SupportModule", groupData.SupportModule)}
                   </fieldset>
                 </div>
                 <div className="col-md-6 mb-2">
@@ -429,7 +643,7 @@ export default function AddGroups() {
                     {/* <legend className="float-none w-auto px-2 fs-8">
                 WhatsApp Module
               </legend> */}
-                    {renderFields("WhatsApp", data.Whatsapp)}
+                    {renderFields("WhatsApp", groupData.Whatsapp)}
                   </fieldset>
                 </div>
                 <div className="col-md-6">
@@ -442,7 +656,7 @@ export default function AddGroups() {
                     className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2 fs-8">Reports</legend> */}
-                    {renderFields("Reports", data.Reports)}
+                    {renderFields("Reports", groupData.Reports)}
                   </fieldset>
                 </div>
                 <div className="col-md-6">
@@ -455,7 +669,7 @@ export default function AddGroups() {
                     className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2 fs-8">Extra</legend> */}
-                    {renderFields("Extra", data.Extra)}
+                    {renderFields("Extra", groupData.Extra)}
                   </fieldset>
                 </div>
 
@@ -477,7 +691,7 @@ export default function AddGroups() {
                         type="number"
                         id="freeTrialDays"
                         className="form-control"
-                        value={data.FreeTrialDays}
+                        value={groupData.FreeTrialDays}
                         onChange={(e) =>
                           handleChange(
                             null,
@@ -499,7 +713,7 @@ export default function AddGroups() {
                         type="number"
                         id="freeTrialPerContact"
                         className="form-control"
-                        value={data.FreeTrialPerContact}
+                        value={groupData.FreeTrialPerContact}
                         onChange={(e) =>
                           handleChange(
                             null,
@@ -518,7 +732,7 @@ export default function AddGroups() {
                         type="number"
                         id="crmLeadLimit"
                         className="form-control"
-                        value={data.TotalCRMLeadLimit}
+                        value={groupData.TotalCRMLeadLimit}
                         onChange={(e) =>
                           handleChange(
                             null,
@@ -548,7 +762,7 @@ export default function AddGroups() {
                         type="number"
                         id="crmLeadLimit"
                         className="form-control"
-                        value={data.TotalCRMLeadLimit}
+                        value={groupData.TotalCRMLeadLimit}
                         // onChange={(e) =>
                         //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
                         // }
@@ -560,7 +774,7 @@ export default function AddGroups() {
                         type="number"
                         id="clientfetch"
                         className="form-control"
-                        value={data.TotalCRMLeadLimit}
+                        value={groupData.TotalCRMLeadLimit}
                         // onChange={(e) =>
                         //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
                         // }
@@ -572,7 +786,7 @@ export default function AddGroups() {
                         type="number"
                         id="unreadtfetch"
                         className="form-control"
-                        value={data.TotalCRMLeadLimit}
+                        value={groupData.TotalCRMLeadLimit}
                         // onChange={(e) =>
                         //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
                         // }

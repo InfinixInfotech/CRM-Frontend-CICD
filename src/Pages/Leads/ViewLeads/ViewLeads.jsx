@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./ViewLeads.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { DeleteButton } from "../../../Components/Button/DeleteButton/DeleteButton";
 import { StatusButton } from "../../../Components/Button/StatusButton/StatusButton";
@@ -133,17 +134,7 @@ const ViewLeads = () => {
       description: "Sample description",
       status: "Unread",
     },
-    // Add more leads data as needed
   ]);
-
-  const handleAction = (actionType, index) => {
-    if (actionType === "delete") {
-      const updatedLeads = leads.filter((_, i) => i !== index);
-      setLeads(updatedLeads);
-    } else {
-      alert(`${actionType} action triggered for Lead ID: ${leads[index].id}`);
-    }
-  };
 
   return (
     <>
@@ -152,15 +143,9 @@ const ViewLeads = () => {
       </h2>
 
       <div className="container-fluid border border-2 border-gray mt-1  ">
-        <div
-          className="p-2  mb-2"
-          style={{ marginTop: "11px", background: "rgb(227,227,227)" }}
-        >
+        <div className="outerBgBox p-2  mb-2">
           <div className="container-fluid mt-3 ms-0 me-0">
-            <div
-              className="p-3  mb-2"
-              style={{ marginTop: "11px", background: "rgb(245, 245, 245)" }}
-            >
+            <div className="dropDownContainer p-3  mb-2">
               {/* Filters */}
               <div className="row d-flex gap-2 mb-0 justify-content-between">
                 {[
@@ -176,22 +161,11 @@ const ViewLeads = () => {
                   "Segment",
                 ].map((filter, index) => (
                   <div className="col-md-2" key={index}>
-                    <div style={{ position: "relative" }}>
-                    <label className="form-label " style={{fontSize:"14px"}}>{filter}</label>
-                      <select
-                        className="form-control px-2"
-                        style={{
-                          height: "28px",
-                          fontSize: "14px",
-                          padding: "0px 32px 0px 8px", // Space for the arrow
-                          lineHeight: "28px",
-                          appearance: "none", // Hide default arrow
-                          background: `white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%236c757d' d='M0 0l5 5 5-5z'/%3E%3C/svg%3E") no-repeat right 8px center`,
-                          backgroundSize: "10px 6px", // Adjust arrow size
-                          border: "1px solid #ced4da", // Optional: match the theme
-                          borderRadius: "4px", // Optional: rounded corners
-                        }}
-                      >
+                    <div>
+                      <label className="ViewLeadFormLable form-label ">
+                        {filter}
+                      </label>
+                      <select className="formControl form-control px-2">
                         <option value="all">{filter}</option>
                         <option value="option1">Option 1</option>
                         <option value="option2">Option 2</option>
@@ -208,11 +182,10 @@ const ViewLeads = () => {
             <CopyButton tableId="leads-table" />
 
             <table
-              className="table table-bordered table-hover mt-2"
+              className="ViewLeadsTableFont table table-bordered table-hover mt-2"
               id="leads-table"
-              style={{ fontSize: "14px", textAlign: "center" }}
             >
-              <thead className="thead-dark" style={{ fontWeight: "100" }}>
+              <thead className="tableHeader thead-dark">
                 {" "}
                 {/* Adjust font weight */}
                 <tr>
@@ -238,54 +211,30 @@ const ViewLeads = () => {
                     <td>{lead.clientName}</td>
                     <td>
                       {lead.mobile}
-                      <br/>
+                      <br />
                     </td>
                     <td>{lead.assignedTo}</td>
                     <td>{lead.leadSource}</td>
                     <td>
                       <button
-                        className="btn btn-sm px-2 py-0"
+                        className="viewLeadButton btn btn-sm px-2 py-0"
                         onClick={() => alert("Add Segment Clicked")}
-                        style={{
-                          fontWeight: "600",
-                          borderRadius: "0",
-                          backgroundColor: "#758694",
-                          color: "white",
-                          fontSize : "12px",
-                          border : "1px solid grey"
-                        }}
                       >
                         Add Segment
                       </button>
                     </td>
                     <td>
                       <button
-                        className="btn btn-sm px-2 py-0"
+                        className="viewLeadButton btn btn-sm px-2 py-0"
                         onClick={() => alert("Add Free Trial Clicked")}
-                        style={{
-                          fontWeight: "600",
-                          borderRadius: "0",
-                          backgroundColor: "#758694",
-                          color: "white",
-                          fontSize : "12px",
-                          border : "1px solid grey"
-                        }}
                       >
                         Add FT
                       </button>
                     </td>
                     <td>
                       <button
-                        className="btn btn-sm px-2 py-0"
+                        className="viewLeadButton btn btn-sm px-2 py-0"
                         onClick={() => alert("Add Follow Up Clicked")}
-                        style={{
-                          fontWeight: "600",
-                          borderRadius: "0",
-                          backgroundColor: "#758694",
-                          color: "white",
-                          fontSize : "12px",
-                          border : "1px solid grey"
-                        }}
                       >
                         Add New
                       </button>
@@ -317,8 +266,8 @@ const ViewLeads = () => {
             {/* Pagination and Summary */}
             <div className="d-flex justify-content-between align-items-center mt-4">
               <div>
-                Showing <strong>1 </strong>  to <strong>10 </strong> of <strong>3,445</strong>{" "}
-                entries
+                Showing <strong>1 </strong> to <strong>10 </strong> of{" "}
+                <strong>3,445</strong> entries
               </div>
               <nav>
                 <ul className="pagination pagination-sm mb-0">

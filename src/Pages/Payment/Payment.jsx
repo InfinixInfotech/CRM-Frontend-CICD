@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Payment.css"
 import { DeleteButton } from "../../Components/Button/DeleteButton/DeleteButton";
 import { EditButton } from "../../Components/Button/EditButton/EditButton";
 import { PrintButton } from "../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
@@ -6,6 +7,7 @@ import { CsvButton } from "../../Components/Button/DataButton/DataCsvButtton/Dat
 import { PdfButton } from "../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { StatusButton } from "../../Components/Button/StatusButton/StatusButton";
+
 
 const Payment = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -223,11 +225,6 @@ const Payment = () => {
     setSelectedEmail(null);
   };
 
-  const handleStatusChange = (index, newStatus) => {
-    const updatedPayments = [...payments];
-    updatedPayments[index].status = newStatus;
-    setPayments(updatedPayments);
-  };
 
   return (
     <>
@@ -237,8 +234,7 @@ const Payment = () => {
 
       <div className="container-fluid border border-2 border-gray mt-1 ">
         <div
-          className=" mb-2"
-          style={{ marginTop: "11px", background: "#E3E3E3", padding: "5px" }}
+          className="outerBgBox mb-2"
         >
           {/* Popup */}
           {showPopup && (
@@ -387,7 +383,7 @@ const Payment = () => {
             </div>
             <div className="mt-2">
               <table className="table table-bordered" id="payment-table1">
-                <thead className="table-dark" style={{ opacity: 0.7 }}>
+                <thead className="tableHeader table-dark" style={{ opacity: 0.7 }}>
                   <tr>
                     <th>Date Range</th>
                     <th>Branch</th>

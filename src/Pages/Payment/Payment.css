@@ -1,0 +1,22 @@
+:root{
+ --marginTop-outerBgBox : 11px;
+ --background-outerBgBox : #E3E3E3;
+ --padding-outerBgBox : 5px;
+ --position-popup-overlay : fixed;
+ --top-popup-overlay : 0;
+ --left-popup-overlay : 0;
+ --width-popup-overlay : 100vw;
+ --height-popup-overlay : 100vh;
+ --backgroundColor-popup-overlay : rgba(0, 0, 0, 0.5); 
+ --zIndex-popup-overlay : 999;
+}
+
+.outerBgBox{
+  margin-top: var(--marginTop-outerBgBox);
+  background-color: var(--background-outerBgBox);
+  padding: var(--padding-outerBgBox);
+}
+
+.popup-overlay{
+  
+}

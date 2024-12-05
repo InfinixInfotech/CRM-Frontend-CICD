@@ -6,7 +6,24 @@ const apiUrl = isLive ? envUrl : '';
 
 export const postLeadStatusUrl = `${apiUrl}/api/LeadStatus/InsertLeadStatus`;
 export const getAllLeadStatusUrl = `${apiUrl}/api/LeadStatus/GetAllLeadStatus`;
-export const staticToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiI0NTg5MmJlNy1mN2RiLTRhMzQtYTgzYS1jYzZjYTI5ZWQ3MTEiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsImlhdCI6MTczMjk2MjM5NiwiSXNBZG1pbiI6InRydWUiLCJleHAiOjE3NjQ0OTgzOTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcyODIvIn0.MCFkSYkAfpTelbfVnFUtUQrDZ-Hkj8ROkaTJyfY-P_0`
+export const putLeadStatusUrl = `${apiUrl}/api/LeadStatus/UpdateLeadStatus`;
+export const deleteLeadStatusUrl = `${apiUrl}/api/LeadStatus/DeleteLeadStatus`;
+export const getByIdLeadStatusUrl = `${apiUrl}/api/LeadStatus/GetLeadStatusById`;
+// -----------------------------------------------------------------------------------------------------------
+export const postLeadSourceUrl = `${apiUrl}/api/LeadSource/InsertLeadSource`;
+export const putLeadSourceUrl = `${apiUrl}/api/LeadSource/UpdateLeadSource`;
+export const deleteLeadSourceUrl = `${apiUrl}/api/LeadSource/DeleteLeadSource`;
+export const getAllLeadSourceUrl = `${apiUrl}/api/LeadSource/GetAllLeadSource`;
+export const getByIdLeadSourceUrl = `${apiUrl}/api/LeadSource/GetLeadSourceById`;
+// -----------------------------------------------------------------------------------------------------------
+export const postDepartmentUrl = `${apiUrl}/api/LeadStatus/GetLeadStatusById`;
+export const postSegmentListUrl = `${apiUrl}/api/Segment/InsertSegmentAsync`;
+export const postQualificationUrl = `${apiUrl}/api/Qualification/InsertQualificationAsync`;
+export const postSegmentPlanUrl = `${apiUrl}/api/SegmentPlan/InsertSegmentPlanAsync`;
+export const postAddUserUrl = `${apiUrl}/api/Users/AddUsers`;
+export const postGroupsUrl = `${apiUrl}/api/Groups/InsertGroups`
+export const staticToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkNmZiOTNlOS1lMzVjLTQ0NjktYjU2Mi00ZjM1Njg4ZWIxN2MiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsImlhdCI6MTczMzEyODk3MSwiSXNBZG1pbiI6InRydWUiLCJleHAiOjE3NjQ2NjQ5NzEsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcyODIvIn0.NOSgVb8iz3rWk-Veu0FLRJLQIYnZvWDkPdKbpToGR30`
+
 
 export default function ApiServer() {
   return (

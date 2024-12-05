@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import "./UploadLeads.css"
 const UploadLeads = () => {
   const [formData, setFormData] = useState({
     campaignName: "",
@@ -39,7 +39,7 @@ const UploadLeads = () => {
     Upload Leads
       </h2>
     <div className="container-fluid border border-2 border-gray mt-1  w-50">
-    <div className="container-fluid  rounded mt-2 mb-2" style={{width:"100%" , background:"rgb(227,227,227)" , border :"2px solid grey"}}>
+    <div className="innerBox container-fluid  rounded mt-2 mb-2">
     <div className="container-fluid mt-3 me-0 ms-0" style={{fontSize:"14px"}}>
       <form onSubmit={handleSubmit}>
         <div className="mb-3">

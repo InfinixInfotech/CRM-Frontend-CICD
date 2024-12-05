@@ -8,27 +8,23 @@ import { PdfButton } from "../../../Components/Button/DataButton/DataPdfButton/D
 import { CopyButton } from "../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 
 const Designation = () => {
-  const [statuses, setStatuses] = useState([]);
-  const [newDestination, setNewDestination] = useState([]);
-  const [newStatus, setNewStatus] = useState("");
+  const [designation, setDesignation] = useState([]);
+  const [newDesignation, setNewDesignation] = useState("");
+  const [newTarget, setNewTarget] = useState("");
 
-  // Add a new status
-  const handleAddStatus = () => {
-    if (newStatus.trim() !== "" && !statuses.includes(newStatus.trim())) {
-      setStatuses([...statuses, newStatus.trim()]);
-      setNewStatus("");
+
+  const handleAddTarget = () => {
+    if (newTarget.trim() !== "" && !designation.includes(newTarget.trim())) {
+      const newaddDesignation = {
+        designationName : newDesignation,
+        designationTarget : newTarget,
+      }
+
+      setDesignation([...designation, newaddDesignation]);
+      setNewTarget("");
+      setNewDesignation("")
     }
   };
-
-  const handleSaveEdit = () => {
-    const updatedStatuses = statuses.map((status, index) =>
-      index === editingIndex ? editingValue.trim() : status
-    );
-    setStatuses(updatedStatuses);
-    setEditingIndex(null);
-    setEditingValue("");
-  };
- 
 
   return (
     <>
@@ -46,34 +42,37 @@ const Designation = () => {
 <div
  style={{
    display: "grid",
-   gridTemplateColumns: "1fr 1fr auto", // Two equal columns for inputs and auto for button
-   gap: "20px", // Space between items
-   alignItems: "center", // Align items vertically
-   maxWidth: "600px", // Optional: Width for the container
-   margin: "0 auto", // Center horizontally
+   gridTemplateColumns: "1fr 1fr auto", 
+   gap: "20px", 
+   alignItems: "center", 
+   maxWidth: "600px", 
+   margin: "0 auto", 
  }}
 >
- {/* Input for Status */}
- <input
+
+
+<input
    type="text"
-   value={newStatus}
-   onChange={(e) => setNewStatus(e.target.value)}
+   value={newDesignation}
+   onChange={(e) => setNewDesignation(e.target.value)}
    placeholder="Designation Name"
-   style={{ padding: "10px", width: "100%" }} // Ensure input spans the column
+   style={{ padding: "10px", width: "100%" }} 
  />
- {/* Input for Destination */}
+
+ 
  <input
    type="text"
-   value={newDestination}
-   onChange={(e) => setNewDestination(e.target.value)}
-   placeholder="Destination Target"
-   style={{ padding: "10px", width: "100%" }} // Ensure input spans the column
+   value={newTarget}
+   onChange={(e) => setNewTarget(e.target.value)}
+   placeholder="Designation Target"
+   style={{ padding: "10px", width: "100%" }} 
  />
- {/* Button */}
+ 
+
  <button
-   onClick={handleAddStatus}
+   onClick={handleAddTarget}
    className="btn btn-primary"
-   style={{ padding: "10px" }} // Styling for button
+   style={{ padding: "10px" }} 
  >
    Create
  </button>
@@ -91,15 +90,17 @@ const Designation = () => {
        <table id="table-data" className="table table-bordered table-striped">
          <thead>
            <tr>
+             <th>Designation Target</th>
              <th>Designation Name</th>
              <th className="text-center">Action</th>
            </tr>
          </thead>
          <tbody>
-           {statuses.length > 0 ? (
-             statuses.map((status, index) => (
+           {designation.length > 0 ? (
+             designation.map((designationObj, index) => (
                <tr key={index}>
-                 <td>{status}</td>
+                 <td>{designationObj.designationName}</td>
+                 <td>{designationObj.designationTarget}</td>
                  <td className="text-center">
                    <div className="d-flex justify-content-center align-items-center gap-2">
                      <EditButton />

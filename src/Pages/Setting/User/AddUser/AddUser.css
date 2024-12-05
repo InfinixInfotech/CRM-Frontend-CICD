@@ -1,74 +1,84 @@
-form div {
-    margin-bottom: 15px;
-  }
-  
- 
-  label {
-    display: block;
-    margin-bottom: 8px;
-    /* font-weight: bold; */
-    color: #333;
-  }
-  
-  
-  input[type="text"],
-  input[type="password"],
-  input[type="tel"],
-  input[type="number"],
-  select {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  input[type="checkbox"] {
-    margin-right: 10px;
-  }
-  
-  
-  button {
-    background-color: #ff6600;
-    color: #fff;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  button:hover {
-    background-color: #e05500;
-  }
-  
- 
-  div.checkbox-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-  }
-  
-  .checkbox-group div {
-    display: flex;
-    align-items: center;
-  }
-  
- 
-  @media (max-width: 768px) {
-    form {
-      padding: 20px;
-    }
-  
-    input,
-    select {
-      font-size: 13px;
-    }
-  
-    button {
-      width: 100%;
-      font-size: 14px;
-    }
-  }
-  
+:root{
+ --display-formWrappere : flex;
+ --flexDirection-formWrappere : column;
+ --gap-formWrappere : 1rem;
+ --display-form : flex;
+ --flex-wrap-form : wrap;
+ --gap-form : 1rem;
+ --flex-formDiv : 1 1 calc(33.333% - 1rem);
+ --min-width-formDiv : 200px;
+ --display-formLabel : block;
+ --margin-bottom-formLabel : 0.5rem;
+ --font-weight-formLabel : normal;
+ --font-size-formLabel : 14px;
+ --width-formInput-select : 100%;
+ --padding-formInput-select : 0;
+ --border-formInput-select : 1px solid #ccc;
+ --border-radius-formInput-select : 4px;
+ --display-checkboxGroup : flex;
+ --flex-wrap-checkboxGroup : wrap;
+ --gap-checkboxGroup :1rem;
+ --display-checkboxGroup-div : flex;
+ --align-items-checkboxGroup-div : center;
+ --gap-checkboxGroup-div : 0.5rem;
+ --flex-checkboxGroup-div : 1 1 calc(33.333% - 1rem);
+ --min-width-checkboxGroup-div : 200px;
+ --display-AdduserCheckboxes : grid;
+ --grid-template-columns-AdduserCheckboxes : repeat(3,1fr);
+ --gap-AdduserCheckboxes : 1px;
+}
+
+.formWrapper {
+  display: var(--display-formWrappere);
+  flex-direction: var(--flexDirection-formWrappere);
+  gap: var(--gap-formWrappere);
+}
+
+.addUser-form {
+  display: var(--display-form);
+  flex-wrap: var(--flex-wrap-form);
+  gap: var(--gap-form);
+}
+
+.addUser-form div {
+  flex:  var(--flex-formDiv);
+  min-width: var(--min-width-formDiv) ; 
+}
+
+.addUser-form label {
+  display: var(--display-formLabel);
+  margin-bottom: var(--margin-bottom-formLabel);
+  font-weight: var(--font-weight-formLabel);
+  font-size: var(--font-size-formLabel);
+}
+
+.addUser-form input[type="text"],
+.addUser-form input[type="number"],
+.addUser-form input[type="date"],
+.addUser-form input[type="password"],
+.addUser-form select {
+  width: var(--width-formInput-select);
+  padding : var(--padding-formInput-select);
+  border: var(--border-formInput-select);
+  border-radius: var(--border-radius-formInput-select);
+}
+
+.checkboxGroup {
+  display: var(--display-checkboxGroup);
+  flex-wrap: var(--flex-wrap);
+  gap: var(--gap-checkboxGroup);
+}
+
+.checkboxGroup > div {
+  display: var(--display-checkboxGroup-div);
+  align-items: var(--align-items-checkboxGroup-div);
+  gap: var(--gap-checkboxGroup-div);
+  flex: var(--flex-checkboxGroup-div);  
+  min-width: var(--min-width-checkboxGroup-div );
+}
+
+.AdduserCheckboxes{
+  display: var(--display-AdduserCheckboxes);
+  grid-template-columns: var(--grid-template-columns-AdduserCheckboxes);
+  gap: var(--gap-AdduserCheckboxes);
+}
