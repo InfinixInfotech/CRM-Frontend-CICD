@@ -106,8 +106,9 @@ export async function apiPutCallWithoutAuth(endpoint, data) {
 
 
 
-export async function apiPostCallWithAuth(endpoint,params, token) {
+export async function apiPostCallWithAuth(endpoint, params, token) {
   try {
+    console.log(params)
       const response = await fetch(endpoint,{
           method: 'POST',
           headers: {
@@ -163,7 +164,7 @@ export async function apiDeleteCallWithAuth(endpoint, token) {
           method: 'DELETE',
           headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer${token}`, // Add Bearer token
+              'Authorization': `Bearer ${token}`, // Add Bearer token
           },
       });
 

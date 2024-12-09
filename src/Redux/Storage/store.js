@@ -5,7 +5,7 @@ import leadSourceReducer from "../Reducers/LeadSourceReducer";
 import segmentListReducer from "../Reducers/SegmentListReducer";
 import qualificationReducer from "../Reducers/QualificationReducer";
 import segmentPlanReducer from "../Reducers/SegmentPlanReducer"
-import addUserReducer from "../Reducers/AddUserReducer"
+import userReducer from "../Reducers/UserReducer"
 import groupsReducer from "../Reducers/GroupsReducer"
 
 const store = configureStore({
@@ -17,7 +17,7 @@ const store = configureStore({
     segmentlist: segmentListReducer,
     qualification: qualificationReducer,
     segmentplan: segmentPlanReducer,
-    adduser: addUserReducer,
+    user: userReducer,
     groups : groupsReducer,
   },
 });

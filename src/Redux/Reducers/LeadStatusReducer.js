@@ -49,7 +49,7 @@ const leadStatusReducer = createSlice({
       .addCase(deleteLeadStatusThunk.fulfilled, (state, action) => {
         state.loading = false;
         state.deleteSuccess = true;        
-        state.data = action.payload;
+        // state.data =state.data.filter(item => item.id !== action.payload.id);
       })
       .addCase(deleteLeadStatusThunk.rejected, (state, action) => {
         state.loading = false;

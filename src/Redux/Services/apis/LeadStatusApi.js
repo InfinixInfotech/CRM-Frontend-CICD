@@ -26,10 +26,11 @@ export const getAllLeadStatus = async () => {
   }
 };
 
-// PUT Lead Status
+
 export const putLeadStatus = async (params) => {
   try {
-    const response = await apiPutCallWithAuth(putLeadStatusUrl, params, staticToken);
+    const urlWithId = `${putLeadStatusUrl}?id=${id}`;
+    const response = await apiPutCallWithAuth(urlWithId, params, staticToken);
     return response; 
   } catch (error) {
     console.error("Error updating lead status:", error);
@@ -40,19 +41,19 @@ export const putLeadStatus = async (params) => {
 // DELETE Lead Status
 export const deleteLeadStatus = async (id) => {
   try {
-    const urlWithId = `${deleteLeadStatusUrl}/${id}`;
+    const urlWithId = `${deleteLeadStatusUrl}?id=${id}`;
     const response = await apiDeleteCallWithAuth(urlWithId, staticToken);
     return response; 
   } catch (error) {
     console.error("Error deleting lead status:", error);
-    return null;
+    return { success: false, message: error.message || 'An error occurred' };
   }
 };
 
 // GET Lead Status by ID
 export const getByIdLeadStatus = async (id) => {
   try {
-    const urlWithId = `${getByIdLeadStatusUrl}/${id}`;
+    const urlWithId = `${getByIdLeadStatusUrl}?id=${id}`;
     const response = await apiGetCallWithAuth(urlWithId, staticToken);
     return response; 
   } catch (error) {

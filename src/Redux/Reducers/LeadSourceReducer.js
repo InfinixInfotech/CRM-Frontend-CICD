@@ -48,29 +48,31 @@ const leadSourceReducer = createSlice({
       // For getAllLeadStatusThunk
       .addCase(deleteLeadSourceThunk.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.deleteError = null;
       })
       .addCase(deleteLeadSourceThunk.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload;
+        state.deleteSuccess = true;        
+        // state.data =state.data.filter(item => item.id !== action.payload.id);
       })
       .addCase(deleteLeadSourceThunk.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.deleteError = action.payload;
       })
       
      
       .addCase(putLeadSourceThunk.pending, (state) => {
         state.loading = true;
-        state.error = null;
+        state.putError = null;
       })
       .addCase(putLeadSourceThunk.fulfilled, (state, action) => {
         state.loading = false;
+        state.putSuccess = true;        
         state.data = action.payload;
       })
       .addCase(putLeadSourceThunk.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload;
+        state.putError = action.payload;
       })
       
       .addCase(getByIdLeadSourceThunk.pending, (state) => {
@@ -84,7 +86,7 @@ const leadSourceReducer = createSlice({
       .addCase(getByIdLeadSourceThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
-      });
+      })
   },
 });
 

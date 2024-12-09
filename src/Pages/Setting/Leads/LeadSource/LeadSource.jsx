@@ -7,23 +7,31 @@ import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButto
 import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { EditButton } from "../../../../Components/Button/EditButton/EditButton";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllLeadSourceThunk, postLeadSourceThunk } from "../../../../Redux/Services/thunks/LeadSourceThunk";
+import {
+  deleteLeadSourceThunk,
+  getAllLeadSourceThunk,
+  getByIdLeadSourceThunk,
+  postLeadSourceThunk,
+  putLeadSourceThunk,
+} from "../../../../Redux/Services/thunks/LeadSourceThunk";
+
 
 
 const LeadSource = () => {
   const [leadSource, setLeadSource] = useState([]);
   const [newLeadSource, setNewLeadSource] = useState("");
+  const [editLeadSource, setEditLeadSource] = useState(null);
+  const [editValue, setEditValue] = useState("");
   const [msg, setMsg] = useState("");
   const dispatch = useDispatch();
 
-  const { data, loading, error } = useSelector((state) => state.leadsource);
 
+  const { data, loading, error } = useSelector((state) => state.leadsource);
 
   useEffect(() => {
     dispatch(getAllLeadSourceThunk());
   }, [dispatch]);
 
-  
   useEffect(() => {
     if (data?.data) {
       setLeadSource(data.data);
@@ -31,7 +39,10 @@ const LeadSource = () => {
   }, [data]);
 
   const handleAddLeadSource = () => {
-    if (newLeadSource.trim() !== "" && !leadSource.includes(newLeadSource.trim())) {
+    if (
+      newLeadSource.trim() !== "" &&
+      !leadSource.includes(newLeadSource.trim())
+    ) {
       const newAddLeadSource = {
         leadSourceValue: newLeadSource,
       };
@@ -44,79 +55,159 @@ const LeadSource = () => {
     }
   };
 
+  const handleEditLeadSource = (id) => {
+    if (editValue.trim() !== "") {
+      dispatch(putLeadSourceThunk({ id, leadSourceValue: editValue })).then(
+        (response) => {
+          setMsg(response?.payload?.message || "Status updated successfully");
+          dispatch(getAllLeadSourceThunk());
+          setEditStatus(null);
+          setEditValue("");
+        }
+      );
+    }
+  };
+
+  const handleDeleteLeadSource = (id) => {
+    if (window.confirm("Are you sure you want to delete this status?")) {
+      dispatch(deleteLeadSourceThunk(id))
+        .unwrap()
+        .then((response) => {
+          setMsg(response.message || "Status deleted successfully");
+        })
+        .catch((error) => {
+          setMsg(error || "Failed to delete status");
+        });
+    }
+  };
+
+  const fetchLeadSourceById = (id) => {
+    dispatch(getByIdLeadSourceThunk(id)).then((response) => {
+      const leadSourceValue = response.payload?.data;
+      setEditStatus(leadSourceValue?.id);
+      setEditValue(leadSourceValue?.status);
+    });
+  };
+
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
         Lead Source
       </h2>
       <BackButton />
-      <div className="lead-status-container mt-2">
-        <div className="addLeadscontainer add-status p-2 mb-2">
-          <h4 className="addLeadsinput border border-black p-2 mb-2 text-white ">
-            Add New Pool
-          </h4>
-          <input
-            type="text"
-            value={newLeadSource}
-            onChange={(e) => setNewLeadSource(e.target.value)}
-            placeholder="Pool Name"
-          />
-          <button onClick={handleAddLeadSource} className="btn btn-primary mt-2">
-            Create
-          </button>
-          <p className="mt-3 text-success">{msg}</p>
-        </div>
+      <div
+        className="container-fluid border border-2 border-gray mt-2 py-3"
+        style={{ padding: "18px 16px" }}
+      >
+        <div
+          className="lead-status-container mt-0 p-3"
+          style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
+        >
+          <div className="addLeadscontainer add-status p-2 mb-2">
+            <h4 className="p-0 mb-3 text-dark ">Add New Pool</h4>
 
-        <div className="bg-white p-4 rounded border border-4 border-gray">
-          <h5>View Pools</h5>
-          <div className=" mb-4 ">
-            <PrintButton />
-            <PdfButton />
-            <CsvButton />
-            <CopyButton />
+            <input
+              type="text"
+              value={newLeadSource}
+              onChange={(e) => setNewLeadSource(e.target.value)}
+              placeholder="Pool Name"
+            />
+            <button onClick={handleAddLeadSource} className="btn btn-primary ">
+              Create
+            </button>
+            <p className="mt-3 text-success">{msg}</p>
           </div>
-          <table id="table-data" className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>Pool Name</th>
-                <th className="text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
+
+          <div className="bg-white p-4 rounded border border-4 border-gray">
+            <h5>View Pools</h5>
+            <div className=" mb-4 ">
+              <PrintButton />
+              <PdfButton />
+              <CsvButton />
+              <CopyButton />
+            </div>
+            <table
+              id="table-data"
+              className="table table-bordered table-striped"
+            >
+              <thead>
                 <tr>
-                  <td colSpan="2" className="text-center">
-                    Loading...
-                  </td>
+                  <th>Pool Name</th>
+                  <th className="text-center">Action</th>
                 </tr>
-              ) : error ? (
-                <tr>
-                  <td colSpan="2" className="text-center text-danger">
-                    Error: {error}
-                  </td>
-                </tr>
-              ) : leadSource.length > 0 ? (
-                leadSource.map((leadSourceObj, index) => (
-                  <tr key={leadSourceObj.id || index}>
-                    <td>{leadSourceObj.leadSourceValue}</td>{" "}
-                    
-                    <td className="text-center">
-                      <div className="d-flex justify-content-center align-items-center gap-2">
-                        <EditButton />
-                        <DeleteButton />
-                      </div>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan="2" className="text-center">
+                      Loading...
                     </td>
                   </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="2" className="text-center">
-                    No statuses available.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+                ) : error ? (
+                  <tr>
+                    <td colSpan="2" className="text-center text-danger">
+                      Error: {error}
+                    </td>
+                  </tr>
+                ) : leadSource.length > 0 ? (
+                  // leadSource.map((leadSource, index) => (
+                  //   <tr key={leadSourceObj.id || index}>
+                  //     <td>{leadSourceObj.leadSourceValue}</td>{" "}
+                  //     <td className="text-center">
+                  //       <div className="d-flex justify-content-center align-items-center gap-2">
+                  //         <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
+                  //         <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2 " />
+                  //       </div>
+                  //     </td>
+                  //   </tr>
+                  // ))
+
+                  leadSource.map((leadSourceObj,index) => (
+                    <tr key={leadSourceObj.id || index}>
+                      <td>
+                        {editLeadSource === leadSourceObj.id ? (
+                          <input
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                          />
+                        ) : (
+                          leadSourceObj.leadSourceValue
+                        )}
+                      </td>
+                      <td className="text-center">
+                        <div className="d-flex justify-content-center align-items-center gap-2">
+                          {editLeadSource === leadSourceObj.id ? (
+                            <button
+                              onClick={() => handleEditLeadSource(leadSourceObj.id)}
+                              className="btn btn-success"
+                            >
+                              Save
+                            </button>
+                          ) : (
+                            <EditButton
+                              className="btn btn-primary btn-sm mr-1 py-0 px-2"
+                              onClick={() => fetchLeadSourceById(leadSourceObj.id)}
+                            />
+                          )}
+                          <DeleteButton
+                            className="btn btn-danger btn-sm mr-1  py-0 px-2"
+                            onClick={() => handleDeleteLeadSource(leadSourceObj.id)}
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                    ))
+                ) : (
+                  <tr>
+                    <td colSpan="2" className="text-center">
+                      No statuses available.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </>

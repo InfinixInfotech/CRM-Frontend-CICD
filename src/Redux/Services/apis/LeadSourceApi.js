@@ -34,47 +34,35 @@ export const getAllLeadSource = async () => {
 };
 
 
-export const deleteLeadSource = async (params) => {
+export const deleteLeadSource = async (id) => {
   try {
-    const response = await apiDeleteCallWithAuth(
-      deleteLeadSourceUrl,
-      params,
-      staticToken
-    );
-
-    return response;
+    const urlWithId = `${deleteLeadSourceUrl}?id=${id}`;
+    const response = await apiDeleteCallWithAuth(urlWithId, staticToken);
+    return response; 
   } catch (error) {
-    console.error(error);
-    return null;
+    console.error("Error deleting lead status:", error);
+    return { success: false, message: error.message || 'An error occurred' };
   }
 };
 
 export const putLeadSource = async (params) => {
   try {
-    const response = await apiPutCallWithAuth(
-      putLeadSourceUrl,
-      params,
-      staticToken,
-    );
-
-    return response;
+    const urlWithId = `${putLeadSourceUrl}?id=${id}`;
+    const response = await apiPutCallWithAuth(urlWithId, params, staticToken);
+    return response; 
   } catch (error) {
-    console.error(error);
+    console.error("Error updating lead status:", error);
     return null;
   }
 };
 
-export const getByIdLeadSource = async (params) => {
+export const getByIdLeadSource = async (id) => {
   try {
-    const response = await apiGetCallWithAuth(
-      getByIdLeadSourceUrl,
-      params,
-      staticToken,
-    );
-
-    return response;
+    const urlWithId = `${getByIdLeadSourceUrl}?id=${id}`;
+    const response = await apiGetCallWithAuth(urlWithId, staticToken);
+    return response; 
   } catch (error) {
-    console.error(error);
+    console.error("Error getting lead status by ID:", error);
     return null;
   }
 };

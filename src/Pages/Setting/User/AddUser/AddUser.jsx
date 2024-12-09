@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./AddUser.css";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
 import { useDispatch, useSelector } from "react-redux";
-import { postAddUserThunk } from "../../../../Redux/Services/thunks/AddUserThunk";
+import { postUserThunk } from "../../../../Redux/Services/thunks/UserThunk";
 
 const AddUser = () => {
   const [user, setUser] = useState({
@@ -63,7 +63,7 @@ const AddUser = () => {
 
   const dispatch = useDispatch();
 
-  const { data, loading, error } = useSelector((state) => state.adduser);
+  const { data, loading, error } = useSelector((state) => state.user);
 
   useEffect(() => {
     if (data && data.data) {
@@ -149,11 +149,9 @@ const AddUser = () => {
     };
 
     // Make the API call using dispatch
-    dispatch(postAddUserThunk(AddNewUser))
+    dispatch(postUserThunk(AddNewUser))
       .then((response) => {
         console.log("User added successfully:", response);
-       
-
       })
       .catch((error) => {
         console.error("Error adding user:", error);
@@ -165,373 +163,392 @@ const AddUser = () => {
         Add Users
       </h2>
       <BackButton />
-      <div className="formWrapper bg-white p-2 rounded border border-2 border-gray mt-3 ">
-        <h4 className="addLeadsinput border border-black p-2 mb-2 text-white ">
-          Add Users
-        </h4>
+      <div className="container-fluid border border-2 border-gray mt-1 pb-3">
+        <div className="formWrapper p-2 rounded mt-3 p-4 ">
+          <form className="addUser-form" onSubmit={handleSubmit}>
+            <div>
+              <label>Full Name</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="fullName"
+                value={user.fullName}
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Employee Code</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="employeeCode"
+                value={user.employeeCode}
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Father's Name</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="fatherName"
+                value={user.fatherName}
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Mothers's Name</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="motherName"
+                value={user.motherName}
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Mobile Number</label>
+              <input
+                className="ps-2 inputField"
+                type="number"
+                name="mobileNumber"
+                value={user.mobileNumber}
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>User Name</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="userName"
+                value={user.userName}
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Password</label>
+              <input
+                className="ps-2 inputField"
+                type="password"
+                name="password"
+                value={user.password}
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Target</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="target"
+                value={user.target}
+                onChange={handleChange}
+                //required
+              />
+            </div>
 
-        <form className="addUser-form" onSubmit={handleSubmit}>
-          <div>
-            <label>Full Name</label>
-            <input
-              type="text"
-              name="fullName"
-              value={user.fullName}
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Employee Code</label>
-            <input
-              type="text"
-              name="employeeCode"
-              value={user.employeeCode}
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Father's Name</label>
-            <input
-              type="text"
-              name="fatherName"
-              value={user.fatherName}
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Mothers's Name</label>
-            <input
-              type="text"
-              name="motherName"
-              value={user.motherName}
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Mobile Number</label>
-            <input
-              type="number"
-              name="mobileNumber"
-              value={user.mobileNumber}
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>User Name</label>
-            <input
-              type="text"
-              name="userName"
-              value={user.userName}
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Password</label>
-            <input
-              type="password"
-              name="password"
-              value={user.password}
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Target</label>
-            <input
-              type="text"
-              name="target"
-              value={user.target}
-              onChange={handleChange}
-              //required
-            />
-          </div>
+            <div className="dropdown">
+              <label>Reporting To:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
+            <div className="dropdown">
+              <label>Group Name:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
+            <div className="dropdown">
+              <label>Department Name:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
+            <div className="dropdown">
+              <label>Designation Name:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
+            <div className="dropdown">
+              <label>Qualification Name:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
+            <div className="dropdown">
+              <label>Segment Access:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
+            <div className="dropdown">
+              <label>Pool Access:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
+            <div className="dropdown">
+              <label>Group Access:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
+            <div className="dropdown">
+              <label>Custom Fetch:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
+            <div className="dropdown">
+              <label>Branch:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
+            <div className="dropdown">
+              <label>Chat Group:</label>
+              <select className="inputField">
+                <option value="">Person 1</option>
+                <option value="">Person 2</option>
+              </select>
+            </div>
 
-          <div className="dropdown">
-            <label>Reporting To:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label>Group Name:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label>Department Name:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label>Designation Name:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label>Qualification Name:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label>Segment Access:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label>Pool Access:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label>Group Access:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label>Custom Fetch:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label>Branch:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
-          <div className="dropdown">
-            <label>Chat Group:</label>
-            <select>
-              <option value="">Person 1</option>
-              <option value="">Person 2</option>
-            </select>
-          </div>
+            <div>
+              <label>Custom Fetch Ratio</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="customFetchRatio"
+                value={user.customFetchRatio}
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Extension</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="extension"
+                value={user.extension}
+                onChange={handleChange}
+                pattern="[0-9]{1,5}"
+                //required
+              />
+            </div>
+            <div>
+              <label>DID Number</label>
+              <input
+                className="ps-2 inputField"
+                type="number"
+                name="didNumber"
+                value={user.didNumber}
+                // placeholder="DID Number ."
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Vendor Access</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="vendorAccess"
+                value={user.vendorAccess}
+                // placeholder="DID Number ."
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Except Vendor Access</label>
+              <input
+                className="ps-2 inputField inputField"
+                type="text"
+                name="exceptVendorAccess"
+                value={user.exceptVendorAccess}
+                // placeholder="DID Number ."
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>OTP Number</label>
+              <input
+                className="ps-2 inputField inputField"
+                type="number"
+                name="otpNumber"
+                value={user.otpNumber}
+                // placeholder="0 for no otp"
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Date Of Birth</label>
+              <input
+                className="ps-2 inputField inputField"
+                type="date"
+                name="dateOfBirth"
+                value={user.dateOfBirth}
+                // placeholder="Date of birth"
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Date Of Joining</label>
+              <input
+                className="ps-2 inputField inputField"
+                type="date"
+                name="dateOfJoining"
+                value={user.dateOfJoining}
+                // placeholder="Date of joining"
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Pan Number</label>
+              <input
+                className="ps-2 inputField"
+                style={{ textTransform: "uppercase" }}
+                type="text"
+                name="panNumber"
+                value={user.panNumber}
+                // placeholder="PAN NUMBER"
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Aadhar Number</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="aadharNumber"
+                value={user.aadharNumber}
+                // placeholder="PAN NUMBER"
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Local Address</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="localAddress"
+                value={user.localAddress}
+                // placeholder="PAN NUMBER"
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Permanent Address</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="permanentAddress"
+                value={user.permanentAddress}
+                // placeholder="PAN NUMBER"
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Bank Name</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="bankName"
+                value={user.bankName}
+                // placeholder="PAN NUMBER"
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>IFSC</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="IFSC"
+                value={user.IFSC}
+                // placeholder="PAN NUMBER"
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Account Number</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="accountNumber"
+                value={user.accountNumber}
+                // placeholder="PAN NUMBER"
+                onChange={handleChange}
+                //required
+              />
+            </div>
+            <div>
+              <label>Essl ID</label>
+              <input
+                className="ps-2 inputField"
+                type="text"
+                name="esslID"
+                value={user.esslID}
+                // placeholder="PAN NUMBER"
+                onChange={handleChange}
+                //required
+              />
+            </div>
 
-          <div className="AdduserCheckboxes">
-            <label>Access:</label>
-            {user.access &&
-              Object.keys(user.access).length > 0 &&
-              Object.keys(user.access).map((key) => (
-                <div className="d-flex gap-1" key={key}>
-                  <input
-                    type="checkbox"
-                    name={key}
-                    checked={user.access[key]}
-                    onChange={handleCheckboxChange}
-                  />
-                  <label>{key}</label>
-                </div>
-              ))}
-          </div>
-
-          <div>
-            <label>Custom Fetch Ratio</label>
-            <input
-              type="text"
-              name="customFetchRatio"
-              value={user.customFetchRatio}
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Extension</label>
-            <input
-              type="text"
-              name="extension"
-              value={user.extension}
-              placeholder="Calling Ext."
-              onChange={handleChange}
-              pattern="[0-9]{1,5}"
-              //required
-            />
-          </div>
-          <div>
-            <label>DID Number</label>
-            <input
-              type="number"
-              name="didNumber"
-              value={user.didNumber}
-              // placeholder="DID Number ."
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Vendor Access</label>
-            <input
-              type="text"
-              name="vendorAccess"
-              value={user.vendorAccess}
-              // placeholder="DID Number ."
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Except Vendor Access</label>
-            <input
-              type="text"
-              name="exceptVendorAccess"
-              value={user.exceptVendorAccess}
-              // placeholder="DID Number ."
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>OTP Number</label>
-            <input
-              type="number"
-              name="otpNumber"
-              value={user.otpNumber}
-              // placeholder="0 for no otp"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Date Of Birth</label>
-            <input
-              type="date"
-              name="dateOfBirth"
-              value={user.dateOfBirth}
-              // placeholder="Date of birth"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Date Of Joining</label>
-            <input
-              type="date"
-              name="dateOfJoining"
-              value={user.dateOfJoining}
-              // placeholder="Date of joining"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Pan Number</label>
-            <input
-              style={{ textTransform: "uppercase" }}
-              type="text"
-              name="panNumber"
-              value={user.panNumber}
-              // placeholder="PAN NUMBER"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Aadhar Number</label>
-            <input
-              type="text"
-              name="aadharNumber"
-              value={user.aadharNumber}
-              // placeholder="PAN NUMBER"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Local Address</label>
-            <input
-              type="text"
-              name="localAddress"
-              value={user.localAddress}
-              // placeholder="PAN NUMBER"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Permanent Address</label>
-            <input
-              type="text"
-              name="permanentAddress"
-              value={user.permanentAddress}
-              // placeholder="PAN NUMBER"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Bank Name</label>
-            <input
-              type="text"
-              name="bankName"
-              value={user.bankName}
-              // placeholder="PAN NUMBER"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>IFSC</label>
-            <input
-              type="text"
-              name="IFSC"
-              value={user.IFSC}
-              // placeholder="PAN NUMBER"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Account Number</label>
-            <input
-              type="text"
-              name="accountNumber"
-              value={user.accountNumber}
-              // placeholder="PAN NUMBER"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          <div>
-            <label>Essl ID</label>
-            <input
-              type="text"
-              name="esslID"
-              value={user.esslID}
-              // placeholder="PAN NUMBER"
-              onChange={handleChange}
-              //required
-            />
-          </div>
-          
-          
-          <button className="btn btn-primary" type="submit">
-            Create
-          </button>
-        
-
-        </form>
+            <div className="AdduserCheckboxes">
+              <label>Access:</label>
+              {user.access &&
+                Object.keys(user.access).length > 0 &&
+                Object.keys(user.access).map((key) => (
+                  <div className="d-flex gap-1" key={key}>
+                    <input
+                      type="checkbox"
+                      name={key}
+                      checked={user.access[key]}
+                      onChange={handleCheckboxChange}
+                    />
+                    <label>{key}</label>
+                  </div>
+                ))}
+            </div>
+            <div className="d-flex justify-content-center">
+              <button className="btn btn-primary " type="submit">
+                Create
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </>
   );

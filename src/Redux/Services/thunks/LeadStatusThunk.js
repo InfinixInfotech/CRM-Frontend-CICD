@@ -31,7 +31,7 @@ export const deleteLeadStatusThunk = createAsyncThunk(
     'leadstatus/deleteLeadStatus',
     async (id, { rejectWithValue }) => {
       try {
-        const response = await deleteLeadStatus({ id }); // Assuming you are passing the id in the body
+        const response = await deleteLeadStatus(id); // Assuming you are passing the id in the body
         if (response?.success) {
           return response; // Return the successful response data
         }
@@ -41,6 +41,7 @@ export const deleteLeadStatusThunk = createAsyncThunk(
       }
     }
   );
+
 // Update a lead status
 export const putLeadStatusThunk = createAsyncThunk(
     'leadstatus/putLeadStatus',

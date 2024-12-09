@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
 import { useDispatch, useSelector } from "react-redux";
-import { postGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
+import { deleteGroupsThunk, getAllGroupsThunk, getByIdGroupsThunk, postGroupsThunk, putGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
 
 export default function AddGroups() {
+  
   const dispatch = useDispatch();
-  const { data, loading, error } = useSelector((state) => state.adduser);
+  const { data, loading, error } = useSelector((state) => state.groups);
   useEffect(() => {
     if (data && data.data) {
       console.log("API Data:", data.data);
@@ -17,7 +18,7 @@ export default function AddGroups() {
 
   const handleDropdownChange = (event) => {
     const selectedValue = event.target.value;
-    // Navigate to the route based on the selected value
+
     if (selectedValue === "Profile") {
     } else if (selectedValue === "Setting") {
     }
@@ -461,16 +462,13 @@ export default function AddGroups() {
           Add Groups
         </h2>
         <BackButton />
-        <div className="container-fluid border border-2 border-gray mt-0 w-100 mt-3 ">
+        <div className="container-fluid border border-2 border-gray mt-0 w-100 mt-3 pb-3">
           <div style={{ paddingLeft: "24px", paddingTop: "32px" }}>
             <form className="row g-3 container-flued" onSubmit={handleSubmit}>
               {/* Dashboard */}
-              <div className="row" style={{ background: "rgb(227,227,227)" }}>
-                <div className="col-12 mb-4">
-                  <label htmlFor="groupName" className="form-label mt-2">
-                    <h4>Group Name</h4>
-                  </label>
-
+              <div className="row" style={{ background: "rgb(227,227,227)" , border:"2px solid gray"}}>
+                <div className="col-12 mb-4 mt-2">
+                 <label className="fs-5 fw-semibold">Group Name</label>
                   <input
                     style={{ border: "1px solid #A6AEBF" }}
                     type="text"
@@ -484,7 +482,7 @@ export default function AddGroups() {
                   />
                 </div>
 
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Dashboard
                   </label>
@@ -496,7 +494,7 @@ export default function AddGroups() {
                     {renderFields("Dashboard", groupData.Dashboard)}
                   </fieldset>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* Free Trial */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Free Trial
@@ -510,7 +508,7 @@ export default function AddGroups() {
                   </fieldset>
                 </div>
 
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* Contact */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Contact
@@ -523,7 +521,7 @@ export default function AddGroups() {
                     {renderFields("Contact", groupData.Contact)}
                   </fieldset>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* Mutual Fund */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Mutual Fund
@@ -536,7 +534,7 @@ export default function AddGroups() {
                     {renderFields("MutualFund", groupData.MutualFund)}
                   </fieldset>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* Leads */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Leads
@@ -550,7 +548,7 @@ export default function AddGroups() {
                   </fieldset>
                 </div>
 
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* SO */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     SO
@@ -563,7 +561,7 @@ export default function AddGroups() {
                     {renderFields("SO", groupData.SO)}
                   </fieldset>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* Compliance */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Compliance
@@ -577,7 +575,7 @@ export default function AddGroups() {
                   </fieldset>
                 </div>
 
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* Export */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Export
@@ -590,7 +588,7 @@ export default function AddGroups() {
                     {renderFields("Export", groupData.Export)}
                   </fieldset>
                 </div>
-                <div className="col-md-6 mb-2">
+                <div className="col-md-6 mb-3">
                   {/* Logs */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Logs
@@ -604,7 +602,7 @@ export default function AddGroups() {
                   </fieldset>
                 </div>
 
-                <div className="col-md-6 mb-2">
+                <div className="col-md-6 mb-3">
                   {/* Export */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     HR Extra
@@ -617,7 +615,7 @@ export default function AddGroups() {
                     {renderFields("HRExtra", groupData.HRExtra)}
                   </fieldset>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* Export */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Support Module
@@ -632,7 +630,7 @@ export default function AddGroups() {
                     {renderFields("SupportModule", groupData.SupportModule)}
                   </fieldset>
                 </div>
-                <div className="col-md-6 mb-2">
+                <div className="col-md-6 mb-3">
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     WhatsApp Module
                   </label>
@@ -646,7 +644,7 @@ export default function AddGroups() {
                     {renderFields("WhatsApp", groupData.Whatsapp)}
                   </fieldset>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* Export */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Reports
@@ -659,7 +657,7 @@ export default function AddGroups() {
                     {renderFields("Reports", groupData.Reports)}
                   </fieldset>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* Export */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Extra
@@ -673,7 +671,7 @@ export default function AddGroups() {
                   </fieldset>
                 </div>
 
-                <div className="col-md-6">
+                <div className="col-md-6 mb-3">
                   {/* Numeric Fields */}
                   <label style={{ fontWeight: "600", fontSize: "18px" }}>
                     Other Settings
@@ -683,7 +681,7 @@ export default function AddGroups() {
                     className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
                   >
                     {/* <legend className="float-none w-auto px-2">Other Settings</legend> */}
-                    <div className="mb-3">
+                    <div className="mb-3 ">
                       <label htmlFor="freeTrialDays" className="form-label">
                         Free Trial Days
                       </label>
@@ -794,12 +792,11 @@ export default function AddGroups() {
                     </div>
                   </fieldset>
                 </div>
-              </div>
-              {/* Submit Button */}
-              <div className="col-12 text-center">
-                <button type="submit" className="btn btn-primary">
+                <div className="col-12 text-center">
+                <button type="submit" className="btn btn-primary mb-3 mt-4">
                   Submit
                 </button>
+              </div>
               </div>
             </form>
           </div>

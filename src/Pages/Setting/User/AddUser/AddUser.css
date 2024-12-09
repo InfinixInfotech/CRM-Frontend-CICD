@@ -2,6 +2,10 @@
  --display-formWrappere : flex;
  --flexDirection-formWrappere : column;
  --gap-formWrappere : 1rem;
+ --marginTop-formWrapper : 11px;
+ --backGroundColor-formWrapper : rgb(227,227,227);
+ --padding-formWrapper : 5px;
+ --border-formWrapper : 2px solid gray;
  --display-form : flex;
  --flex-wrap-form : wrap;
  --gap-form : 1rem;
@@ -25,13 +29,17 @@
  --min-width-checkboxGroup-div : 200px;
  --display-AdduserCheckboxes : grid;
  --grid-template-columns-AdduserCheckboxes : repeat(3,1fr);
- --gap-AdduserCheckboxes : 1px;
+ --gap-AdduserCheckboxes : 0px;
 }
 
 .formWrapper {
   display: var(--display-formWrappere);
   flex-direction: var(--flexDirection-formWrappere);
   gap: var(--gap-formWrappere);
+    margin-top: var(--marginTop-formWrapper);
+  background-color: var(--backGroundColor-formWrapper);
+  padding: var(--padding-formWrapper);
+  border:  var(--border-formWrapper);
 }
 
 .addUser-form {
@@ -81,4 +89,8 @@
   display: var(--display-AdduserCheckboxes);
   grid-template-columns: var(--grid-template-columns-AdduserCheckboxes);
   gap: var(--gap-AdduserCheckboxes);
+}
+
+.inputField{
+  font-size: 14px;
 }

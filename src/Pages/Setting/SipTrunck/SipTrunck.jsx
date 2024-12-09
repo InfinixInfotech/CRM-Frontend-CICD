@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./SipTrunck.css";
 import BackButton from "../../../Components/Button/BackButton/BackButton";
 import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
 import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
@@ -32,7 +31,6 @@ const SipTrunk = () => {
       userName: "Dinstart_249",
       password: "Dinstart_249",
     },
-
   ]);
 
   const handleChange = (e) => {
@@ -50,23 +48,26 @@ const SipTrunk = () => {
       password: "",
     });
   };
-
-
+  // style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
         SIP Trunk
       </h2>
       <BackButton />
-      <div className="sip-trunk-container">
-        <div className="add-sip-trunk">
-          <h5 className="addLeadsinput border border-black p-2 mb-2 text-white ">
-            Add New SIP Trunk
-          </h5>
+      <div
+        className="container-fluid border border-2 border-gray mt-2 py-3"
+        style={{ padding: "18px 16px" }}
+      >
+        <div style={{ background: "rgb(227,227,227)", border: "2px solid grey" , padding:"15px" }}>
+        <div className="mb-2" >
+          <h5 className="text-dark fs-4 mb-3">Add New SIP Trunk</h5>
           <form>
-            <div className="form-row">
-              <label>Server</label>
+            <div className="mb-3">
+              <label className="form-label">Server</label>
               <select
+               style={{fontSize:"14px"}}
+                className="form-select"
                 name="server"
                 value={formData.server}
                 onChange={handleChange}
@@ -75,40 +76,48 @@ const SipTrunk = () => {
                 <option value="Other Server">Other Server</option>
               </select>
             </div>
-            <div className="form-row">
-              <label>Trunk Name</label>
+            <div className="mb-3">
+              <label className="form-label">Trunk Name</label>
               <input
+               style={{fontSize:"14px"}}
                 type="text"
+                className="form-control"
                 name="trunkName"
                 value={formData.trunkName}
                 onChange={handleChange}
                 placeholder="Trunk Name"
               />
             </div>
-            <div className="form-row">
-              <label>Trunk IP Address</label>
+            <div className="mb-3">
+              <label className="form-label">Trunk IP Address</label>
               <input
+               style={{fontSize:"14px"}}
                 type="text"
+                className="form-control"
                 name="trunkIP"
                 value={formData.trunkIP}
                 onChange={handleChange}
                 placeholder="Trunk IP Address"
               />
             </div>
-            <div className="form-row">
-              <label>User Name</label>
+            <div className="mb-3">
+              <label className="form-label">User Name</label>
               <input
+               style={{fontSize:"14px"}}
                 type="text"
+                className="form-control"
                 name="userName"
                 value={formData.userName}
                 onChange={handleChange}
                 placeholder="User Name"
               />
             </div>
-            <div className="form-row">
-              <label>Password</label>
+            <div className="mb-3">
+              <label className="form-label">Password</label>
               <input
+               style={{fontSize:"14px"}}
                 type="password"
+                className="form-control"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
@@ -116,7 +125,7 @@ const SipTrunk = () => {
               />
             </div>
             <button
-              className="btn btn-secondary"
+              className="btn btn-secondary mb-3"
               type="button"
               onClick={handleCreate}
             >
@@ -125,14 +134,17 @@ const SipTrunk = () => {
           </form>
         </div>
 
-        <div className="view-sip-trunk">
-          <h1>View SIP Trunk</h1>
-          <CopyButton />
-          <CsvButton />
-          <PdfButton />
-          <PrintButton />
-          <table>
-            <thead>
+        <div>
+          <h5 className="text-dark p-0 mb-2 fs-4">View SIP Trunk</h5>
+         <div style={{backgroundColor:"#F5F5F5" , padding:"2px 18px"}}>
+         <div className="mb-2">
+            <CopyButton />
+            <CsvButton />
+            <PdfButton />
+            <PrintButton />
+          </div>
+          <table className="table table-bordered text-center">
+            <thead className="table-dark" style={{opacity:"0.7"}}>
               <tr>
                 <th>Server</th>
                 <th>Trunk Name</th>
@@ -151,13 +163,17 @@ const SipTrunk = () => {
                   <td>{trunk.userName}</td>
                   <td>{trunk.password}</td>
                   <td>
-                    <EditButton />
-                    <DeleteButton />
+                  <div className="d-flex justify-content-center align-items-center gap-2 ">
+                        <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
+                        <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2 " />
+                      </div>
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
+         </div>
+        </div>
         </div>
       </div>
     </>

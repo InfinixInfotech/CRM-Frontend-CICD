@@ -1,11 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { deleteGroups, getAllGroups, getByIdGroups, postGroups, putGroups } from "../apis/GroupsApi";
+import { getAllUser, getByIdUser, postUser, putUser } from "../apis/UserApi";
 
-export const postGroupsThunk = createAsyncThunk(
-    'groups/postGroups',
+
+export const postUserThunk = createAsyncThunk(
+    'user/postUser',
     async(param, {rejectWithValue})=>{
         try {
-            const response = await postGroups(param);
+            const response = await postUser(param);
             return response;
         } catch (error) {
            return rejectWithValue(error);
@@ -14,11 +15,11 @@ export const postGroupsThunk = createAsyncThunk(
 );
    
 
-export const getAllGroupsThunk = createAsyncThunk(
-    'groups/getAllGroups',
+export const getAllUserThunk = createAsyncThunk(
+    'user/getAllUser',
     async(_, {rejectWithValue})=>{
         try {
-            const response = await getAllGroups();
+            const response = await getAllUser();
             return response;
         } catch (error) {
            return rejectWithValue(error);
@@ -26,28 +27,13 @@ export const getAllGroupsThunk = createAsyncThunk(
     }
 );
 
-// Delete a lead status
-export const deleteGroupsThunk = createAsyncThunk(
-    'groups/deleteGroups',
-    async (id, { rejectWithValue }) => {
-      try {
-        const response = await deleteGroups(id); // Assuming you are passing the id in the body
-        if (response?.success) {
-          return response; // Return the successful response data
-        }
-        return rejectWithValue(response?.message || 'Failed to delete lead status');
-      } catch (error) {
-        return rejectWithValue(error.message || 'An error occurred while deleting lead status');
-      }
-    }
-  );
 
 // Update a lead status
-export const putGroupsThunk = createAsyncThunk(
-    'groups/putGroups',
+export const putUserThunk = createAsyncThunk(
+    'user/putUser',
     async(param, {rejectWithValue}) => {
         try {
-            const response = await putGroups(param);
+            const response = await putUser(param);
             if (response?.success) {
                 return response;
             }
@@ -59,11 +45,11 @@ export const putGroupsThunk = createAsyncThunk(
 );
 
 // Get lead status by ID
-export const getByIdGroupsThunk = createAsyncThunk(
-    'groups/getByIdGroups',
+export const getByIdUserThunk = createAsyncThunk(
+    'user/getByIdUser',
     async(param, {rejectWithValue}) => {
         try {
-            const response = await getByIdGroups(param);
+            const response = await getByIdUser(param);
             if (response?.success) {
                 return response.data;
             }

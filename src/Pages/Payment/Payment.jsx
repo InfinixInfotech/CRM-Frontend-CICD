@@ -242,44 +242,13 @@ const Payment = () => {
               <div
                 className="popup-overlay"
                 onClick={handleClosePopup}
-                style={{
-                  position: "fixed",
-                  top: 0,
-                  left: 0,
-                  width: "100vw",
-                  height: "100vh",
-                  backgroundColor: "rgba(0, 0, 0, 0.5)",
-                  zIndex: 999,
-                }}
               ></div>
               <div
                 className="popup-content"
-                style={{
-                  position: "fixed",
-                  top: "50%",
-                  left: "50%",
-                  transform: "translate(-50%, -50%)",
-                  width: "20%",
-                  maxWidth: "1000px",
-                  backgroundColor: "white",
-                  borderRadius: "4px",
-                  boxShadow: "0 4px 15px rgba(0, 0, 0, 0.2)",
-                  zIndex: 1000,
-                  padding: "16px",
-                }}
               >
                 <button
                   className="popup-close"
                   onClick={handleClosePopup}
-                  style={{
-                    position: "absolute",
-                    top: "10px",
-                    right: "10px",
-                    background: "transparent",
-                    border: "none",
-                    fontSize: "10px",
-                    cursor: "pointer",
-                  }}
                 >
                   ✖
                 </button>
@@ -293,7 +262,6 @@ const Payment = () => {
 
           <div
             className="paymentTable container-fluid mt-2"
-            style={{ fontSize: "14px" }}
           >
             <table className="table table-bordered table-striped text-center">
               <thead className="thead-dark">
@@ -343,7 +311,7 @@ const Payment = () => {
                       <div className="d-flex flex-row gap-2">
                         <StatusButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
                         <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
-                        <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2 " />
+                        <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2" />
                       </div>
                     </td>
                   </tr>
@@ -374,7 +342,7 @@ const Payment = () => {
                 </ul>
               </nav>
             </div>
-            {/* Summary */}
+
             <div className=" mb-0 ">
               <PrintButton tableId="payment-table1" />
               <PdfButton tableId="payment-table1" />
@@ -383,7 +351,7 @@ const Payment = () => {
             </div>
             <div className="mt-2">
               <table className="table table-bordered" id="payment-table1">
-                <thead className="tableHeader table-dark" style={{ opacity: 0.7 }}>
+                <thead className="tableHeader table-dark">
                   <tr>
                     <th>Date Range</th>
                     <th>Branch</th>
@@ -430,7 +398,7 @@ const Payment = () => {
             </div>
             <div className="mt-2">
               <table className="table table-bordered" id="payment-table2">
-                <thead className="table-dark" style={{ opacity: 0.7 }}>
+                <thead className="tableHeader table-dark">
                   <tr>
                     <th>Date Range</th>
                     <th>Total Number Of Payment</th>
@@ -477,7 +445,7 @@ const Payment = () => {
             </div>
             <div className="mt-2">
               <table className="table table-bordered" id="payment-table3">
-                <thead className="table-dark" style={{ opacity: 0.7 }}>
+                <thead className="tableHeader table-dark">
                   <tr>
                     <th>Branch Name</th>
                     <th>Target</th>

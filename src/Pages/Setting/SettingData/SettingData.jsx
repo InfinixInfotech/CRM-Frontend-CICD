@@ -28,14 +28,15 @@ const SettingData = () => {
         Settings
       </h2>
       <BackButton />
+      <div  className="container-fluid border border-2 border-gray mt-2 py-3"
+        style={{ padding: "18px 16px" }}>
       <div
         className="container"
         style={{
           maxWidth: "100%",
-          margin: "1rem auto",
           padding: "20px",
-          backgroundColor: "#f4f4f4",
-          border: "1px solid #ddd",
+          background: "rgb(227,227,227)",
+          border: "2px solid grey" ,
           borderRadius: "5px",
           fontFamily: "Arial, sans-serif",
         }}
@@ -46,6 +47,7 @@ const SettingData = () => {
               Title
             </label>
             <input
+              style={{fontSize:"14px"}}
               type="text"
               id="title"
               name="title"
@@ -60,6 +62,7 @@ const SettingData = () => {
               Name
             </label>
             <input
+            style={{fontSize:"14px"}}
               type="text"
               id="name"
               name="name"
@@ -74,6 +77,7 @@ const SettingData = () => {
               Notifications
             </label>
             <input
+            style={{fontSize:"14px"}}
               type="text"
               id="notifications"
               name="notifications"
@@ -88,6 +92,7 @@ const SettingData = () => {
               Live Updates
             </label>
             <input
+            style={{fontSize:"14px"}}
               type="text"
               id="liveUpdates"
               name="liveUpdates"
@@ -100,21 +105,21 @@ const SettingData = () => {
           <div className="d-flex justify-content-between mt-4">
             <button
               type="button"
-              className="btn btn-primary"
-              style={{ padding: "10px 20px" }}
+              className="btn btn-primary px-2 py-2"
+            
             >
               CRM Payment
             </button>
             <button
               type="button"
-              className="btn btn-success"
-              style={{ padding: "10px 20px" }}
+              className="btn btn-success px-2 py-1"
               onClick={handleUpdate}
             >
               Update
             </button>
           </div>
         </form>
+      </div>
       </div>
     </>
   );
