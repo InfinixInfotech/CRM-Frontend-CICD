@@ -1,0 +1,32 @@
+name: React App CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - harsh-feature
+  pull_request:
+    branches:
+      - harsh-feature
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Node.js environment
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '22'  # Specify the Node.js version you are using
+
+      # Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+     
+      # Build the React app using Vite
+      - name: Build React app
+        run: npm run build
