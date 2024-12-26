@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
-import { DeleteButton } from "../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";
 import BackButton from "../../../Components/Button/BackButton/BackButton";
 import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
 import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
@@ -14,6 +14,8 @@ import {
   postQualificationThunk,
   putQualificationThunk,
 } from "../../../Redux/Services/thunks/QualificationThunk";
+import { HashLoader } from "react-spinners";
+import { Alert } from "react-bootstrap";
 
 const Qualification = () => {
   const [qualification, setQualification] = useState([]);
@@ -31,11 +33,25 @@ const Qualification = () => {
 
   useEffect(() => {
     if (data?.data) {
-      setQualification(data.data);
+      const timer = setTimeout(() => {
+        setQualification(data.data);
+      }, 500);
+      return () => clearTimeout(timer);
     }
   }, [data]);
 
-  const handleAddQualification = () => {
+  useEffect(() => {
+    if (msg) {
+      const alertTimer = setTimeout(() => {
+        setMsg("");
+      }, 3000); // Alert will disappear after 3 seconds
+      return () => clearTimeout(alertTimer);
+    }
+  }, [msg]);
+
+  const handleAddQualification = (e) => {
+    e.preventDefault();
+    
     if (
       newQualification.trim() !== "" &&
       !qualification.includes(newQualification.trim())
@@ -45,8 +61,13 @@ const Qualification = () => {
       };
 
       dispatch(postQualificationThunk(newAddQualification)).then((response) => {
+        // setQualification([...qualification, newQualification.trim()]);
         setMsg(response?.payload?.message || "added successfully");
-        setQualification([...qualification, newQualification.trim()]);
+        setQualification((prevState) => [
+          ...prevState,
+          { qualificationName: newQualification, id: response.id },
+        ]);
+
         setNewQualification("");
       });
     }
@@ -61,21 +82,24 @@ const Qualification = () => {
         dispatch(getAllQualificationThunk());
         setEditQualification(null);
         setEditValue("");
+        setMsg(response.message);
+
       });
     }
   };
 
   const handleDeleteQualification = (id) => {
-    if (window.confirm("Are you sure you want to delete Qualification?")) {
-      dispatch(deleteQualificationThunk(id))
-        .unwrap()
-        .then((response) => {
-          setMsg(response.message || "deleted successfully");
-        })
-        .catch((error) => {
-          setMsg(error || "Failed to delete status");
-        });
-    }
+    dispatch(deleteQualificationThunk(id))
+      .unwrap()
+      .then((response) => {
+        setMsg(response.message);
+        setQualification((prevStatuses) =>
+          prevStatuses.filter((status) => status.id !== id)
+        );
+      })
+      .catch((error) => {
+        setMsg(error || "Failed to delete status");
+      });
   };
 
   const fetchQualificationById = (id) => {
@@ -106,19 +130,15 @@ const Qualification = () => {
           <div className="lead-status-container mt-2">
             <div className="addLeadscontainer add-status p-2 mb-2">
               <h4 className="p-0 mb-3 text-dark ">Add New Qualification</h4>
-              <input
-                type="text"
-                value={newQualification}
-                onChange={(e) => setNewQualification(e.target.value)}
-                placeholder="Qualification Name"
-              />
-              <button
-                onClick={handleAddQualification}
-                className="btn btn-primary"
-              >
-                Create
-              </button>
-              <p className="mt-3 text-success">{msg}</p>
+              <form onSubmit={handleAddQualification}>
+                <input
+                  type="text"
+                  value={newQualification}
+                  onChange={(e) => setNewQualification(e.target.value)}
+                  placeholder="Qualification Name"
+                />
+                <button type="submit" className="btn btn-primary">Create</button>
+              </form>
             </div>
 
             <div className="bg-white p-4 rounded border border-4 border-gray">
@@ -128,6 +148,12 @@ const Qualification = () => {
                 <PdfButton />
                 <CsvButton />
                 <CopyButton />
+
+                {msg && (
+                  <Alert variant="info" className="mt-2 text-center">
+                    {msg}
+                  </Alert>
+                )}
               </div>
               <table
                 id="table-data"
@@ -141,11 +167,30 @@ const Qualification = () => {
                 </thead>
                 <tbody>
                   {loading ? (
-                    <tr>
-                      <td colSpan="2" className="text-center">
-                        Loading...
-                      </td>
-                    </tr>
+                    <div
+                      style={{
+                        position: "fixed", // Fixed to ensure it stays over everything
+                        top: 0,
+                        left: 0,
+                        width: "100vw", // Full width
+                        height: "100vh", // Full height
+                        backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
+                        zIndex: 9998, // Make sure it's above most elements
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "50%", // Center vertically
+                          left: "50%", // Center horizontally
+                          transform: "translate(-50%, -50%)", // Correct alignment
+                          zIndex: 9999, // Ensure the loader is above the overlay
+                          backgroundColor: "transparent",
+                        }}
+                      >
+                        <HashLoader color="#0060f1" size={50} />
+                      </div>
+                    </div>
                   ) : error ? (
                     <tr>
                       <td colSpan="2" className="text-center text-danger">
@@ -153,17 +198,6 @@ const Qualification = () => {
                       </td>
                     </tr>
                   ) : qualification.length > 0 ? (
-                    // qualification.map((QualificationObj, index) => (
-                    //   <tr key={index}>
-                    //     <td>{QualificationObj.qualificationName}</td>{" "}
-                    //     <td className="text-center">
-                    //       <div className="d-flex justify-content-center align-items-center gap-2">
-                    //         <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
-                    //         <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2 " />
-                    //       </div>
-                    //     </td>
-                    //   </tr>
-                    // ))
                     qualification.map((QualificationObj) => (
                       <tr key={QualificationObj.id}>
                         <td>
@@ -198,7 +232,7 @@ const Qualification = () => {
                             )}
                             <DeleteButton
                               className="btn btn-danger btn-sm mr-1  py-0 px-2"
-                              onClick={() =>
+                              onDelete={() =>
                                 handleDeleteQualification(QualificationObj.id)
                               }
                             />

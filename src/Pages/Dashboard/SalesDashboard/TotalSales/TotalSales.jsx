@@ -80,7 +80,7 @@ const SalesOrderReport = () => {
 
  
   return (
-    <div className="mt-5">
+    <div >
       {/* Print-Specific CSS */}
       <style>
         {`

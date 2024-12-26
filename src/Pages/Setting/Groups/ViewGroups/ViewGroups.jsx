@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DeleteButton } from "../../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../../../Components/Button/DeleteButton/DeleteButton";
 import { EditButton } from "../../../../Components/Button/EditButton/EditButton";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
@@ -8,120 +8,178 @@ import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButto
 import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
 
-import { putGroupsThunk , deleteGroupsThunk, getAllGroupsThunk, getByIdGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
+import {
+  putGroupsThunk,
+  deleteGroupsThunk,
+  getAllGroupsThunk,
+  getByIdGroupsThunk,
+} from "../../../../Redux/Services/thunks/GroupsThunk";
 import { useDispatch, useSelector } from "react-redux";
+import { HashLoader } from "react-spinners";
+import { Alert } from "react-bootstrap";
 
 const ViewGroups = () => {
-  const [groupsData, setGroupsData] = useState([
-    { groupName: "All Rights", userCount: 4, leadLimit: 0, fetchLimit: 5 },
-    { groupName: "User Group", userCount: 0, leadLimit: 0, fetchLimit: 0 },
-    { groupName: "SBA", userCount: 50, leadLimit: 0, fetchLimit: 0 },
-    { groupName: "BA", userCount: 157, leadLimit: 0, fetchLimit: 0 },
-    { groupName: "TL", userCount: 22, leadLimit: 0, fetchLimit: 0 },
-    { groupName: "Manager", userCount: 14, leadLimit: 0, fetchLimit: 0 },
-    { groupName: "ARM", userCount: 8, leadLimit: 0, fetchLimit: 0 },
-    { groupName: "Operation Team", userCount: 6, leadLimit: 0, fetchLimit: 0 },
-    { groupName: "HR", userCount: 7, leadLimit: 0, fetchLimit: 0 },
-    { groupName: "kyc", userCount: 1, leadLimit: 0, fetchLimit: 0 },
-  ]);
+  const [groupsData, setGroupsData] = useState([]);
   const [editgroups, setEditGroups] = useState(null);
   const [editValue, setEditValue] = useState("");
-  const [msg, setMsg] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [groupsPerPage] = useState(10); 
+  const [msg,setMsg]=useState("")
   const dispatch = useDispatch();
-  
-  
+
   const { data, loading, error } = useSelector((state) => state.groups);
 
   useEffect(() => {
     dispatch(getAllGroupsThunk());
   }, [dispatch]);
-
+ 
   useEffect(() => {
-    console.log("helloooooooo "+data.data);
-    
     if (data?.data) {
-      setGroupsData(data.data);
+      const timer = setTimeout(() => {
+        setGroupsData(data.data);
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [data]);
 
+
+  useEffect(() => {
+    if (msg) {
+      const alertTimer = setTimeout(() => {
+        setMsg("");
+      }, 3000); // Alert will disappear after 3 seconds
+      return () => clearTimeout(alertTimer);
+    }
+  }, [msg]);
+
+
   const handleEditGroups = (id) => {
     if (editValue.trim() !== "") {
-      dispatch(putLeadStatusThunk({ id, status: editValue })).then(
-        (response) => {
-          setMsg(response?.payload?.message || "Status updated successfully");
-          dispatch(getAllLeadStatusThunk());
-          setEditStatus(null);
-          setEditValue("");
-        }
-      );
+      dispatch(putGroupsThunk({ id, status: editValue })).then((response) => {
+        setMsg(response?.payload?.message || "updated successfully");
+        dispatch(getAllGroupsThunk());
+        setEditStatus(null);
+        setEditValue("");
+      });
     }
   };
 
   const handleDeleteGroups = (id) => {
-    if (window.confirm("Are you sure you want to delete this status?")) {
-      dispatch(deleteLeadStatusThunk(id))
-        .unwrap()
-        .then((response) => {
-          setMsg(response.message || "Status deleted successfully");
-        })
-        .catch((error) => {
-          setMsg(error || "Failed to delete status");
-        });
-    }
+    setGroupsData((prevGroups) =>
+      prevGroups.filter((group) => group.id !== id)
+    );
+
+    dispatch(deleteGroupsThunk(id))
+      .unwrap()
+      .then((response) => {
+        setMsg(response.message || "Group deleted successfully");
+
+      })
+      .catch((error) => {
+        // Handle error in case of failure
+        setMsg(error || "Failed to delete group");
+
+      });
   };
 
   const fetchGroupsById = (id) => {
-    dispatch(getByIdLeadStatusThunk(id)).then((response) => {
+    dispatch(getByIdGroupsThunk(id)).then((response) => {
       const status = response.payload?.data;
       setEditStatus(status?.id);
       setEditValue(status?.status);
     });
   };
 
+  // Logic for pagination
+  const indexOfLastGroup = currentPage * groupsPerPage;
+  const indexOfFirstGroup = indexOfLastGroup - groupsPerPage;
+  const currentGroups = groupsData.slice(indexOfFirstGroup, indexOfLastGroup);
+
+  // Change page
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const totalPages = Math.ceil(groupsData.length / groupsPerPage);
+
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
-        View Groups
-      </h2>
-      <BackButton />
-      <div  className="container-fluid border border-2 border-gray mt-2 ">
-        <div style={{ background: "rgb(227,227,227)" , margin:"15px 5px 15px 5px" , paddingBottom:"15px" , border:"2px solid gray"}} >
-          <div className="container mt-1" >
-            <div className="mb-2">
-              <PrintButton tableId={"table-data"}/>
-              <PdfButton tableId={"table-data"}/>
-              <CsvButton tableId={"table-data"}/>
-              <CopyButton tableId={"table-data"}/>
-            </div>
-            <table
-              id="table-data"
-              className="table table-bordered table-striped"
+    <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2" style={{ position: "relative" }}>
+      View Groups
+    </h2>
+    <BackButton />
+    <div className="container-fluid border border-2 border-gray mt-2">
+      <div
+        style={{
+          background: "rgb(227,227,227)",
+          margin: "15px 5px 15px 5px",
+          paddingBottom: "15px",
+          border: "2px solid gray",
+        }}
+      >
+        <div className="px-2 mt-1">
+          <div className="mb-2">
+            <PrintButton tableId={"table-data"} />
+            <PdfButton tableId={"table-data"} />
+            <CsvButton tableId={"table-data"} />
+            <CopyButton tableId={"table-data"} />
+  
+            {msg && (
+              <Alert variant="info" className="mt-2 text-center">
+                {msg}
+              </Alert>
+            )}
+          </div>
+  
+          {/* Loader and Background Overlay */}
+          {loading && (
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                backgroundColor: "rgba(104, 102, 102, 0.5)",
+                zIndex: 9998,
+              }}
             >
-              <thead>
+              <div
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 9999,
+                }}
+              >
+                <HashLoader color="#0060f1" size={50} />
+              </div>
+            </div>
+          )}
+  
+          <table id="table-data" className="table table-bordered table-striped w-100">
+            <thead>
+              <tr>
+                <th className="text-center">Group Name</th>
+                <th className="text-center">Lead Limit</th>
+                <th className="text-center">Fetch Limit</th>
+                <th className="text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loading ? (
                 <tr>
-                  <th className="text-center">Group Name</th>
-                  <th className="text-center">Lead Limit</th>
-                  <th className="text-center">Fetch Limit</th>
-                  <th className="text-center">Action</th>
+                  <td colSpan="6" className="text-center">
+                    {/* Empty row for loader */}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {
-                // groupsData.map((group, index) => (
-                //   <tr key={index}>
-                //     <td>{group.groupName}</td>
-                //     <td>{group.userCount}</td>
-                //     <td>{group.leadLimit}</td>
-                //     <td>{group.fetchLimit}</td>
-                //     <td className="text-center">
-                //       <div className="d-flex justify-content-center align-items-center gap-2">
-                //         <EditButton className="px-2 py-0"/>
-                //         <DeleteButton className="px-2 py-0" />
-                //       </div>
-                //     </td>
-                //   </tr>
-                // ))
-                groupsData.map((groupObj) => (
+              ) : error ? (
+                <tr>
+                  <td colSpan="4" className="text-center text-danger">
+                    Error: {error}
+                  </td>
+                </tr>
+              ) : currentGroups.length > 0 ? (
+                currentGroups.map((groupObj) => (
                   <tr key={groupObj.id}>
                     <td>
                       {editgroups === groupObj.id ? (
@@ -138,7 +196,7 @@ const ViewGroups = () => {
                       {editgroups === groupObj.id ? (
                         <input
                           type="number"
-                          value={editValue}  // You can assign specific value for each field
+                          value={editValue}
                           onChange={(e) => setEditValue(e.target.value)}
                         />
                       ) : (
@@ -149,7 +207,7 @@ const ViewGroups = () => {
                       {editgroups === groupObj.id ? (
                         <input
                           type="number"
-                          value={editValue}  // You can assign specific value for each field
+                          value={editValue}
                           onChange={(e) => setEditValue(e.target.value)}
                         />
                       ) : (
@@ -168,24 +226,48 @@ const ViewGroups = () => {
                         ) : (
                           <EditButton
                             className="btn btn-primary btn-sm mr-1 py-0 px-2"
-                            onClick={() => setEditGroups(groupObj.id)}
+                            onClick={() => fetchGroupsById(groupObj.id)}
                           />
                         )}
                         <DeleteButton
                           className="btn btn-danger btn-sm mr-1 py-0 px-2"
-                          onClick={() => handleDeleteGroups(groupObj.id)}
+                          onDelete={() => handleDeleteGroups(groupObj.id)}
                         />
                       </div>
                     </td>
                   </tr>
                 ))
-                }
-              </tbody>
-            </table>
+              ) : (
+                <tr>
+                  <td colSpan="4">No data available in table</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+  
+          {/* Pagination Controls */}
+          <div className="d-flex justify-content-center mt-3">
+            <ul className="pagination">
+              {Array.from({ length: totalPages }, (_, index) => (
+                <li
+                  key={index + 1}
+                  className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
+                >
+                  <button
+                    className="page-link"
+                    onClick={() => paginate(index + 1)}
+                  >
+                    {index + 1}
+                  </button>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </div>
-    </>
+    </div>
+  </>
+  
   );
 };
 

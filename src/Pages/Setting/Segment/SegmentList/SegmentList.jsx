@@ -5,7 +5,7 @@ import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintB
 import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
-import { DeleteButton } from "../../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../../../Components/Button/DeleteButton/DeleteButton";
 import { EditButton } from "../../../../Components/Button/EditButton/EditButton";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -15,6 +15,7 @@ import {
   postSegmentListThunk,
   putSegmentListThunk,
 } from "../../../../Redux/Services/thunks/SegmentListThunk";
+import { HashLoader } from "react-spinners";
 
 const SegmentList = () => {
   const [formData, setFormData] = useState({
@@ -39,7 +40,10 @@ const SegmentList = () => {
 
   useEffect(() => {
     if (data?.data) {
-      setSegments(data.data);
+      const timer = setTimeout(() => {
+        setSegments(data.data);
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [data]);
 
@@ -48,8 +52,9 @@ const SegmentList = () => {
     setFormData({ ...formData, [name]: type === "checkbox" ? checked : value });
   };
 
-  const handleCreate = () => {
-    setFormData({     
+  const handleCreate = (e) => {
+    e.preventDefault();
+    setFormData({
       segmentName: "",
       tradeSegmentName: "",
       segmentType: "Equity",
@@ -57,8 +62,9 @@ const SegmentList = () => {
       highRisk: true,
       status: false,
     });
-    console.log(formData)
+    setFormData(formData);
     dispatch(postSegmentListThunk(formData));
+    setSegments(data.data);
   };
 
   const handleEditSegment = (id) => {
@@ -75,16 +81,17 @@ const SegmentList = () => {
   };
 
   const handleDeleteSegment = (id) => {
-    if (window.confirm("Are you sure you want to delete this segment Name?")) {
-      dispatch(deleteSegmentListThunk(id))
-        .unwrap()
-        .then((response) => {
-          setMsg(response.message || "Segment deleted successfully");
-        })
-        .catch((error) => {
-          setMsg(error || "Failed to delete segment");
-        });
-    }
+    dispatch(deleteSegmentListThunk(id))
+      .unwrap()
+      .then((response) => {
+        setMsg(response.message || "Segment deleted successfully");
+        setSegments((prevStatuses) =>
+          prevStatuses.filter((status) => status.id !== id)
+        );
+      })
+      .catch((error) => {
+        setMsg(error || "Failed to delete segment");
+      });
   };
 
   const fetchSegmentById = (id) => {
@@ -115,7 +122,7 @@ const SegmentList = () => {
         >
           <div className="mb-4 p-3 border rounded">
             <h4 className="mb-3">Add New Segment</h4>
-            <form>
+            <form onSubmit={handleCreate}>
               <div className="mb-3">
                 <label className="form-label">Segment Name</label>
                 <input
@@ -171,14 +178,14 @@ const SegmentList = () => {
                 </label>
               </div>
               <button
-                type="button"
+                type="submit"
                 className="btn btn-primary"
-                onClick={handleCreate}
               >
                 Create
               </button>
-              <p className="mt-3">{msg}</p>
+              
             </form>
+            <p className="mt-3">{msg}</p>
           </div>
 
           <h4 className="mb-2 ps-4">View Segments</h4>
@@ -201,11 +208,30 @@ const SegmentList = () => {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="5" className="text-center">
-                      Loading...
-                    </td>
-                  </tr>
+                  <div
+                    style={{
+                      position: "fixed", // Fixed to ensure it stays over everything
+                      top: 0,
+                      left: 0,
+                      width: "100vw", // Full width
+                      height: "100vh", // Full height
+                      backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
+                      zIndex: 9998, // Make sure it's above most elements
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%", // Center vertically
+                        left: "50%", // Center horizontally
+                        transform: "translate(-50%, -50%)", // Correct alignment
+                        zIndex: 9999, // Ensure the loader is above the overlay
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <HashLoader color="#0060f1" size={50} />
+                    </div>
+                  </div>
                 ) : error ? (
                   <tr>
                     <td colSpan="5" className="text-center text-danger">
@@ -243,7 +269,7 @@ const SegmentList = () => {
                           )}
                           <DeleteButton
                             className="btn btn-danger btn-sm mr-1 py-0 px-2"
-                            onClick={() => handleDeleteSegment(segmentObj.id)}
+                            onDelete={() => handleDeleteSegment(segmentObj.id)}
                           />
                         </div>
                       </td>

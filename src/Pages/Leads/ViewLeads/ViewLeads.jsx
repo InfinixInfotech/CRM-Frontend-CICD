@@ -1,140 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ViewLeads.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { DeleteButton } from "../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";
 import { StatusButton } from "../../../Components/Button/StatusButton/StatusButton";
 import { SendButton } from "../../../Components/Button/SendButton/SendButton";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
-import { PRButton } from "../../../Components/Button/PRButton/PRButton";
 import { DisposeButton } from "../../../Components/Button/DisposeButton/DisposeButton";
 import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
 import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
+import ConditionalPrSoButton from "../../../Components/Button/ConditionalPrSoButton/ConditionalPrSoButton";
+import { useDispatch, useSelector } from "react-redux";
+
+import { HashLoader } from "react-spinners";
+import { fetchAllUploadBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
+import { getByIdUploadBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 
 const ViewLeads = () => {
-  const [leads, setLeads] = useState([
-    {
-      id: 218474,
-      clientName: "Client 1",
-      mobile: "8800296182",
-      assignedTo: "Admin",
-      leadSource: "Fresh Pool",
-      segment: null,
-      freeTrial: null,
-      followUp: null,
-      description: "Sample description",
-      status: "Unread",
-    },
-    {
-      id: 414666,
-      clientName: "Azad",
-      mobile: "9711879103",
-      assignedTo: "Admin",
-      leadSource: "Fresh Pool",
-      segment: null,
-      freeTrial: null,
-      followUp: null,
-      description: "Sample description",
-      status: "Unread",
-    },
-    {
-      id: 414666,
-      clientName: "Azad",
-      mobile: "9711879103",
-      assignedTo: "Admin",
-      leadSource: "Fresh Pool",
-      segment: null,
-      freeTrial: null,
-      followUp: null,
-      description: "Sample description",
-      status: "Unread",
-    },
-    {
-      id: 414666,
-      clientName: "Azad",
-      mobile: "9711879103",
-      assignedTo: "Admin",
-      leadSource: "Fresh Pool",
-      segment: null,
-      freeTrial: null,
-      followUp: null,
-      description: "Sample description",
-      status: "Unread",
-    },
-    {
-      id: 414666,
-      clientName: "Azad",
-      mobile: "9711879103",
-      assignedTo: "Admin",
-      leadSource: "Fresh Pool",
-      segment: null,
-      freeTrial: null,
-      followUp: null,
-      description: "Sample description",
-      status: "Unread",
-    },
-    {
-      id: 414666,
-      clientName: "Azad",
-      mobile: "9711879103",
-      assignedTo: "Admin",
-      leadSource: "Fresh Pool",
-      segment: null,
-      freeTrial: null,
-      followUp: null,
-      description: "Sample description",
-      status: "Unread",
-    },
-    {
-      id: 414666,
-      clientName: "Azad",
-      mobile: "9711879103",
-      assignedTo: "Admin",
-      leadSource: "Fresh Pool",
-      segment: null,
-      freeTrial: null,
-      followUp: null,
-      description: "Sample description",
-      status: "Unread",
-    },
-    {
-      id: 414666,
-      clientName: "Azad",
-      mobile: "9711879103",
-      assignedTo: "Admin",
-      leadSource: "Fresh Pool",
-      segment: null,
-      freeTrial: null,
-      followUp: null,
-      description: "Sample description",
-      status: "Unread",
-    },
-    {
-      id: 414666,
-      clientName: "Azad",
-      mobile: "9711879103",
-      assignedTo: "Admin",
-      leadSource: "Fresh Pool",
-      segment: null,
-      freeTrial: null,
-      followUp: null,
-      description: "Sample description",
-      status: "Unread",
-    },
-    {
-      id: 414666,
-      clientName: "Azad",
-      mobile: "9711879103",
-      assignedTo: "Admin",
-      leadSource: "Fresh Pool",
-      segment: null,
-      freeTrial: null,
-      followUp: null,
-      description: "Sample description",
-      status: "Unread",
-    },
-  ]);
+  const isPrGenerated = 0;
+  const [editAddLead, setEditAddLead] = useState(null);
+  const [editValue, setEditValue] = useState("");
+  const [leads, setLeads] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+
+  const requestData = {
+    EmployeeCode: "INFSASHANT1007",
+    CampaignName: "INFDEC232024",
+  };
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.uploadbulklead);
+
+  const handleFetchLeadButton = () => {
+    console.log("Fetching leads with requestData:", requestData);
+    dispatch(fetchAllUploadBulkLeadThunk(requestData));
+    // setIsLoading(true);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 3000);
+  };
+
+  useEffect(() => {
+    dispatch(getByIdUploadBulkLeadThunk(requestData));
+  }, [dispatch]);
+
+  useEffect(() => {
+    console.log("data--------------------------------"+data);
+    if (data) {
+      const timer = setTimeout(() => {
+        setLeads(data);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [data]);
 
   return (
     <>
@@ -175,11 +94,23 @@ const ViewLeads = () => {
                 ))}
               </div>
             </div>
-
-            <PrintButton tableId="leads-table" />
-            <PdfButton tableId="leads-table" />
-            <CsvButton tableId="leads-table" />
-            <CopyButton tableId="leads-table" />
+            <div className="d-flex align-items-center justify-content-between">
+              <div>
+                <PrintButton tableId="leads-table" />
+                <PdfButton tableId="leads-table" />
+                <CsvButton tableId="leads-table" />
+                <CopyButton tableId="leads-table" />
+              </div>
+              <div>
+                <button
+                  onClick={handleFetchLeadButton}
+                  className="btn btn-secondary px-2 py-0 rounded-0 text-white "
+                  disabled={isLoading} // Disable button while loading
+                >
+                  Fetch Lead
+                </button>
+              </div>
+            </div>
 
             <table
               className="ViewLeadsTableFont table table-bordered table-hover mt-2"
@@ -203,66 +134,191 @@ const ViewLeads = () => {
               </thead>
 
               <tbody>
-                {leads.map((lead, index) => (
-                  <tr key={index}>
-                    <td>
-                      <input type="checkbox" />
-                    </td>
-                    <td>{lead.clientName}</td>
-                    <td>
-                      {lead.mobile}
-                      <br />
-                    </td>
-                    <td>{lead.assignedTo}</td>
-                    <td>{lead.leadSource}</td>
-                    <td>
-                      <button
-                        className="viewLeadButton btn btn-sm px-2 py-0"
-                        onClick={() => alert("Add Segment Clicked")}
-                      >
-                        Add Segment
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="viewLeadButton btn btn-sm px-2 py-0"
-                        onClick={() => alert("Add Free Trial Clicked")}
-                      >
-                        Add FT
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="viewLeadButton btn btn-sm px-2 py-0"
-                        onClick={() => alert("Add Follow Up Clicked")}
-                      >
-                        Add New
-                      </button>
-                    </td>
-                    <td>
-                      <button
-                        className="btn btn-sm btn-link"
-                        onClick={() =>
-                          alert(`Description: ${lead.description}`)
-                        }
-                      >
-                        View
-                      </button>
-                    </td>
-                    <td>
-                      <div className="btn-group d-grid gap-1 d-sm-flex">
-                        <StatusButton />
-                        <EditButton />
-                        <DeleteButton />
-                        <DisposeButton />
-                        <PRButton />
-                        <SendButton />
-                      </div>
+                {loading ? (
+                  <div
+                    style={{
+                      position: "fixed", // Fixed to ensure it stays over everything
+                      top: 0,
+                      left: 0,
+                      width: "100vw", // Full width
+                      height: "100vh", // Full height
+                      backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
+                      zIndex: 9998, // Make sure it's above most elements
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%", // Center vertically
+                        left: "50%", // Center horizontally
+                        transform: "translate(-50%, -50%)", // Correct alignment
+                        zIndex: 9999, // Ensure the loader is above the overlay
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <HashLoader color="#0060f1" size={50} />
+                    </div>
+                  </div>
+                ) : error ? (
+                  <tr>
+                    <td colSpan="10" className="text-center text-danger">
+                      Error: {error}
                     </td>
                   </tr>
-                ))}
+                ) : leads.length > 0 ? (
+                  leads.map((leadObj) => (
+                    <tr key={leadObj}>
+                      <td>
+                        <input type="checkbox" />
+                      </td>
+                      <td>
+                        {editAddLead === leadObj.id ? (
+                          <input
+                            type="text"
+                            value={editValue.clientName || ""}
+                            onChange={(e) =>
+                              setEditValue({
+                                ...editValue,
+                                clientName: e.target.value,
+                              })
+                            }
+                          />
+                        ) : (
+                          leadObj.lead.clientName || "N/A"
+                        )}
+                      </td>
+                      <td>
+                        {editAddLead === leadObj.id ? (
+                          <input
+                            type="text"
+                            value={editValue.mobile || ""}
+                            onChange={(e) =>
+                              setEditValue({
+                                ...editValue,
+                                mobile: e.target.value,
+                              })
+                            }
+                          />
+                        ) : (
+                          leadObj.lead.mobile || "N/A"
+                        )}
+                      </td>
+                      <td>
+                        {editAddLead === leadObj.id ? (
+                          <input
+                            type="text"
+                            value={editValue.assignedTo || ""}
+                            onChange={(e) =>
+                              setEditValue({
+                                ...editValue,
+                                assignedTo: e.target.value,
+                              })
+                            }
+                          />
+                        ) : (
+                          leadObj.lead.assignedTo || "N/A"
+                        )}
+                      </td>
+                      <td>
+                        {editAddLead === leadObj.id ? (
+                          <input
+                            type="text"
+                            value={editValue.leadSource || ""}
+                            onChange={(e) =>
+                              setEditValue({
+                                ...editValue,
+                                leadSource: e.target.value,
+                              })
+                            }
+                          />
+                        ) : (
+                          leadObj.lead.leadSource || "N/A"
+                        )}
+                      </td>
+                      <td>
+                        {editAddLead === leadObj.id ? (
+                          <button
+                            className="btn btn-success btn-sm"
+                            onClick={() => handleSaveLead(leadObj.id)}
+                          >
+                            Save
+                          </button>
+                        ) : (
+                          <button
+                            className="viewLeadButton btn btn-sm px-2 py-0"
+                            onClick={() => alert("Add Segment Clicked")}
+                          >
+                            Add Segment
+                          </button>
+                        )}
+                      </td>
+                      <td>
+                        {editAddLead === leadObj.id ? (
+                          <button className="btn btn-success btn-sm">
+                            Save
+                          </button>
+                        ) : (
+                          <button
+                            className="viewLeadButton btn btn-sm px-2 py-0"
+                            onClick={() => alert("Add Free Trial Clicked")}
+                          >
+                            Add FT
+                          </button>
+                        )}
+                      </td>
+                      <td>
+                        {editAddLead === leadObj.id ? (
+                          <button
+                            className="btn btn-success btn-sm"
+                            onClick={() => handleSaveLead(lead.id)}
+                          >
+                            Save
+                          </button>
+                        ) : (
+                          <button
+                            className="viewLeadButton btn btn-sm px-2 py-0"
+                            onClick={() => alert("Add Follow Up Clicked")}
+                          >
+                            Add New
+                          </button>
+                        )}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-sm btn-link"
+                          onClick={() =>
+                            alert(`Description: ${leadObj.lead.mobile}`)
+                          }
+                        >
+                          View
+                        </button>
+                      </td>
+                      <td>
+                        <div className="btn-group d-grid gap-1 d-sm-flex">
+                          <StatusButton />
+                          <EditButton
+                          // onClick={() => fetchAddLeadById(leadObj.EmployeeCode , leadObj.CampaignName)}
+                          />
+                          <DeleteButton
+                            onClick={() => handleDeleteAddLead(leadObj.id)}
+                          />
+                          <DisposeButton />
+                          <ConditionalPrSoButton
+                            isPrGenerated={isPrGenerated}
+                          />
+                          <SendButton />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="10">No data available in table</td>
+                  </tr>
+                )}
               </tbody>
             </table>
+
             {/* Pagination and Summary */}
             <div className="d-flex justify-content-between align-items-center mt-4">
               <div>

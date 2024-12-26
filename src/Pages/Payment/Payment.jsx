@@ -1,12 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./Payment.css"
-import { DeleteButton } from "../../Components/Button/DeleteButton/DeleteButton";
+import  DeleteButton  from "../../Components/Button/DeleteButton/DeleteButton";
 import { EditButton } from "../../Components/Button/EditButton/EditButton";
 import { PrintButton } from "../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
 import { CsvButton } from "../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { StatusButton } from "../../Components/Button/StatusButton/StatusButton";
+
 
 
 const Payment = () => {
@@ -214,7 +215,7 @@ const Payment = () => {
       status: "Pending",
     },
   ]);
-
+  
   const handleEmailPopup = (email) => {
     setSelectedEmail(email);
     setShowPopup(true);

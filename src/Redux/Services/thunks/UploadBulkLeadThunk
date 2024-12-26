@@ -1,0 +1,74 @@
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import { fetchAllUploadBulkLead, getByIdUploadBulkLead, postUploadBulkLead } from "../apis/UploadBulkLeadApi";
+
+
+export const postUploadBulkLeadThunk = createAsyncThunk(
+    'uploadbulklead/postUploadBulkLead',
+    async(param, {rejectWithValue})=>{
+        try {
+            const response = await postUploadBulkLead(param);
+            return response;
+        } catch (error) {
+           return rejectWithValue(error);
+        }
+    }
+);
+
+// Get lead status by ID
+export const getByIdUploadBulkLeadThunk = createAsyncThunk(
+    'uploadbulklead/getByIdUploadBulkLead',
+    async(param, {rejectWithValue}) => {
+        try {
+            const response = await getByIdUploadBulkLead(param);
+            if (response?.success) {
+                return response.data;
+            }
+            return rejectWithValue(response?.message || 'Failed to fetch lead by ID');
+        } catch (error) {
+            return rejectWithValue(error.message || 'An error occurred while fetching lead by ID');
+        }
+    }
+);
+
+export const fetchAllUploadBulkLeadThunk = createAsyncThunk(
+    'uploadbulklead/getAllUploadBulkLead',
+    async(params, {rejectWithValue})=>{
+        try {
+            const response = await fetchAllUploadBulkLead(params);
+            return response;
+        } catch (error) {
+           return rejectWithValue(error);
+        }
+    }
+);
+
+// export const deleteSegmentPlanThunk = createAsyncThunk(
+//     'segmentplan/deleteSegmentPlan',
+//     async (id, { rejectWithValue }) => {
+//       try {
+//         const response = await deleteSegmentPlan(id); // Assuming you are passing the id in the body
+//         if (response?.success) {
+//           return response; // Return the successful response data
+//         }
+//         return rejectWithValue(response?.message || 'Failed to delete lead status');
+//       } catch (error) {
+//         return rejectWithValue(error.message || 'An error occurred while deleting lead status');
+//       }
+//     }
+//   );
+
+// // Update a lead status
+// export const putSegmentPlanThunk = createAsyncThunk(
+//     'segmentplan/putSegmentPlan',
+//     async(param, {rejectWithValue}) => {
+//         try {
+//             const response = await putSegmentPlan(param);
+//             if (response?.success) {
+//                 return response;
+//             }
+//             return rejectWithValue(response?.message || 'Failed to update lead status');
+//         } catch (error) {
+//             return rejectWithValue(error.message || 'An error occurred while updating lead status');
+//         }
+//     }
+// );

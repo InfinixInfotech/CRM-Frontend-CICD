@@ -106,14 +106,15 @@ export async function apiPutCallWithoutAuth(endpoint, data) {
 
 
 
-export async function apiPostCallWithAuth(endpoint, params, token) {
+export async function apiPostCallWithAuth(endpoint,params, token) {
+  
   try {
-    console.log(params)
+    // console.log("apiPostCallWithAuthParams:-------------------   "+JSON.stringify(params))
       const response = await fetch(endpoint,{
           method: 'POST',
           headers: {
               'Content-Type': 'application/json',
-              'Authorization':`Bearer ${token}`, // Add Bearer token
+              'Authorization':`Bearer ${token}`, 
           },
           body: JSON.stringify(params),
       });
@@ -132,6 +133,33 @@ export async function apiPostCallWithAuth(endpoint, params, token) {
   }
 }
 
+//-------------------------form data post method --------------------------------
+
+export async function apiPostCallWithAuthFormData(endpoint, formData, token) {
+  try {
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+      body: formData, // Directly pass FormData
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      console.log('Response:', data);
+      return data;
+    } else {
+      console.error('Error:', response.status, response.statusText);
+      return null;
+    }
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return null;
+  }
+}
+
+
 export async function apiGetCallWithAuth(endpoint, token) {
   console.log(endpoint);
   try {
@@ -139,7 +167,7 @@ export async function apiGetCallWithAuth(endpoint, token) {
           method: 'GET',
           headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`, // Add Bearer token
+              'Authorization': `Bearer ${token}`, 
           },
       });
 
@@ -156,6 +184,38 @@ export async function apiGetCallWithAuth(endpoint, token) {
       return null;
   }
 }
+//--------------------------------------get call by send response--------------------------------------
+export async function apiGetCallWithRersponseAuth(endpoint, params, token) {
+  console.log(endpoint);
+  try {
+      // Construct the URL with query parameters
+      // const queryString = new URLSearchParams(params).toString();
+      // const url = `${endpoint}?${queryString}`;
+
+      // console.log("Constructed URL:", url);
+
+      const response = await fetch(endpoint, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`, 
+          },
+      });
+
+      if (response.ok) {
+          const data = await response.json();
+          console.log('Response:', data);
+          return data;
+      } else {
+          console.error('Error:', response.status, response.statusText);
+          return null;
+      }
+  } catch (error) {
+      console.error('Fetch error:', error);
+      return null;
+  }
+}
+
 
 export async function apiDeleteCallWithAuth(endpoint, token) {
   console.log(endpoint);

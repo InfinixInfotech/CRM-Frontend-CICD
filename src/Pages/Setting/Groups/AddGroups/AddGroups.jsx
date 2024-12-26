@@ -1,20 +1,22 @@
 import React, { useEffect, useState } from "react";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
-import { useDispatch, useSelector } from "react-redux";
-import { deleteGroupsThunk, getAllGroupsThunk, getByIdGroupsThunk, postGroupsThunk, putGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
+import { useDispatch } from "react-redux";
+import { postGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
+import { Alert } from "react-bootstrap";
 
 export default function AddGroups() {
-  
   const dispatch = useDispatch();
-  const { data, loading, error } = useSelector((state) => state.groups);
+  const [showAlert, setShowAlert] = useState(false);
+
   useEffect(() => {
-    if (data && data.data) {
-      console.log("API Data:", data.data);
-      setUser(data.data);
-    } else {
-      console.log("API Data is null or undefined.");
+    if (showAlert) {
+      const timer = setTimeout(() => {
+        setShowAlert(false); // Hide the alert after 3000ms
+      }, 3000);
+
+      return () => clearTimeout(timer); // Cleanup the timer
     }
-  }, [data]);
+  }, [showAlert]);
 
   const handleDropdownChange = (event) => {
     const selectedValue = event.target.value;
@@ -23,8 +25,9 @@ export default function AddGroups() {
     } else if (selectedValue === "Setting") {
     }
   };
+
   const [groupData, setGroupData] = useState({
-    GroupName: "",
+    groupName: "",
     Dashboard: {
       SalesDashboard: false,
       CallingDashboard: false,
@@ -49,6 +52,11 @@ export default function AddGroups() {
       LeadActionAssign: false,
       CreateAgreement: false,
       AddRPM: false,
+    },
+    leadFetch: {
+      active: false,
+      from: [],
+      ratio: "string",
     },
     Contact: {
       Create: false,
@@ -181,225 +189,304 @@ export default function AddGroups() {
       ShowWhatsapp: false,
       SendAttachment: false,
     },
-    FreeTrialDays: 0,
-    FreeTrialPerContact: 0,
-    TotalCRMLeadLimit: 0,
+    FreeTrialDays: null,
+    FreeTrialPerContact: null,
+    TotalCRMLeadLimit: null,
+    LeadFetchRatio: null,
+    ClientFetchRatio: null,
+    UnreadFetch: null,
   });
+  console.log(groupData);
 
-  // Update State
-  const handleChange = (category, key, subKey, value) => {
-    setGroupData((prev) => {
-      const updated = { ...prev };
-      if (subKey) {
-        updated[category][key][subKey] = value;
-      } else if (key) {
-        updated[category][key] = value;
-      } else {
-        updated[category] = value;
+  const handleChange = (path, value) => {
+    setGroupData((prevData) => {
+      const newData = { ...prevData };
+      const pathArray = path.split(".");
+
+      let current = newData;
+      for (let i = 0; i < pathArray.length - 1; i++) {
+        current = current[pathArray[i]];
       }
-      return updated;
+      current[pathArray[pathArray.length - 1]] = value;
+
+      return newData;
     });
   };
 
-  // Form Submission
+  const renderCheckbox = (label, path, checked) => (
+    <div className="form-check form-check-inline mb-2" key={path}>
+      <input
+        className="form-check-input"
+        type="checkbox"
+        id={path}
+        checked={checked}
+        onChange={(e) => handleChange(path, e.target.checked)}
+      />
+      <label className="form-check-label" htmlFor={path}>
+        {label}
+      </label>
+    </div>
+  );
+
+  const renderNumberInput = (label, path, value) => (
+    <div className="mb-3" key={path}>
+      <label className="form-label" htmlFor={path}>
+        {label}
+      </label>
+      <input
+        type="number"
+        className="form-control"
+        id={path}
+        value={value}
+        onChange={(e) => handleChange(path, parseInt(e.target.value) || 0)}
+      />
+    </div>
+  );
+
+  const renderSection = (title, fields, basePath) => (
+    <div className="col-md-6 mb-3">
+      <h5 className="fw-semibold">{title}</h5>
+      <div
+        className="p-3 rounded"
+        style={{
+          border: "2px solid #DEE2E6",
+          backgroundColor: "white",
+          border: "2px solid #A6AEBF",
+        }}
+      >
+        {Object.entries(fields).map(([key, value]) => {
+          const path = `${basePath}.${key}`;
+          if (typeof value === "boolean") {
+            return renderCheckbox(key, path, value);
+          } else if (typeof value === "number") {
+            return renderNumberInput(key, path, value);
+          } else if (typeof value === "object" && value !== null) {
+            return (
+              <div key={key} className="mb-3">
+                <h6 className="mb-2">{key}</h6>
+                <div className="ms-3">
+                  {Object.entries(value).map(([subKey, subValue]) => {
+                    const subPath = `${path}.${subKey}`;
+                    if (typeof subValue === "boolean") {
+                      return renderCheckbox(subKey, subPath, subValue);
+                    } else if (typeof subValue === "number") {
+                      return renderNumberInput(subKey, subPath, subValue);
+                    }
+                    return null;
+                  })}
+                </div>
+              </div>
+            );
+          }
+          return null;
+        })}
+      </div>
+    </div>
+  );
+
   const handleSubmit = (e) => {
     e.preventDefault();
-  
+    setShowAlert(true); // Show the alert
+
     const AddGroups = {
-      id: 0,  // Replace with actual ID value
-      groupName: "string",  // Replace with actual group name
-      groupId: "string",  // Replace with actual group ID
+      id: 0,
+      groupName: groupData.groupName,
+      groupId: "string",
       dashboard: {
-        salesDashboard: true,
-        callingDashboard: true,
+        salesDashboard: groupData.Dashboard.SalesDashboard,
+        callingDashboard: groupData.Dashboard.CallingDashboard,
       },
       leads: {
-        create: true,
-        view: true,
-        marketingLeads: true,
-        edit: true,
-        delete: true,
-        dispose: true,
-        disposeClients: true,
-        upload: true,
-        internalAssign: true,
-        outerAssign: true,
-        globalAssign: true,
-        viewFollowUp: true,
-        deleteFollowUp: true,
-        followAssign: true,
-        bulkLeadOperation: true,
-        leadAction: true,
-        leadActionAssign: true,
-        createAgreement: true,
-        addRPM: true,
+        create: groupData.Leads.Create,
+        view: groupData.Leads.View,
+        marketingLeads: groupData.Leads.MarketingLeads,
+        edit: groupData.Leads.Edit,
+        delete: groupData.Leads.Delete,
+        dispose: groupData.Leads.Dispose,
+        disposeClients: groupData.Leads.DisposeClients,
+        upload: groupData.Leads.Upload,
+        internalAssign: groupData.Leads.InternalAssign,
+        outerAssign: groupData.Leads.OuterAssign,
+        globalAssign: groupData.Leads.GlobalAssign,
+        viewFollowUp: groupData.Leads.ViewFollowUp,
+        deleteFollowUp: groupData.Leads.DeleteFollowUp,
+        followAssign: groupData.Leads.FollowAssign,
+        bulkLeadOperation: groupData.Leads.BulkLeadOperation,
+        leadAction: groupData.Leads.LeadAction,
+        leadActionAssign: groupData.Leads.LeadActionAssign,
+        createAgreement: groupData.Leads.CreateAgreement,
+        addRPM: groupData.Leads.AddRPM,
+      },
+      leadFetch: {
+        active: groupData.leadFetch.active,
+        from: groupData.leadFetch.from,
+        ratio: groupData.leadFetch.ratio,
       },
       contact: {
-        create: true,
-        view: true,
-        contactAssign: true,
-        contactAction: true,
-        contactActionAssign: true,
+        create: groupData.Contact.Create,
+        view: groupData.Contact.View,
+        contactAssign: groupData.Contact.ContactAssign,
+        contactAction: groupData.Contact.ContactAction,
+        contactActionAssign: groupData.Contact.ContactActionAssign,
       },
       mutualFund: {
-        create: true,
-        view: true,
-        mutualFundAssign: true,
-        mutualFundAction: true,
-        mutualFundActionAssign: true,
+        create: groupData.MutualFund.Create,
+        view: groupData.MutualFund.View,
+        mutualFundAssign: groupData.MutualFund.MutualFundAssign,
+        mutualFundAction: groupData.MutualFund.MutualFundAction,
+        mutualFundActionAssign: groupData.MutualFund.MutualFundActionAssign,
       },
       freeTrial: {
-        create: true,
-        view: true,
-        edit: true,
-        outerAssign: true,
+        create: groupData.FreeTrial.Create,
+        view: groupData.FreeTrial.View,
+        edit: groupData.FreeTrial.Edit,
+        outerAssign: groupData.FreeTrial.OuterAssign,
       },
       so: {
-        create: true,
-        view: true,
-        edit: true,
-        approveSO: true,
-        invoice: true,
-        paymentPortal: true,
-        paymentApproval: true,
-        paymentEdit: true,
-        delete: true,
-        serviceActivation: true,
-        paidClientAssign: true,
-        paidClientAction: true,
-        paidClientActionAssign: true,
+        create: groupData.SO.Create,
+        view: groupData.SO.View,
+        edit: groupData.SO.Edit,
+        approveSO: groupData.SO.ApproveSO,
+        invoice: groupData.SO.Invoice,
+        paymentPortal: groupData.SO.PaymentPortal,
+        paymentApproval: groupData.SO.PaymentApproval,
+        paymentEdit: groupData.SO.PaymentEdit,
+        delete: groupData.SO.Delete,
+        serviceActivation: groupData.SO.ServiceActivation,
+        paidClientAssign: groupData.SO.PaidClientAssign,
+        paidClientAction: groupData.SO.PaidClientAction,
+        paidClientActionAssign: groupData.SO.PaidClientActionAssign,
       },
       compliance: {
-        kyc: true,
-        riskProfile: true,
-        agreement: true,
-        agreementApproved: true,
-        viewRPM: true,
-        editRPM: true,
-        invoice: true,
-        soReport: true,
-        taxReport: true,
-      },
-      leadTemplate: {
-        sendSMSLead: true,
-        sendWhatsappLead: true,
-        sendEmailLead: true,
-      },
-      clientTemplate: {
-        sendSMSClient: true,
-        sendWhatsappClient: true,
-        sendEmailClient: true,
-      },
-      hrExtra: {
-        orgChart: true,
-        scrapBook: true,
-        holiday: true,
-      },
-      supportModule: {
-        itAdmin: true,
-        hrAdmin: true,
-        complianceAdmin: true,
-        admin: true,
-      },
-      teamMembers: {
-        list: true,
-        data: true,
-      },
-      smsModule: {
-        sendSMS: true,
-        viewSMS: true,
-      },
-      callingModule: {
-        monitoring: true,
-        reports: true,
-        sendSMSViaGateway: true,
-        viewSMSViaGateway: true,
-        missCall: true,
-        liveCall: true,
-      },
-      reports: {
-        generalReport: true,
-        ftReport: true,
-        paidClientReport: true,
-        expiredPaidClientReport: true,
-        userReport: true,
-        callingReport: true,
-        messageReport: true,
-        smsReport: true,
-        dndReport: true,
-        tracksheet: true,
-        researchReport: true,
+        kyc: groupData.Compliance.KYC,
+        riskProfile: groupData.Compliance.RiskProfile,
+        agreement: groupData.Compliance.Agreement,
+        agreementApproved: groupData.Compliance.AgreementApproved,
+        viewRPM: groupData.Compliance.ViewRPM,
+        editRPM: groupData.Compliance.EditRPM,
+        invoice: groupData.Compliance.Invoice,
+        soReport: groupData.Compliance.SOReport,
+        taxReport: groupData.Compliance.TaxReport,
       },
       logs: {
-        client: true,
-        sms: true,
-        chat: true,
-        whatsapp: true,
-        login: true,
-        extension: true,
+        client: groupData.Logs.Client,
+        sms: groupData.Logs.Sms,
+        chat: groupData.Logs.Chat,
+        whatsapp: groupData.Logs.Whatsapp,
+        extension: groupData.Logs.Extension,
       },
       extra: {
-        callingModule: true,
-        userModule: true,
-        groupModule: true,
-        poolsModule: true,
-        leadStatusModule: true,
-        segmentModule: true,
-        soModule: true,
-        fetchingReport: true,
-        mailDelete: true,
-        forecast: true,
-        brokerage: true,
-        liveUpdates: true,
-        policy: true,
-        leadApproval: true,
-        groupDesignation: true,
-        groupDepartment: true,
-        groupHierarchy: true,
-        customSMS: true,
-        notification: true,
-        notificationUpdate: true,
-        leaderDashboardUpdate: true,
-        groupChat: true,
+        callingModule: groupData.Extra.callingModule,
+        userModule: groupData.Extra.userModule,
+        groupModule: groupData.Extra.groupModule,
+        pools: groupData.Extra.pools,
+        leadStatusModule: groupData.Extra.leadStatusModule,
+        segmentModule: groupData.Extra.segmentModule,
+        soModule: groupData.Extra.soModule,
+        fetchingReport: groupData.Extra.fetchingReport,
+        mailDelete: groupData.Extra.mailDelete,
+        forecast: groupData.Extra.forecast,
+        brokerage: groupData.Extra.brokerage,
+        liveUpdates: groupData.Extra.liveUpdates,
+        policy: groupData.Extra.policy,
+        leadApproval: groupData.Extra.leadApproval,
+        groupDesignation: groupData.Extra.groupDesignation,
+        groupDepartment: groupData.Extra.groupDepartment,
+        groupHierarchy: groupData.Extra.groupHierarchy,
+        customSMS: groupData.Extra.customSMS,
+        notification: groupData.Extra.notification,
+        notificationUpdate: groupData.Extra.notificationUpdate,
+        leaderDashboardUpdate: groupData.Extra.leaderDashboardUpdate,
+        groupChat: groupData.Extra.groupChat,
       },
-      mis: {
-        employee: true,
-        lead: true,
-        client: true,
-        sales: true,
-        disposeLeads: true,
-        preSales: true,
-      },
-      whatsapp: {
-        showWhatsapp: true,
-        sendAttachment: true,
+      Whatsapp: {
+        showWhatsapp: groupData.Whatsapp.ShowWhatsapp,
+        sendAttachment: groupData.Whatsapp.SendAttachment,
       },
       export: {
-        leads: true,
-        contacts: true,
-        freeTrial: true,
-        followUp: true,
-        clients: true,
-        salesOrder: true,
-        smsLogs: true,
-        chatLogs: true,
+        leads: groupData.Export.Leads,
+        contacts: groupData.Export.Contact,
+        freeTrial: groupData.Export.Freetrial,
+        followUp: groupData.Export.FollowUp,
+        clients: groupData.Export.Clients,
+        salesOrder: groupData.Export.SalesOrder,
+        smsLogs: groupData.Export.SmaLogs,
+        chatLogs: groupData.Export.ChatLogs,
       },
-      freeTrialDays: 0,  // Set the actual free trial days
-      freeTrialPerContact: 0,  // Set the actual value
-      totalCRMLeadLimit: 0,  // Set the actual limit
+      mis: {
+        employee: false,
+        lead: false,
+        client: false,
+        sales: false,
+        disposeLeads: false,
+        preSales: false,
+      },
+      hrExtra: {
+        orgChart: false,
+        scrapBook: false,
+        holiday: false,
+      },
+      reports: {
+        generalReport: false,
+        ftReport: false,
+        paidClientReport: false,
+        expiredPaidClientReport: false,
+        userReport: false,
+        callingReport: false,
+        messageReport: false,
+        smsReport: false,
+        dndReport: false,
+        tracksheet: false,
+        researchReport: false,
+      },
       leadFetch: {
-        active: true,
-        from: ["string"], // Replace with actual sources
-        ratio: "string", // Provide the actual ratio
+        active: false,
+        from: [],
+        ratio: "string",
       },
       clientFetch: {
-        active: true,
-        from: ["string"], // Replace with actual sources
-        ratio: "string", // Provide the actual ratio
+        active: false,
+        from: [],
+        ratio: "string",
       },
-      unreadFetch: 0,  // Set the actual unread fetch value
+      smsModule: {
+        sendSMS: false,
+        viewSMS: false,
+      },
+      callingModule: {
+        monitoring: false,
+        reports: false,
+        sendSMSViaGateway: false,
+        viewSMSViaGateway: false,
+        missCall: false,
+        liveCall: false,
+      },
+      leadTemplate: {
+        sendSMSLead: false,
+        sendWhatsappLead: false,
+        sendEmailLead: false,
+      },
+      clientTemplate: {
+        sendSMSClient: false,
+        sendWhatsappClient: false,
+        sendEmailClient: false,
+      },
+      supportModule: {
+        itAdmin: false,
+        hrAdmin: false,
+        complianceAdmin: false,
+        admin: false,
+      },
+      teamMembers: {
+        list: false,
+        data: false,
+      },
+      freeTrialDays: groupData.FreeTrialDays,
+      freeTrialPerContact: groupData.FreeTrialPerContact,
+      totalCRMLeadLimit: groupData.TotalCRMLeadLimit,
+      unreadFetch: groupData.UnreadFetch,
     };
-  
+
     dispatch(postGroupsThunk(AddGroups))
       .then((response) => {
         console.log("Group added successfully:", response);
@@ -408,398 +495,144 @@ export default function AddGroups() {
         console.error("Error adding group:", error);
       });
   };
-  
-
-  const renderFields = (category, fields) => {
-    return Object.keys(fields).map((key) => {
-      const value = fields[key];
-      if (typeof value === "boolean") {
-        return (
-          <label key={key}>
-            <input
-              style={{ height: "12px", marginRight: "2px" }}
-              className="text-center"
-              type="checkbox"
-              checked={value}
-              onChange={(e) =>
-                handleChange(category, key, null, e.target.checked)
-              }
-            />
-            {key}
-          </label>
-        );
-      } else if (typeof value === "number") {
-        return (
-          <label key={key}>
-            {key}:
-            <input
-              type="number"
-              value={value}
-              onChange={(e) =>
-                handleChange(category, key, null, parseInt(e.target.value) || 0)
-              }
-            />
-          </label>
-        );
-      } else if (typeof value === "object") {
-        return (
-          <fieldset key={key} className="me-3">
-            <legend>{key}</legend>
-            {renderFields(category, value)}
-          </fieldset>
-        );
-      }
-      return null;
-    });
-  };
-
-  // style={{background:"rgb(227,227,227)"}}
 
   return (
     <>
-      <div style={{ marginTop: "4rem" }}>
-        <h2 className="mb-1 text-center bg-dark text-white py-2 ">
-          Add Groups
-        </h2>
-        <BackButton />
-        <div className="container-fluid border border-2 border-gray mt-0 w-100 mt-3 pb-3">
-          <div style={{ paddingLeft: "24px", paddingTop: "32px" }}>
-            <form className="row g-3 container-flued" onSubmit={handleSubmit}>
-              {/* Dashboard */}
-              <div className="row" style={{ background: "rgb(227,227,227)" , border:"2px solid gray"}}>
-                <div className="col-12 mb-4 mt-2">
-                 <label className="fs-5 fw-semibold">Group Name</label>
-                  <input
-                    style={{ border: "1px solid #A6AEBF" }}
-                    type="text"
-                    id="groupName"
-                    className="form-control"
-                    value={groupData.GroupName}
-                    onChange={(e) =>
-                      handleChange("GroupName", null, null, e.target.value)
-                    }
-                    placeholder="Enter Group Name"
-                  />
-                </div>
+      <h2 className="mb-1 text-center bg-dark text-white py-2 mt-5">
+        Add Groups
+      </h2>
+      <BackButton />
+      <div
+        className="container-fluid border border-2 border-gray mt-2 py-3"
+        style={{ padding: "18px 16px" }}
+      >
+        <div
+          className="container-fluid border border-2 border-gray p-4"
+          style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
+        >
 
-                <div className="col-md-6 mb-3">
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Dashboard
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className=" bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2">Dashboard</legend> */}
-                    {renderFields("Dashboard", groupData.Dashboard)}
-                  </fieldset>
-                </div>
-                <div className="col-md-6 mb-3">
-                  {/* Free Trial */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Free Trial
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12  bg-white p-3 rounded flex-wrap d-flex gap-2 "
-                  >
-                    {/* <legend className="float-none w-auto px-2 ">Free Trial</legend> */}
-                    {renderFields("FreeTrial", groupData.FreeTrial)}
-                  </fieldset>
-                </div>
+        <div>
+        {showAlert && (
+        <Alert variant="info" className="mt-2 text-center">
+          Group Added Successfully
+        </Alert>
+      )}
+        </div>
 
-                <div className="col-md-6 mb-3">
-                  {/* Contact */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Contact
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12  bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2 ">Contact</legend> */}
-                    {renderFields("Contact", groupData.Contact)}
-                  </fieldset>
-                </div>
-                <div className="col-md-6 mb-3">
-                  {/* Mutual Fund */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Mutual Fund
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2">Mutual Fund</legend> */}
-                    {renderFields("MutualFund", groupData.MutualFund)}
-                  </fieldset>
-                </div>
-                <div className="col-md-6 mb-3">
-                  {/* Leads */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Leads
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2 fs-8">Leads</legend> */}
-                    {renderFields("Leads", groupData.Leads)}
-                  </fieldset>
-                </div>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label className="form-label fs-5 fw-semibold">Group Name</label>
+              <input
+                type="text"
+                className="form-control"
+                style={{ border: "2px solid #A6AEBF" }}
+                value={groupData.groupName || ""}
+                onChange={(e) => handleChange("groupName", e.target.value)}
+              />
+            </div>
 
-                <div className="col-md-6 mb-3">
-                  {/* SO */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    SO
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2">SO</legend> */}
-                    {renderFields("SO", groupData.SO)}
-                  </fieldset>
-                </div>
-                <div className="col-md-6 mb-3">
-                  {/* Compliance */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Compliance
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2">Compliance</legend> */}
-                    {renderFields("Compliance", groupData.Compliance)}
-                  </fieldset>
-                </div>
+            <div className="row">
+              {renderSection("Dashboard", groupData.Dashboard, "Dashboard")}
+              {renderSection("Free Trial", groupData.FreeTrial, "FreeTrial")}
+              {renderSection("Contact", groupData.Contact, "Contact")}
+              {renderSection("Mutual Fund", groupData.MutualFund, "MutualFund")}
+              {renderSection("Leads", groupData.Leads, "Leads")}
+              {renderSection("SO", groupData.SO, "SO")}
+              {renderSection("Compliance", groupData.Compliance, "Compliance")}
+              {renderSection("Export", groupData.Export, "Export")}
+              {renderSection("Logs", groupData.Logs, "Logs")}
+              {renderSection("HR Extra", groupData.HRExtra, "HRExtra")}
+              {renderSection(
+                "Support Module",
+                groupData.SupportModule,
+                "SupportModule"
+              )}
+              {renderSection("WhatsApp Module", groupData.Whatsapp, "Whatsapp")}
+              {renderSection("Reports", groupData.Reports, "Reports")}
+              {renderSection("Extra", groupData.Extra, "Extra")}
 
-                <div className="col-md-6 mb-3">
-                  {/* Export */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Export
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2 fs-8">Export</legend> */}
-                    {renderFields("Export", groupData.Export)}
-                  </fieldset>
-                </div>
-                <div className="col-md-6 mb-3">
-                  {/* Logs */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Logs
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2 fs-8">Logs</legend> */}
-                    {renderFields("Logs", groupData.Logs)}
-                  </fieldset>
-                </div>
+              <div className="col-md-6">
+                <h5 className="fw-semibold">Other Settings</h5>
+                <div
+                  className="rounded p-3"
+                  style={{
+                    border: "2px solid #DEE2E6",
+                    border: "2px solid #A6AEBF",
+                    backgroundColor: "white",
+                  }}
+                >
+                  {renderNumberInput(
+                    "Free Trial Days",
+                    "FreeTrialDays",
+                    groupData.FreeTrialDays
+                  )}
+                  {renderNumberInput(
+                    "Free Trial Per Contact",
+                    "FreeTrialPerContact",
+                    groupData.FreeTrialPerContact
+                  )}
+                  {renderNumberInput(
+                    "Total CRM Lead Limit",
+                    "TotalCRMLeadLimit",
+                    groupData.TotalCRMLeadLimit
+                  )}
+                  {renderNumberInput(
+                    "Lead Fetch Ratio",
+                    "LeadFetchRatio",
+                    groupData.LeadFetchRatio
+                  )}
+                  {renderNumberInput(
+                    "Client Fetch Ratio",
+                    "ClientFetchRatio",
+                    groupData.ClientFetchRatio
+                  )}
+                  {renderNumberInput(
+                    "Unread Fetch",
+                    "UnreadFetch",
+                    groupData.UnreadFetch
+                  )}
 
-                <div className="col-md-6 mb-3">
-                  {/* Export */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    HR Extra
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2 fs-8">HR Extra</legend> */}
-                    {renderFields("HRExtra", groupData.HRExtra)}
-                  </fieldset>
-                </div>
-                <div className="col-md-6 mb-3">
-                  {/* Export */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Support Module
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2 fs-8">
-                Support Module
-              </legend> */}
-                    {renderFields("SupportModule", groupData.SupportModule)}
-                  </fieldset>
-                </div>
-                <div className="col-md-6 mb-3">
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    WhatsApp Module
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2 fs-8">
-                WhatsApp Module
-              </legend> */}
-                    {renderFields("WhatsApp", groupData.Whatsapp)}
-                  </fieldset>
-                </div>
-                <div className="col-md-6 mb-3">
-                  {/* Export */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Reports
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2 fs-8">Reports</legend> */}
-                    {renderFields("Reports", groupData.Reports)}
-                  </fieldset>
-                </div>
-                <div className="col-md-6 mb-3">
-                  {/* Export */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Extra
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2 fs-8">Extra</legend> */}
-                    {renderFields("Extra", groupData.Extra)}
-                  </fieldset>
-                </div>
+                  <div>
+                    <label className="form-label">Lead Fetch From</label>
+                    <select
+                      className="form-select"
+                      value={groupData.leadFetch.from}
+                      onChange={(e) =>
+                        handleChange("leadFetch.from", e.target.value)
+                      }
+                    >
+                      <option value="" disabled>
+                        Select Some Option
+                      </option>
+                      <option value="dispose pool">Dispose Pool</option>
+                      <option value="fresh pool">Fresh Pool</option>
+                      <option value="Diamond pool HNI pool">
+                        Diamond Pool HNI Pool
+                      </option>
+                    </select>
+                  </div>
 
-                <div className="col-md-6 mb-3">
-                  {/* Numeric Fields */}
-                  <label style={{ fontWeight: "600", fontSize: "18px" }}>
-                    Other Settings
-                  </label>
-                  <fieldset
-                    style={{ border: "1px solid #A6AEBF" }}
-                    className="col-12 bg-white p-3 rounded flex-wrap d-flex gap-2"
-                  >
-                    {/* <legend className="float-none w-auto px-2">Other Settings</legend> */}
-                    <div className="mb-3 ">
-                      <label htmlFor="freeTrialDays" className="form-label">
-                        Free Trial Days
-                      </label>
-                      <input
-                        type="number"
-                        id="freeTrialDays"
-                        className="form-control"
-                        value={groupData.FreeTrialDays}
-                        onChange={(e) =>
-                          handleChange(
-                            null,
-                            "FreeTrialDays",
-                            null,
-                            parseInt(e.target.value) || 0
-                          )
-                        }
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label
-                        htmlFor="freeTrialPerContact"
-                        className="form-label"
-                      >
-                        Free Trial Per Contact
-                      </label>
-                      <input
-                        type="number"
-                        id="freeTrialPerContact"
-                        className="form-control"
-                        value={groupData.FreeTrialPerContact}
-                        onChange={(e) =>
-                          handleChange(
-                            null,
-                            "FreeTrialPerContact",
-                            null,
-                            parseInt(e.target.value) || 0
-                          )
-                        }
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="crmLeadLimit" className="form-label">
-                        Total CRM Lead Limit
-                      </label>
-                      <input
-                        type="number"
-                        id="crmLeadLimit"
-                        className="form-control"
-                        value={groupData.TotalCRMLeadLimit}
-                        onChange={(e) =>
-                          handleChange(
-                            null,
-                            "TotalCRMLeadLimit",
-                            null,
-                            parseInt(e.target.value) || 0
-                          )
-                        }
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="crmLeadLimit" className="form-label">
-                        Total CRM Lead Limit
-                      </label>
-                      <select
-                        className="form-select form-control form-select-sm"
-                        onChange={handleDropdownChange}
-                      >
-                        <option selected>Select Some Option</option>
-                        <option>fresh pool</option>
-                        <option>Diamond pool HNI pool</option>
-                      </select>
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor=""> Lead Fetch Ratio</label>
-                      <input
-                        type="number"
-                        id="crmLeadLimit"
-                        className="form-control"
-                        value={groupData.TotalCRMLeadLimit}
-                        // onChange={(e) =>
-                        //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
-                        // }
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="">Client Fetch Ratio</label>
-                      <input
-                        type="number"
-                        id="clientfetch"
-                        className="form-control"
-                        value={groupData.TotalCRMLeadLimit}
-                        // onChange={(e) =>
-                        //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
-                        // }
-                      />
-                    </div>
-                    <div className="mb-3">
-                      <label htmlFor="">Unread Fetch </label>
-                      <input
-                        type="number"
-                        id="unreadtfetch"
-                        className="form-control"
-                        value={groupData.TotalCRMLeadLimit}
-                        // onChange={(e) =>
-                        //     handleChange(null, "TotalCRMLeadLimit", null, parseInt(e.target.value) || 0)
-                        // }
-                      />
-                    </div>
-                  </fieldset>
+                  <div className="mb-3">
+                    <label className="form-label">Lead Fetch Ratio</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      value={groupData.leadFetch.ratio}
+                      onChange={(e) =>
+                        handleChange("leadFetch.ratio", e.target.value)
+                      }
+                    />
+                  </div>
                 </div>
-                <div className="col-12 text-center">
-                <button type="submit" className="btn btn-primary mb-3 mt-4">
-                  Submit
-                </button>
               </div>
-              </div>
-            </form>
-          </div>
+            </div>
+
+            <div className="col-12 text-center">
+              <button type="submit" className="btn btn-primary mb-3 mt-4">
+                Submit
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </>

@@ -17,6 +17,7 @@ export const postGroups = async (params) => {
   }
 };
 
+
 export const getAllGroups = async () => {     
   try {
     const response = await apiGetCallWithAuth(getAllGroupsUrl, staticToken);

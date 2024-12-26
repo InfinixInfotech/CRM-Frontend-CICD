@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
-import { DeleteButton } from "../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";
 import BackButton from "../../../Components/Button/BackButton/BackButton";
 import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
 import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";

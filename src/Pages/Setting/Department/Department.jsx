@@ -1,13 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
-import { DeleteButton } from "../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";
 import BackButton from "../../../Components/Button/BackButton/BackButton";
 import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
 import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
-import { deleteDepartmentThunk, getAllDepartmentThunk, getByIdDepartmentThunk, postDepartmentThunk, putDepartmentThunk } from "../../../Redux/Services/thunks/DepartmentThunk";
+import {
+  deleteDepartmentThunk,
+  getAllDepartmentThunk,
+  getByIdDepartmentThunk,
+  postDepartmentThunk,
+  putDepartmentThunk,
+} from "../../../Redux/Services/thunks/DepartmentThunk";
 import { useDispatch, useSelector } from "react-redux";
+import { HashLoader } from "react-spinners";
+import { Alert } from "react-bootstrap";
 
 const Department = () => {
   const [addDepartment, setAddDepartment] = useState([]);
@@ -16,62 +24,45 @@ const Department = () => {
   const [editValue, setEditValue] = useState("");
   const [msg, setMsg] = useState("");
   const dispatch = useDispatch();
-
   const { data, loading, error } = useSelector((state) => state.department);
 
   useEffect(() => {
-    dispatch(getAllDepartmentThunk());
+    const fetchData = async () => {
+      dispatch(getAllDepartmentThunk());
+      setIsLoading(false);
+    };
+    fetchData();
   }, [dispatch]);
 
   useEffect(() => {
     if (data?.data) {
-      setAddDepartment(data.data);
+      const timer = setTimeout(() => {
+        setAddDepartment(data.data);
+      }, 300);
+      return () => clearTimeout(timer);
     }
   }, [data]);
 
-  // Add a new status
-  // const handleAddDepartment = async () => {
-  //   console.log("status");
+  useEffect(() => {
+    if (msg) {
+      const alertTimer = setTimeout(() => {
+        setMsg("");
+      }, 3000); // Alert will disappear after 3 seconds
+      return () => clearTimeout(alertTimer);
+    }
+  }, [msg]);
 
-  //   if (newDept.trim() !== "" && !addDepartment.includes(newDept.trim())) {
-  //     // FormData could be replaced with an object if no files are involved
-  //     // const formData = new FormData();
-  //     // formData.append("departmentName", newDept);
-  //     const addNewDept = { departmentName: newDept.trim() };
-
-  //     try {
-  //         const response = await dispatch(postDepartmentThunk(addNewDept)).unwrap();
-          
-  //         const message = response?.message || "Added successfully";
-  //         setMsg(message);
-  
-  //         setAddDepartment((prevDepartments) => [
-  //             ...prevDepartments,
-  //             newDept.trim(),
-  //         ]);
-  //         setNewDept("");
-  //     } catch (error) {
-  //         const errorMsg = error?.message || "Permission denied";
-  //         setMsg(errorMsg);
-  //     }     
-  //   } else {
-  //     setMsg("Invalid or duplicate department");
-  //   }
-  // };
-
-  const handleAddDepartment = () => {
-    if (
-      newDept.trim() !== "" &&
-      !addDepartment.includes(newDept.trim())
-    ) {
+  const handleAddDepartment = (e) => {
+    e.preventDefault();
+    if (newDept.trim() !== "" && !addDepartment.includes(newDept.trim())) {
       const newAddDept = {
         departmentName: newDept,
       };
 
       dispatch(postDepartmentThunk(newAddDept)).then((response) => {
         setMsg(response?.payload?.message || "added successfully");
-        setAddDepartment([...addDepartment, newAddDept.trim()]);
         setNewDept("");
+        setAddDepartment([...addDepartment, newAddDept]);
       });
     }
   };
@@ -90,26 +81,26 @@ const Department = () => {
   };
 
   const handleDeleteDepartment = (id) => {
-    if (window.confirm("Are you sure you want to delete this status?")) {
-      dispatch(deleteDepartmentThunk(id))
-        .unwrap()
-        .then((response) => {
-          setMsg(response.message || "deleted successfully");
-        })
-        .catch((error) => {
-          setMsg(error || "Failed to delete status");
-        });
-    }
+    dispatch(deleteDepartmentThunk(id))
+      .unwrap()
+      .then((response) => {
+        setMsg(response.message || "deleted successfully");
+        setAddDepartment((prevStatuses) =>
+          prevStatuses.filter((status) => status.id !== id)
+        );
+      })
+      .catch((error) => {
+        setMsg(error || "Failed to delete status");
+      });
   };
 
   const fetchDepartmentById = (id) => {
     dispatch(getByIdDepartmentThunk(id)).then((response) => {
-      const leadSourceValue = response.payload?.data;
-      setEditStatus(leadSourceValue?.id);
-      setEditValue(leadSourceValue?.status);
+      const department = response.payload?.data;
+      setEditStatus(department?.id);
+      setEditValue(department?.department);
     });
   };
-
 
   return (
     <>
@@ -128,18 +119,17 @@ const Department = () => {
           <div className="addLeadscontainer add-status p-2 mb-2">
             <h4 className="p-0 text-dark ">Add New Department</h4>
 
-            <input
-              type="text"
-              value={newDept}
-              onChange={(e) => setNewDept(e.target.value)}
-              placeholder="Department Name"
-            />
-            <button
-              onClick={handleAddDepartment}
-              className="btn btn-primary"
-            >
-              Create
-            </button>
+            <form onSubmit={handleAddDepartment}>
+              <input
+                type="text"
+                value={newDept}
+                onChange={(e) => setNewDept(e.target.value)}
+                placeholder="Department Name"
+              />
+              <button type="submit" className="btn btn-primary">
+                Create
+              </button>
+            </form>
           </div>
 
           <div className="bg-white p-4 rounded border border-4 border-gray">
@@ -149,6 +139,12 @@ const Department = () => {
               <PdfButton />
               <CsvButton />
               <CopyButton />
+
+              {msg && (
+                <Alert variant="info" className="mt-2 text-center">
+                  {msg}
+                </Alert>
+              )}
             </div>
             <table
               id="table-data"
@@ -161,17 +157,85 @@ const Department = () => {
                 </tr>
               </thead>
               <tbody>
-                {addDepartment.map((departObj, index) => (
-                  <tr key={index}>
-                    <td>{departObj.departmentName}</td>
-                    <td className="text-center">
-                      <div className="d-flex justify-content-center align-items-center gap-2 ">
-                        <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
-                        <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2 " />
-                      </div>
+                {loading ? (
+                  <div
+                    style={{
+                      position: "fixed",
+                      top: 0,
+                      left: 0,
+                      width: "100vw",
+                      height: "100vh",
+                      backgroundColor: "rgba(104, 102, 102, 0.5)",
+                      zIndex: 9998,
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        zIndex: 9999,
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <HashLoader color="#0060f1" size={50} />
+                    </div>
+                  </div>
+                ) : error ? (
+                  <tr>
+                    <td colSpan="2" className="text-center text-danger">
+                      Error: {error}
                     </td>
                   </tr>
-                ))}
+                ) : addDepartment.length > 0 ? (
+                  addDepartment.map((addDepartmentObj) => (
+                    <tr key={addDepartmentObj.id}>
+                      <td>
+                        {editDepartment === addDepartmentObj.id ? (
+                          <input
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                          />
+                        ) : (
+                          addDepartmentObj.departmentName
+                        )}
+                      </td>
+                      <td className="text-center">
+                        <div className="d-flex justify-content-center align-items-center gap-2">
+                          {editDepartment === addDepartmentObj.id ? (
+                            <button
+                              onClick={() =>
+                                handleEditDepartment(addDepartmentObj.id)
+                              }
+                              className="btn btn-success"
+                            >
+                              Save
+                            </button>
+                          ) : (
+                            <EditButton
+                              className="btn btn-primary btn-sm mr-1 py-0 px-2"
+                              onClick={() =>
+                                fetchDepartmentById(addDepartmentObj.id)
+                              }
+                            />
+                          )}
+                          <DeleteButton
+                            className="btn btn-danger btn-sm mr-1 py-0 px-2"
+                            onDelete={() =>
+                              handleDeleteDepartment(addDepartmentObj.id)
+                            }
+                          />
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="2">No data available in table</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

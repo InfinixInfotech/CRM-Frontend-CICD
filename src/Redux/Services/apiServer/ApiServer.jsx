@@ -1,5 +1,5 @@
 import React from 'react';
-const isLive = true;
+const isLive = false;
 const envUrl = import.meta.env.VITE_API_URL;
 const apiUrl = isLive ? envUrl : '';
   
@@ -40,7 +40,7 @@ export const deleteSegmentPlanUrl = `${apiUrl}/api/SegmentPlan/DeleteSegmentPlan
 export const getAllSegmentPlanUrl = `${apiUrl}/api/SegmentPlan/GetAllSegmentPlanAsync`;
 export const getByIdSegmentPlanUrl = `${apiUrl}/api/SegmentPlan/GetSegmentById`;
 // --------------------------------------AddUser Api's----------------------------------------------------------------------------------------------------
-export const postUserUrl = `${apiUrl}/api/Users/AddUsers`;
+export const postUserUrl = `${apiUrl}/api/Users/AddUsers`; 
 export const putUserUrl = `${apiUrl}/api/Users/UpdateUsersById`;
 export const getAllUserUrl = `${apiUrl}/api/Users/GetAllUsers `;
 export const getByIdUserUrl = `${apiUrl}/api/Users/GetUserById`;
@@ -50,11 +50,31 @@ export const putGroupsUrl = `${apiUrl}/api/Groups/UpdateByIdGroups`;
 export const deleteGroupsUrl = `${apiUrl}/api/Groups/DeleteByIdGroups`;
 export const getAllGroupsUrl = `${apiUrl}/api/Groups/GetAllGroups`;
 export const getByIdGroupsUrl = `${apiUrl}/api/Groups/GetGroupsById`;
+//--------------------------------------Sales Order-------------------------------------------------------------------------------------------------------
+export const postSalesOrderUrl = `${apiUrl}/api/SO/InsertSO`;
+export const putSalesOrderUrl = `${apiUrl}/api/SO/UpdateSO`;
+export const deleteSalesOrderUrl = `${apiUrl}/api/SO/DeleteSO`;
+export const getAllSalesOrderUrl = `${apiUrl}/api/SO/GetAllSO `;
+export const getByIdSalesOrderUrl = `${apiUrl}/api/SO/GetSOById`;
+// ---------------------------------------------PaymentRise Api's--------------------------------------------------------------------------------------------------------------
+export const postLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/AddLeadPR`;
+export const putLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/UpdateLeadPRById`;
+export const deleteLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/DeleteLeadPRById`;
+export const getAllLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/GetAllLeadPR`;
+export const getByIdLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/GetLeadPRById`;
+// ---------------------------------------------AddLeads Api's----------------------------------------------------------------------------
+export const postAddLeadUrl = `${apiUrl}/api/Lead/AddLead`;
+export const putAddLeadUrl = `${apiUrl}/api/Lead/UpdateLeadById`;
+export const deleteAddLeadUrl = `${apiUrl}/api/Lead/DeleteLeadById`;
+export const getAllAddLeadUrl = `${apiUrl}/api/Lead/GetAllLead`;
+export const getByIdAddLeadUrl = `${apiUrl}/api/Lead/GetLeadById`;
+// ---------------------------------------------UploadLead Api's----------------------------------------------------------------------------
+export const postUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/UploadBulkLead`;
+export const fetchAllUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/CustomeFetchLeads`;
+export const GetByIdUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/GetLeadByEmployeeCode`;
 
 
-
-
-export const staticToken = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiJkNmZiOTNlOS1lMzVjLTQ0NjktYjU2Mi00ZjM1Njg4ZWIxN2MiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsImlhdCI6MTczMzEyODk3MSwiSXNBZG1pbiI6InRydWUiLCJleHAiOjE3NjQ2NjQ5NzEsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcyODIvIn0.NOSgVb8iz3rWk-Veu0FLRJLQIYnZvWDkPdKbpToGR30`
+export const staticToken ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyMzg2MDI5Mi04NzAzLTRmMzEtYjIzYS0zZjgwODUyYzFjNzkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsImlhdCI6MTczNDYwNDM0OCwiSXNBZG1pbiI6InRydWUiLCJleHAiOjE3NjYxNDAzNDgsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcyODIvIn0.Mmaz8WaZrAbJ1IVIxsRDtgkIaAb7VxBAGrNhFRum6vA'
 
 
 export default function ApiServer() {

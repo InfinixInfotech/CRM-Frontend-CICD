@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { EditButton } from "../../../../Components/Button/EditButton/EditButton";
-import { DeleteButton } from "../../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../../../Components/Button/DeleteButton/DeleteButton";
 import "./LeadStatus.css";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
 import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
@@ -15,6 +15,8 @@ import {
   putLeadStatusThunk,
   getByIdLeadStatusThunk,
 } from "../../../../Redux/Services/thunks/LeadStatusThunk";
+import { HashLoader } from "react-spinners";
+import { Alert } from "react-bootstrap";
 
 const LeadStatus = () => {
   const [statuses, setStatuses] = useState([]);
@@ -32,11 +34,24 @@ const LeadStatus = () => {
 
   useEffect(() => {
     if (data?.data) {
-      setStatuses(data.data);
+      const timer = setTimeout(() => {
+        setStatuses(data.data);
+      }, 500);
+      return () => clearTimeout(timer);
     }
   }, [data]);
 
-  const handleAddStatus = () => {
+  useEffect(() => {
+    if (msg) {
+      const alertTimer = setTimeout(() => {
+        setMsg("");
+      }, 3000); // Alert will disappear after 3 seconds
+      return () => clearTimeout(alertTimer);
+    }
+  }, [msg]);
+
+  const handleAddStatus = (e) => {
+    e.preventDefault();
     if (
       newStatus.trim() !== "" &&
       !statuses.some((s) => s.status === newStatus.trim())
@@ -44,9 +59,9 @@ const LeadStatus = () => {
       const newLeadStatus = { status: newStatus };
 
       dispatch(postLeadStatusThunk(newLeadStatus)).then((response) => {
-        setMsg(response?.payload?.message || "Status added successfully");
-        dispatch(getAllLeadStatusThunk());
+        setMsg(response?.payload?.message);
         setNewStatus("");
+        dispatch(getAllLeadStatusThunk());
       });
     }
   };
@@ -65,16 +80,17 @@ const LeadStatus = () => {
   };
 
   const handleDeleteStatus = (id) => {
-    if (window.confirm("Are you sure you want to delete this status?")) {
-      dispatch(deleteLeadStatusThunk(id))
-        .unwrap()
-        .then((response) => {
-          setMsg(response.message || "Status deleted successfully");
-        })
-        .catch((error) => {
-          setMsg(error || "Failed to delete status");
-        });
-    }
+    dispatch(deleteLeadStatusThunk(id))
+      .unwrap()
+      .then((response) => {
+        setMsg(response.message || "Status deleted successfully");
+        setStatuses((prevStatuses) =>
+          prevStatuses.filter((status) => status.id !== id)
+        );
+      })
+      .catch((error) => {
+        setMsg(error || "Failed to delete status");
+      });
   };
 
   const fetchStatusById = (id) => {
@@ -105,15 +121,17 @@ const LeadStatus = () => {
         >
           <div className="addLeadscontainer add-status p-2 ">
             <h4 className=" p-0  text-dark ">Add New Lead Status</h4>
-            <input
-              type="text"
-              value={newStatus}
-              onChange={(e) => setNewStatus(e.target.value)}
-              placeholder="Enter Lead Status"
-            />
-            <button onClick={handleAddStatus} className="btn btn-primary">
-              Create
-            </button>
+            <form onSubmit={handleAddStatus}>
+              <input
+                type="text"
+                value={newStatus}
+                onChange={(e) => setNewStatus(e.target.value)}
+                placeholder="Enter Lead Status"
+              />
+              <button type="submit" className="btn btn-primary">
+                Create
+              </button>
+            </form>
             <p className="mt-3 text-success"></p>
           </div>
           <div className="bg-white p-4 rounded border border-4 border-gray">
@@ -123,6 +141,12 @@ const LeadStatus = () => {
               <PdfButton />
               <CsvButton />
               <CopyButton />
+
+              {msg && (
+                <Alert variant="info" className="mt-2 text-center">
+                  {msg}
+                </Alert>
+              )}
             </div>
             <table
               id="table-data"
@@ -136,11 +160,30 @@ const LeadStatus = () => {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="2" className="text-center">
-                      Loading...
-                    </td>
-                  </tr>
+                  <div
+                    style={{
+                      position: "fixed", // Fixed to ensure it stays over everything
+                      top: 0,
+                      left: 0,
+                      width: "100vw", // Full width
+                      height: "100vh", // Full height
+                      backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
+                      zIndex: 9998, // Make sure it's above most elements
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%", // Center vertically
+                        left: "50%", // Center horizontally
+                        transform: "translate(-50%, -50%)", // Correct alignment
+                        zIndex: 9999, // Ensure the loader is above the overlay
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <HashLoader color="#0060f1" size={50} />
+                    </div>
+                  </div>
                 ) : error ? (
                   <tr>
                     <td colSpan="2" className="text-center text-danger">
@@ -177,8 +220,8 @@ const LeadStatus = () => {
                             />
                           )}
                           <DeleteButton
-                            className="btn btn-danger btn-sm mr-1  py-0 px-2"
-                            onClick={() => handleDeleteStatus(statusObj.id)}
+                            className="btn btn-danger btn-sm mr-1 py-0 px-2"
+                            onDelete={() => handleDeleteStatus(statusObj.id)}
                           />
                         </div>
                       </td>

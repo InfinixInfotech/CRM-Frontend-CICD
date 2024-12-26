@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { DeleteButton } from "../../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../../../Components/Button/DeleteButton/DeleteButton";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
 import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
 import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
@@ -14,8 +14,8 @@ import {
   postLeadSourceThunk,
   putLeadSourceThunk,
 } from "../../../../Redux/Services/thunks/LeadSourceThunk";
-
-
+import { HashLoader } from "react-spinners";
+import { Alert } from "react-bootstrap";
 
 const LeadSource = () => {
   const [leadSource, setLeadSource] = useState([]);
@@ -24,7 +24,6 @@ const LeadSource = () => {
   const [editValue, setEditValue] = useState("");
   const [msg, setMsg] = useState("");
   const dispatch = useDispatch();
-
 
   const { data, loading, error } = useSelector((state) => state.leadsource);
 
@@ -38,7 +37,18 @@ const LeadSource = () => {
     }
   }, [data]);
 
-  const handleAddLeadSource = () => {
+  useEffect(() => {
+    if (msg) {
+      const alertTimer = setTimeout(() => {
+        setMsg("");
+      }, 3000); // Alert will disappear after 3 seconds
+      return () => clearTimeout(alertTimer);
+    }
+  }, [msg]);
+
+  const handleAddLeadSource = (e) => {
+    e.preventDefault();
+
     if (
       newLeadSource.trim() !== "" &&
       !leadSource.includes(newLeadSource.trim())
@@ -48,9 +58,13 @@ const LeadSource = () => {
       };
 
       dispatch(postLeadSourceThunk(newAddLeadSource)).then((response) => {
-        setMsg(response?.payload?.message || "Source added successfully");
-        setLeadSource([...leadSource, newLeadSource.trim()]);
+        setLeadSource((prevState) => [
+          ...prevState,
+          { leadSourceValue: newLeadSource, id: response.id },
+        ]);
         setNewLeadSource("");
+        setMsg(response.message || "Status added successfully");
+
       });
     }
   };
@@ -69,16 +83,17 @@ const LeadSource = () => {
   };
 
   const handleDeleteLeadSource = (id) => {
-    if (window.confirm("Are you sure you want to delete this status?")) {
-      dispatch(deleteLeadSourceThunk(id))
-        .unwrap()
-        .then((response) => {
-          setMsg(response.message || "Status deleted successfully");
-        })
-        .catch((error) => {
-          setMsg(error || "Failed to delete status");
-        });
-    }
+    dispatch(deleteLeadSourceThunk(id))
+      .unwrap()
+      .then((response) => {
+        setMsg(response.message || "Status deleted successfully");
+        setLeadSource((prevStatuses) =>
+          prevStatuses.filter((status) => status.id !== id)
+        );
+      })
+      .catch((error) => {
+        setMsg(error || "Failed to delete status");
+      });
   };
 
   const fetchLeadSourceById = (id) => {
@@ -105,17 +120,15 @@ const LeadSource = () => {
         >
           <div className="addLeadscontainer add-status p-2 mb-2">
             <h4 className="p-0 mb-3 text-dark ">Add New Pool</h4>
-
-            <input
-              type="text"
-              value={newLeadSource}
-              onChange={(e) => setNewLeadSource(e.target.value)}
-              placeholder="Pool Name"
-            />
-            <button onClick={handleAddLeadSource} className="btn btn-primary ">
-              Create
-            </button>
-            <p className="mt-3 text-success">{msg}</p>
+            <form onSubmit={handleAddLeadSource}>
+              <input
+                type="text"
+                value={newLeadSource}
+                onChange={(e) => setNewLeadSource(e.target.value)}
+                placeholder="Pool Name"
+              />
+              <button className="btn btn-primary ">Create</button>
+            </form>
           </div>
 
           <div className="bg-white p-4 rounded border border-4 border-gray">
@@ -125,6 +138,12 @@ const LeadSource = () => {
               <PdfButton />
               <CsvButton />
               <CopyButton />
+
+              {msg && (
+                <Alert variant="info" className="mt-2 text-center">
+                  {msg}
+                </Alert>
+              )}
             </div>
             <table
               id="table-data"
@@ -138,11 +157,30 @@ const LeadSource = () => {
               </thead>
               <tbody>
                 {loading ? (
-                  <tr>
-                    <td colSpan="2" className="text-center">
-                      Loading...
-                    </td>
-                  </tr>
+                  <div
+                    style={{
+                      position: "fixed", // Fixed to ensure it stays over everything
+                      top: 0,
+                      left: 0,
+                      width: "100vw", // Full width
+                      height: "100vh", // Full height
+                      backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
+                      zIndex: 9998, // Make sure it's above most elements
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%", // Center vertically
+                        left: "50%", // Center horizontally
+                        transform: "translate(-50%, -50%)", // Correct alignment
+                        zIndex: 9999, // Ensure the loader is above the overlay
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <HashLoader color="#0060f1" size={50} />
+                    </div>
+                  </div>
                 ) : error ? (
                   <tr>
                     <td colSpan="2" className="text-center text-danger">
@@ -150,19 +188,7 @@ const LeadSource = () => {
                     </td>
                   </tr>
                 ) : leadSource.length > 0 ? (
-                  // leadSource.map((leadSource, index) => (
-                  //   <tr key={leadSourceObj.id || index}>
-                  //     <td>{leadSourceObj.leadSourceValue}</td>{" "}
-                  //     <td className="text-center">
-                  //       <div className="d-flex justify-content-center align-items-center gap-2">
-                  //         <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
-                  //         <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2 " />
-                  //       </div>
-                  //     </td>
-                  //   </tr>
-                  // ))
-
-                  leadSource.map((leadSourceObj,index) => (
+                  leadSource.map((leadSourceObj, index) => (
                     <tr key={leadSourceObj.id || index}>
                       <td>
                         {editLeadSource === leadSourceObj.id ? (
@@ -179,7 +205,9 @@ const LeadSource = () => {
                         <div className="d-flex justify-content-center align-items-center gap-2">
                           {editLeadSource === leadSourceObj.id ? (
                             <button
-                              onClick={() => handleEditLeadSource(leadSourceObj.id)}
+                              onClick={() =>
+                                handleEditLeadSource(leadSourceObj.id)
+                              }
                               className="btn btn-success"
                             >
                               Save
@@ -187,17 +215,21 @@ const LeadSource = () => {
                           ) : (
                             <EditButton
                               className="btn btn-primary btn-sm mr-1 py-0 px-2"
-                              onClick={() => fetchLeadSourceById(leadSourceObj.id)}
+                              onClick={() =>
+                                fetchLeadSourceById(leadSourceObj.id)
+                              }
                             />
                           )}
                           <DeleteButton
                             className="btn btn-danger btn-sm mr-1  py-0 px-2"
-                            onClick={() => handleDeleteLeadSource(leadSourceObj.id)}
+                            onDelete={() =>
+                              handleDeleteLeadSource(leadSourceObj.id)
+                            }
                           />
                         </div>
                       </td>
                     </tr>
-                    ))
+                  ))
                 ) : (
                   <tr>
                     <td colSpan="2" className="text-center">

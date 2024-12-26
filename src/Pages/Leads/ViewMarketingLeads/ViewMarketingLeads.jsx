@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { DeleteButton } from "../../../Components/Button/DeleteButton/DeleteButton";
+import  DeleteButton  from "../../../Components/Button/DeleteButton/DeleteButton";
 import { StatusButton } from "../../../Components/Button/StatusButton/StatusButton";
 import { SendButton } from "../../../Components/Button/SendButton/SendButton";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";

@@ -24,6 +24,9 @@
 
 }
 
+.Box-View-Leads{
+  background-color: red;
+}
 .outerBgBox{
   margin-top: var(--marginTop-outerBgBox);
   background-color: var(--backgroundColor-outerBgBox);

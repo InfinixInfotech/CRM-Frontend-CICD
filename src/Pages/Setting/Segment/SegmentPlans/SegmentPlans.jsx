@@ -1,13 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { EditButton } from "../../../../Components/Button/EditButton/EditButton";
-import { DeleteButton } from "../../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../../../Components/Button/DeleteButton/DeleteButton";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
 import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
 import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteSegmentPlanThunk, getAllSegmentPlanThunk, getByIdSegmentPlanThunk, postSegmentPlanThunk, putSegmentPlanThunk } from "../../../../Redux/Services/thunks/SegmentPlanThunk";
+import { Alert } from "react-bootstrap";
+import {
+  deleteSegmentPlanThunk,
+  getAllSegmentPlanThunk,
+  getByIdSegmentPlanThunk,
+  postSegmentPlanThunk,
+  putSegmentPlanThunk,
+} from "../../../../Redux/Services/thunks/SegmentPlanThunk";
+import { HashLoader } from "react-spinners";
+
 
 const SegmentPlans = () => {
   const [plans, setPlans] = useState([]);
@@ -27,9 +36,22 @@ const SegmentPlans = () => {
 
   useEffect(() => {
     if (data?.data) {
-      setPlans(data.data);
+      const timer = setTimeout(() => {
+        setPlans(data.data);
+      }, 500);
+      return () => clearTimeout(timer);
     }
   }, [data]);
+  
+
+  useEffect(() => {
+    if (msg) {
+      const alertTimer = setTimeout(() => {
+        setMsg("");
+      }, 3000);
+      return () => clearTimeout(alertTimer);
+    }
+  }, [msg]);
 
   const segmentOptions = [
     { value: "StockCash", label: "Stock Cash" },
@@ -45,7 +67,8 @@ const SegmentPlans = () => {
   ];
 
   // Handle adding a new plan
-  const handleAddPlan = () => {
+  const handleAddPlan = (e) => {
+    e.preventDefault();
     if (newSegment && newAmount && newTimePeriod) {
       const newPlan = {
         segmentName: newSegment,
@@ -66,7 +89,6 @@ const SegmentPlans = () => {
     }
   };
 
-
   const handleEditSegmentPlan = (id) => {
     if (editValue.trim() !== "") {
       dispatch(putSegmentPlanThunk({ id, segmentName: editValue })).then(
@@ -81,16 +103,17 @@ const SegmentPlans = () => {
   };
 
   const handleDeleteSegmentPlan = (id) => {
-    if (window.confirm("Are you sure you want to delete this segment plan?")) {
-      dispatch(deleteSegmentPlanThunk(id))
-        .unwrap()
-        .then((response) => {
-          setMsg(response.message || "deleted successfully");
-        })
-        .catch((error) => {
-          setMsg(error || "Failed to delete");
-        });
-    }
+    dispatch(deleteSegmentPlanThunk(id))
+      .unwrap()
+      .then((response) => {
+        setMsg(response.message || "deleted successfully");
+        setPlans((prevStatuses) =>
+          prevStatuses.filter((status) => status.id !== id)
+        );
+      })
+      .catch((error) => {
+        setMsg(error || "Failed to delete");
+      });
   };
 
   const fetchSegmentPlanById = (id) => {
@@ -117,7 +140,8 @@ const SegmentPlans = () => {
         >
           <div className="addLeadscontainer add-status p-2 mb-2">
             <h4 className="mb-3 text-dark">Add New Plan</h4>
-            <div className="d-flex align-items-center gap-3">
+
+            <form onSubmit={handleAddPlan} className="d-flex align-items-center gap-3">
               <select
                 value={newSegment}
                 onChange={(e) => setNewSegment(e.target.value)}
@@ -152,14 +176,14 @@ const SegmentPlans = () => {
                 className="form-control me-3"
               />
 
-              <button
-                onClick={handleAddPlan}
-                className="btn btn-primary px-3 py-1"
-              >
-                Add
-              </button>
-              <p>{msg}</p>
-            </div>
+              <button type="submit" className="btn btn-primary px-3 py-1">Add</button>
+            </form>
+
+            {msg && (
+              <Alert variant="info" className="mt-2 text-center">
+                {msg}
+              </Alert>
+            )}
           </div>
 
           <div className="bg-white p-4 rounded border border-4 border-gray">
@@ -175,6 +199,7 @@ const SegmentPlans = () => {
               className="table table-bordered table-striped"
             >
               <thead>
+                <p>{msg}</p>
                 <tr>
                   <th>Segment</th>
                   <th>Amount (INR)</th>
@@ -183,13 +208,31 @@ const SegmentPlans = () => {
                 </tr>
               </thead>
               <tbody>
-                {
-                loading ? (
-                  <tr>
-                    <td colSpan="2" className="text-center">
-                      Loading...
-                    </td>
-                  </tr>
+                {loading ? (
+                  <div
+                    style={{
+                      position: "fixed", // Fixed to ensure it stays over everything
+                      top: 0,
+                      left: 0,
+                      width: "100vw", // Full width
+                      height: "100vh", // Full height
+                      backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
+                      zIndex: 9998, // Make sure it's above most elements
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "50%", // Center vertically
+                        left: "50%", // Center horizontally
+                        transform: "translate(-50%, -50%)", // Correct alignment
+                        zIndex: 9999, // Ensure the loader is above the overlay
+                        backgroundColor: "transparent",
+                      }}
+                    >
+                      <HashLoader color="#0060f1" size={50} />
+                    </div>
+                  </div>
                 ) : error ? (
                   <tr>
                     <td colSpan="2" className="text-center text-danger">
@@ -197,20 +240,7 @@ const SegmentPlans = () => {
                     </td>
                   </tr>
                 ) : plans.length > 0 ? (
-                  // plans.map((plan, index) => (
-                  //   <tr key={index}>
-                  //     <td>{plan.segmentName}</td>
-                  //     <td>{plan.amount.value}</td>
-                  //     <td>{plan.term}</td>
-                  //     <td className="text-center">
-                  //       <div className="d-flex justify-content-center align-items-center gap-2">
-                  //         <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
-                  //         <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2 " />
-                  //       </div>
-                  //     </td>
-                  //   </tr>
-                  // ))
-                  plans.map((planObj,index) => (
+                  plans.map((planObj, index) => (
                     <tr key={planObj.id}>
                       <td>{planObj.segmentName}</td>
                       <td>{planObj.amount.value}</td>
@@ -232,7 +262,7 @@ const SegmentPlans = () => {
                           )}
                           <DeleteButton
                             className="btn btn-danger btn-sm mr-1 py-0 px-2"
-                            onClick={() => handleDeleteSegmentPlan(planObj.id)}
+                            onDelete={() => handleDeleteSegmentPlan(planObj.id)}
                           />
                         </div>
                       </td>

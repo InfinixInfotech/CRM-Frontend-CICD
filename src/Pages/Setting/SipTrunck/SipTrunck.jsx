@@ -4,7 +4,7 @@ import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButt
 import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
-import { DeleteButton } from "../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton  from "../../../Components/Button/DeleteButton/DeleteButton";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
 
 const SipTrunk = () => {

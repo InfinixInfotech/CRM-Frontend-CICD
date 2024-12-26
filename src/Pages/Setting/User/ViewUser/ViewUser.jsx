@@ -6,6 +6,7 @@ import {
   getByIdUserThunk,
 } from "../../../../Redux/Services/thunks/UserThunk";
 import { useDispatch, useSelector } from "react-redux";
+import { HashLoader } from "react-spinners";
 
 const ViewUser = () => {
   const [users, setUsers] = useState([]);
@@ -21,52 +22,15 @@ const ViewUser = () => {
   useEffect(() => {
     dispatch(getAllUserThunk());
   }, [dispatch]);
-  
+
   useEffect(() => {
     if (data?.data) {
-      setUsers(data.data); // Sets the 'data' array from the API response
+      const timer = setTimeout(() => {
+        setUsers(data.data);
+      }, 500);
+      return () => clearTimeout(timer);
     }
   }, [data]);
-  
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-  
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
-  // useEffect(() => {
-  //   const fetchUsers = async () => {
-  //     const mockData = [
-  //       {
-  //         id: 1,
-  //         username: "Roshan.Chouhan",
-  //         empCode: 117,
-  //         extension: 5013,
-  //         password: "172314",
-  //       },
-  //       {
-  //         id: 2,
-  //         username: "Nikhil.Mourya",
-  //         empCode: 106,
-  //         extension: 3012,
-  //         password: "-0987654321*",
-  //       },
-  //       {
-  //         id: 3,
-  //         username: "Mayuri.Lohar",
-  //         empCode: 4,
-  //         extension: 5029,
-  //         password: "Mayuri@123",
-  //       },
-
-  //     ];
-  //     setUsers(mockData);
-  //   };
-
-  //   fetchUsers();
-  // }, []);
 
   // Handle search filtering
   const filteredUsers = users.filter(
@@ -149,7 +113,38 @@ const ViewUser = () => {
               </tr>
             </thead>
             <tbody>
-              {users && users.length > 0 ? (
+              {loading ? (
+                <div
+                  style={{
+                    position: "fixed", // Fixed to ensure it stays over everything
+                    top: 0,
+                    left: 0,
+                    width: "100vw", // Full width
+                    height: "100vh", // Full height
+                    backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
+                    zIndex: 9998, // Make sure it's above most elements
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "50%", // Center vertically
+                      left: "50%", // Center horizontally
+                      transform: "translate(-50%, -50%)", // Correct alignment
+                      zIndex: 9999, // Ensure the loader is above the overlay
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    <HashLoader color="#0060f1" size={50} />
+                  </div>
+                </div>
+              ) : error ? (
+                <tr>
+                  <td colSpan="2" className="text-center text-danger">
+                    Error: {error}
+                  </td>
+                </tr>
+              ) : users.length > 0 ? (
                 users.map((user, index) => (
                   <tr key={user.employeeCode || index}>
                     <td>{user.userName || "N/A"}</td>

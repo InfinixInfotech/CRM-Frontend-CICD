@@ -4,9 +4,14 @@ import departmentReducer from "../Reducers/DepartmentReducer";
 import leadSourceReducer from "../Reducers/LeadSourceReducer";
 import segmentListReducer from "../Reducers/SegmentListReducer";
 import qualificationReducer from "../Reducers/QualificationReducer";
-import segmentPlanReducer from "../Reducers/SegmentPlanReducer"
-import userReducer from "../Reducers/UserReducer"
-import groupsReducer from "../Reducers/GroupsReducer"
+import segmentPlanReducer from "../Reducers/SegmentPlanReducer";
+import userReducer from "../Reducers/UserReducer";
+import groupsReducer from "../Reducers/GroupsReducer";
+import salesOrderReducer from "../Reducers/SalesOrderReducer";
+import leadPaymentRaiseReducer from "../Reducers/LeadPaymentRaiseReducer"
+import addLeadReducer from "../Reducers/AddLeadReducer"
+import uploadBulkLeadReducer from "../Reducers/UploadBulkLeadReducer"
+
 
 const store = configureStore({
   reducer: {
@@ -19,6 +24,11 @@ const store = configureStore({
     segmentplan: segmentPlanReducer,
     user: userReducer,
     groups : groupsReducer,
+    salesorder: salesOrderReducer,
+    leadpaymentraise: leadPaymentRaiseReducer, 
+    addlead: addLeadReducer,
+    uploadbulklead: uploadBulkLeadReducer,
+
   },
 });
 
