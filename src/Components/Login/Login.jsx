@@ -10,7 +10,7 @@ const LoginPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const url = 'http://192.168.1.29:5118/api/Auth/login';
+  const url = 'http://192.168.1.xyz:5118/api/Auth/login';
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -23,12 +23,13 @@ const LoginPage = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userName,password}),
       });
-
       const data = await response.json();
-
       if (data.response.success) {
-        localStorage.setItem("authToken", data.response.token);
-        navigate("/dashboard");
+        localStorage.setItem("authToken",data.response.token);
+        localStorage.setItem("employcode", data.response.employeeCode);
+        localStorage.setItem("groupName", data.response.groupName);
+
+        navigate("/salesdashboard");
       } else {
         setError(data.response.message || "Login failed");
       }

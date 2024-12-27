@@ -1,11 +1,12 @@
 import { apiDeleteCallWithAuth, apiGetCallWithAuth, apiPostCallWithAuth, apiPutCallWithAuth } from "../../../Utils/apiUtils";
-import { deleteLeadPaymentRaiseUrl, getAllLeadPaymentRaiseUrl, getByIdLeadPaymentRaiseUrl, postLeadPaymentRaiseUrl, putLeadPaymentRaiseUrl, staticToken } from "../apiServer/ApiServer";
+import { CreateDesignationUrl, deleteDesignationUrl, fetchByIdDesignationUrl, GetAllDesignationUrl, UpdateDesignationUrl } from "../apiServer/ApiServer";
 
 
-export const postLeadPaymentRaise = async (params) => {
+export const CreateDesignation = async (params) => {
   try {
+    console.log(params)
     const response = await apiPostCallWithAuth(
-      postLeadPaymentRaiseUrl,
+      CreateDesignationUrl,
       params,
       staticToken
     );
@@ -17,9 +18,9 @@ export const postLeadPaymentRaise = async (params) => {
   }
 };
 
-export const getAllLeadPaymentRaise = async () => {
+export const GetAllDesignation = async () => {
   try {
-    const response = await apiGetCallWithAuth(getAllLeadPaymentRaiseUrl, staticToken);
+    const response = await apiGetCallWithAuth(GetAllDesignationUrl, staticToken);
     return response;
 
   } catch (error) {
@@ -28,9 +29,9 @@ export const getAllLeadPaymentRaise = async () => {
 };
 
 
-export const deleteLeadPaymentRaise = async (id) => {
+export const deleteDesignation = async (id) => {
   try {
-    const urlWithId = `${deleteLeadPaymentRaiseUrl}?id=${id}`;
+    const urlWithId = `${deleteDesignationUrl}?id=${id}`;
     const response = await apiDeleteCallWithAuth(urlWithId, staticToken);
     return response; 
   } catch (error) {
@@ -39,22 +40,20 @@ export const deleteLeadPaymentRaise = async (id) => {
   }
 };
 
-export const putLeadPaymentRaise = async (params) => {
+export const UpdateDesignation = async (params) => {
   try {
-    const { id } = params;  // Extract the id from the params object
-    const urlWithId = `${putLeadPaymentRaiseUrl}?id=${id}`;  // Use the id from params to construct the URL
+    const urlWithId = `${UpdateDesignationUrl}?id=${id}`;
     const response = await apiPutCallWithAuth(urlWithId, params, staticToken);
-    return response;
+    return response; 
   } catch (error) {
     console.error("Error updating lead status:", error);
     return null;
   }
 };
 
-
-export const getByIdLeadPaymentRaise = async (id) => {
+export const fetchByIdDesignation = async (id) => {
   try {
-    const urlWithId = `${getByIdLeadPaymentRaiseUrl}?id=${id}`;
+    const urlWithId = `${fetchByIdDesignationUrl}?id=${id}`;
     const response = await apiGetCallWithAuth(urlWithId, staticToken);
     return response; 
   } catch (error) {

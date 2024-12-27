@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
+import "bootstrap/dist/css/bootstrap.min.css"; 
 import { postSalesOrderThunk } from "../../Redux/Services/thunks/SalesOrderThunk";
 import { useDispatch } from "react-redux";
 import { staticToken } from "../../Redux/Services/apiServer/ApiServer";
@@ -144,9 +144,10 @@ const addSalesOrder = () => {
       <h2 className="text-center bg-dark text-white py-2 mt-5">
         Add Sales Order
       </h2>
-      <div className="container-fluid border border-secondary w-75 py-3">
+      <div  className="container-fluid border border-secondary w-75 py-3 rounded" style={{backgroundColor:"#E3E3E3"}}>
         <form onSubmit={handleSubmit}>
           <div className="row">
+
             {/* Personal Details Section */}
             <div className="col-md-6">
               <h5 className="fw-bold text-dark mb-3 border-bottom">

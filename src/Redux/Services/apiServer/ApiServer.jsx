@@ -69,6 +69,12 @@ export const deleteAddLeadUrl = `${apiUrl}/api/Lead/DeleteLeadById`;
 export const getAllAddLeadUrl = `${apiUrl}/api/Lead/GetAllLead`;
 export const getByIdAddLeadUrl = `${apiUrl}/api/Lead/GetLeadById`;
 // ---------------------------------------------UploadLead Api's----------------------------------------------------------------------------
+export const CreateDesignationUrl = `${apiUrl}/api/Designation/CreateDesignation`;
+export const UpdateDesignationUrl = `${apiUrl}/api/Designation/UpdateDesignation`;
+export const GetAllDesignationUrl = `${apiUrl}/api/Designation/GetAllDesignation`;
+export const fetchByIdDesignationUrl = `${apiUrl}/api/Designation/GetDesignationById`;
+export const deleteDesignationUrl = `${apiUrl}/api/Designation/DeleteDesignation`;
+// ---------------------------------------------UploadLead Api's----------------------------------------------------------------------------
 export const postUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/UploadBulkLead`;
 export const fetchAllUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/CustomeFetchLeads`;
 export const GetByIdUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/GetLeadByEmployeeCode`;

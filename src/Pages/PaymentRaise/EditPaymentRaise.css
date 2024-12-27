@@ -1,0 +1,12 @@
+:root{
+    --fontWeight-lables : 600;
+    --background-color-addleadSections : rgb(227,227,227);
+}
+
+.form-label{
+    font-weight: var(--fontWeight-lables);
+}
+
+.addleadSections{
+    background-color : var(--background-color-addleadSections)
+}

@@ -16,11 +16,11 @@ export const postUploadBulkLead = async (params) => {
     return null;
   }
 };
-
+     
 export const getByIdUploadBulkLead = async (params) => {
   console.log(params);
   try {
-    const urlWithId = `${GetByIdUploadBulkLeadUrl}?EmployeeCode=INFSASHANT1007&CampaignName=INFDEC232024`;
+    const urlWithId = `${GetByIdUploadBulkLeadUrl}?EmployeeCode=INFSASHANT1007&CampaignName=sashantSir`;
     console.log(urlWithId);
     
     const response = await apiGetCallWithRersponseAuth(urlWithId, params, staticToken);
@@ -33,7 +33,7 @@ export const getByIdUploadBulkLead = async (params) => {
 
 export const fetchAllUploadBulkLead = async (params) => {
   try {
-    const urlWithId = `${fetchAllUploadBulkLeadUrl}?EmployeeCode=INFSASHANT1007&CampaignName=INFDEC232024`;
+    const urlWithId = `${fetchAllUploadBulkLeadUrl}?EmployeeCode=INFSASHANT1007&CampaignName=sashantSir`;
     const response = await apiGetCallWithRersponseAuth(urlWithId, params, staticToken);
     return response;
   } catch (error) {

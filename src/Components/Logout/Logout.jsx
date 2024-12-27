@@ -5,8 +5,12 @@ const LogoutPage = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     // Clear authentication token
+  
     localStorage.removeItem("authToken");
     navigate("/");
+
+    localStorage.removeItem("employcode");
+    localStorage.removeItem("groupName");
   };
 
   

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { EditButton } from "../../Components/Button/EditButton/EditButton";
-import  DeleteButton from "../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../Components/Button/DeleteButton/DeleteButton";
 import { PrintButton } from "../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
 import { CsvButton } from "../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { useNavigate } from "react-router-dom";
 import "./SalesOrder.css";
+
+import { getAllSalesOrderThunk } from "../../Redux/Services/thunks/SalesOrderThunk";
+import { useDispatch } from "react-redux";
 
 const SalesOrder = () => {
   const Navigate = useNavigate();
@@ -128,6 +131,39 @@ const SalesOrder = () => {
 
   const [showPopup, setShowPopup] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState(null);
+
+  const dispatch = useDispatch();
+
+  // const GetAllSalesOrder = () => {
+  //   dispatch(getAllSalesOrderThunk())
+  //     .then((response) => {
+  //       if (response?.error) {
+  //         console.error('Error:', response.error);
+  //       } else {
+  //         const salesorder = response.payload?.data;
+  //         console.log(salesorder);
+  //         setsalesOrder(salesorder);
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error('Request failed', error);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   GetAllSalesOrder();
+  // }, [dispatch]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        dispatch(getAllSalesOrderThunk());
+      };  
+      fetchData();
+    }, [dispatch]);
+  
+    useEffect(() => {
+      setsalesOrder(data.data);
+    }, [data]);
 
   const handleEmailPopup = (email) => {
     setSelectedEmail(email);
@@ -273,7 +309,7 @@ const SalesOrder = () => {
                         </button>
                         <DeleteButton className="btn btn-danger btn-sm py-0 px-2" />
                         <EditButton
-                          onDelete={handleNavigate}
+                          onClick={handleNavigate}
                           className="btn btn-primary btn-sm py-0 px-2"
                         />
                       </div>

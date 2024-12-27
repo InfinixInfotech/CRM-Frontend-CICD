@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "./Payment.css"
-import  DeleteButton  from "../../Components/Button/DeleteButton/DeleteButton";
+import "./Payment.css";
+import DeleteButton from "../../Components/Button/DeleteButton/DeleteButton";
 import { EditButton } from "../../Components/Button/EditButton/EditButton";
 import { PrintButton } from "../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
 import { CsvButton } from "../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
@@ -8,224 +8,50 @@ import { PdfButton } from "../../Components/Button/DataButton/DataPdfButton/Data
 import { CopyButton } from "../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { StatusButton } from "../../Components/Button/StatusButton/StatusButton";
 
-
-
+import { getAllLeadPaymentRaiseThunk } from "../../Redux/Services/thunks/LeadPaymentRaiseThunk";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 const Payment = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState(null);
-  const [payments, setPayments] = useState([
-    {
-      leadId: 1928161,
-      paymentId: null,
-      paymentDate: "28-11-2024",
-      clientName: "Pradeep Kumar",
-      mobile: "9430391604",
-      leadOwner: "Vikas Choubey",
-      manager: "Kundan Meena",
-      panNo: "BQEPS9474F",
-      segment: "Stock Option",
-      bank: "Payment Gateway",
-      total: 6500,
-      remark: null,
-      refId: null,
-      email: "kpradeep47238@gmail.com",
-      city: "Hazaribag",
-      state: "Jharkhand",
-      dob: "1984-06-05",
-      status: "Pending",
-    },
-    {
-      leadId: 1928161,
-      paymentId: null,
-      paymentDate: "28-11-2024",
-      clientName: "Pradeep Kumar",
-      mobile: "9430391604",
-      leadOwner: "Vikas Choubey",
-      manager: "Kundan Meena",
-      panNo: "BQEPS9474F",
-      segment: "Stock Option",
-      bank: "Payment Gateway",
-      total: 6500,
-      remark: null,
-      refId: null,
-      email: "kpradeep47238@gmail.com",
-      city: "Hazaribag",
-      state: "Jharkhand",
-      dob: "1984-06-05",
-      status: "Pending",
-    },
-    {
-      leadId: 1928161,
-      paymentId: null,
-      paymentDate: "28-11-2024",
-      clientName: "Pradeep Kumar",
-      mobile: "9430391604",
-      leadOwner: "Vikas Choubey",
-      manager: "Kundan Meena",
-      panNo: "BQEPS9474F",
-      segment: "Stock Option",
-      bank: "Payment Gateway",
-      total: 6500,
-      remark: null,
-      refId: null,
-      email: "kpradeep47238@gmail.com",
-      city: "Hazaribag",
-      state: "Jharkhand",
-      dob: "1984-06-05",
-      status: "Pending",
-    },
-    {
-      leadId: 1928161,
-      paymentId: null,
-      paymentDate: "28-11-2024",
-      clientName: "Pradeep Kumar",
-      mobile: "9430391604",
-      leadOwner: "Vikas Choubey",
-      manager: "Kundan Meena",
-      panNo: "BQEPS9474F",
-      segment: "Stock Option",
-      bank: "Payment Gateway",
-      total: 6500,
-      remark: null,
-      refId: null,
-      email: "kpradeep47238@gmail.com",
-      city: "Hazaribag",
-      state: "Jharkhand",
-      dob: "1984-06-05",
-      status: "Pending",
-    },
-    {
-      leadId: 1928161,
-      paymentId: null,
-      paymentDate: "28-11-2024",
-      clientName: "Pradeep Kumar",
-      mobile: "9430391604",
-      leadOwner: "Vikas Choubey",
-      manager: "Kundan Meena",
-      panNo: "BQEPS9474F",
-      segment: "Stock Option",
-      bank: "Payment Gateway",
-      total: 6500,
-      remark: null,
-      refId: null,
-      email: "kpradeep47238@gmail.com",
-      city: "Hazaribag",
-      state: "Jharkhand",
-      dob: "1984-06-05",
-      status: "Pending",
-    },
-    {
-      leadId: 1928161,
-      paymentId: null,
-      paymentDate: "28-11-2024",
-      clientName: "Pradeep Kumar",
-      mobile: "9430391604",
-      leadOwner: "Vikas Choubey",
-      manager: "Kundan Meena",
-      panNo: "BQEPS9474F",
-      segment: "Stock Option",
-      bank: "Payment Gateway",
-      total: 6500,
-      remark: null,
-      refId: null,
-      email: "kpradeep47238@gmail.com",
-      city: "Hazaribag",
-      state: "Jharkhand",
-      dob: "1984-06-05",
-      status: "Pending",
-    },
-    {
-      leadId: 1928161,
-      paymentId: null,
-      paymentDate: "28-11-2024",
-      clientName: "Pradeep Kumar",
-      mobile: "9430391604",
-      leadOwner: "Vikas Choubey",
-      manager: "Kundan Meena",
-      panNo: "BQEPS9474F",
-      segment: "Stock Option",
-      bank: "Payment Gateway",
-      total: 6500,
-      remark: null,
-      refId: null,
-      email: "kpradeep47238@gmail.com",
-      city: "Hazaribag",
-      state: "Jharkhand",
-      dob: "1984-06-05",
-      status: "Pending",
-    },
-    {
-      leadId: 1928161,
-      paymentId: null,
-      paymentDate: "28-11-2024",
-      clientName: "Pradeep Kumar",
-      mobile: "9430391604",
-      leadOwner: "Vikas Choubey",
-      manager: "Kundan Meena",
-      panNo: "BQEPS9474F",
-      segment: "Stock Option",
-      bank: "Payment Gateway",
-      total: 6500,
-      remark: null,
-      refId: null,
-      email: "kpradeep47238@gmail.com",
-      city: "Hazaribag",
-      state: "Jharkhand",
-      dob: "1984-06-05",
-      status: "Pending",
-    },
-    {
-      leadId: 1928161,
-      paymentId: null,
-      paymentDate: "28-11-2024",
-      clientName: "Pradeep Kumar",
-      mobile: "9430391604",
-      leadOwner: "Vikas Choubey",
-      manager: "Kundan Meena",
-      panNo: "BQEPS9474F",
-      segment: "Stock Option",
-      bank: "Payment Gateway",
-      total: 6500,
-      remark: null,
-      refId: null,
-      email: "kpradeep47238@gmail.com",
-      city: "Hazaribag",
-      state: "Jharkhand",
-      dob: "1984-06-05",
-      status: "Pending",
-    },
-    {
-      leadId: 1505649,
-      paymentId: null,
-      paymentDate: "28-11-2024",
-      clientName: "Prabhakar Balagunde",
-      mobile: "9060650055",
-      leadOwner: "Rahul Lokahnde",
-      manager: "Ashvini Godare",
-      panNo: null,
-      segment: "Stock Option",
-      bank: "SBI Bank",
-      total: 10000,
-      remark: null,
-      refId: null,
-      email: null,
-      city: "Gulbarga",
-      state: "Karnataka",
-      dob: "1985-06-15",
-      status: "Pending",
-    },
-  ]);
+  // const [payments, setPayments] = useState([]);
+  const [data, setdata] = useState([]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+
+  const handleNavigate = (id, paymentObj) => {
+    if (!paymentObj) {
+      console.error("Payment object is undefined or null");
+      return;
+    }
   
+    // console.log("payment ----------------------",paymentObj);
+    navigate(`/editpr/${id}`, { state: { paymentObj } });
+  };
+  
+  const fetchPaymentAll = () => {
+    dispatch(getAllLeadPaymentRaiseThunk()).then((response) => {
+      const payment = response.payload?.data;
+      console.log(payment);
+      setdata(payment);
+      // setEditStatus(payment?.id);
+      // setEditValue(payment?.payment);
+    });
+  };
+
+  useEffect(() => {
+    fetchPaymentAll();
+  }, [dispatch]);
+
   const handleEmailPopup = (email) => {
     setSelectedEmail(email);
     setShowPopup(true);
   };
-
   const handleClosePopup = () => {
     setShowPopup(false);
     setSelectedEmail(null);
   };
-
 
   return (
     <>
@@ -234,23 +60,13 @@ const Payment = () => {
       </h2>
 
       <div className="container-fluid border border-2 border-gray mt-1 ">
-        <div
-          className="outerBgBox mb-2"
-        >
+        <div className="outerBgBox mb-2">
           {/* Popup */}
           {showPopup && (
             <>
-              <div
-                className="popup-overlay"
-                onClick={handleClosePopup}
-              ></div>
-              <div
-                className="popup-content"
-              >
-                <button
-                  className="popup-close"
-                  onClick={handleClosePopup}
-                >
+              <div className="popup-overlay" onClick={handleClosePopup}></div>
+              <div className="popup-content">
+                <button className="popup-close" onClick={handleClosePopup}>
                   ✖
                 </button>
                 <h4 className="mb-3 text-center fs-6">Client Email</h4>
@@ -261,12 +77,42 @@ const Payment = () => {
             </>
           )}
 
-          <div
-            className="paymentTable container-fluid mt-2"
-          >
+          <div className="dropDownContainer p-3 m-3 ">
+            {/* Filters */}
+            <div className="row d-flex gap-2 mb-0 ">
+              {[
+                "Status",
+                "By Date",
+                "SO",
+                "Assigned",
+                "Bank Name",
+                "Branch",
+                "Lead Source",
+              ].map((filter, index) => (
+                <div className="col-md-2" key={index}>
+                  <div>
+                    <label className="ViewLeadFormLable form-label ">
+                      {filter}
+                    </label>
+                    <select
+                      className="formControl form-control px-2"
+                      style={{ width: "8vw" }}
+                    >
+                      <option value="all">{filter}</option>
+                      <option value="option1">Option 1</option>
+                      <option value="option2">Option 2</option>
+                    </select>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="paymentTable container-fluid mt-2">
             <table className="table table-bordered table-striped text-center">
               <thead className="thead-dark">
                 <tr>
+                <th>S.No.</th>
                   <th>Lead Id</th>
                   <th>Payment Date</th>
                   <th>Client Name</th>
@@ -285,33 +131,41 @@ const Payment = () => {
                 </tr>
               </thead>
               <tbody>
-                {payments.map((payment, index) => (
+                {data.map((paymentObj, index) => (
                   <tr key={index}>
-                    <td>{payment.leadId}</td>
-                    <td>{payment.paymentDate}</td>
-                    <td>{payment.clientName}</td>
-                    <td>{payment.mobile}</td>
-                    <td>{payment.leadOwner}</td>
-                    <td>{payment.manager}</td>
-                    <td>{payment.panNo || "N/A"}</td>
-                    <td>{payment.segment}</td>
-                    <td>{payment.bank}</td>
-                    <td>{payment.total}</td>
+                     <td>{paymentObj.id}</td>
+                    <td>{paymentObj.leadId}</td>
+                    <td>{paymentObj.paymentDetails?.paymentDate || "N/A"}</td>
+                    <td>{paymentObj.clientDetails?.name || "N/A"}</td>
+                    <td>{paymentObj.clientDetails?.mobile || "N/A"}</td>
+                    <td>{paymentObj.employeeName || "N/A"}</td>
+                    <td>{paymentObj.manager || "N/A"}</td>
+                    <td>{paymentObj.paymentDetails?.panNo || "N/A"}</td>
+                    <td>{paymentObj.productDetails?.segment || "N/A"}</td>
+                    <td>{paymentObj.paymentDetails?.bankName || "N/A"}</td>
+                    <td>{paymentObj.productDetails?.netAmount || "N/A"}</td>
                     <td>
                       <button
                         className="btn btn-sm text-primary"
-                        onClick={() => handleEmailPopup(payment.email)}
+                        onClick={() =>
+                          handleEmailPopup(paymentObj.clientDetails?.email)
+                        }
                       >
                         Email
                       </button>
                     </td>
-                    <td>{payment.city}</td>
-                    <td>{payment.state}</td>
-                    <td>{payment.dob}</td>
+                    <td>{paymentObj.paymentDetails?.city || "N/A"}</td>
+                    <td>{paymentObj.paymentDetails?.state || "N/A"}</td>
+                    <td>{paymentObj.clientDetails?.dob || "N/A"}</td>
                     <td>
                       <div className="d-flex flex-row gap-2">
                         <StatusButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
-                        <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
+                        <EditButton
+                          onClick={() =>
+                            handleNavigate(paymentObj.id, paymentObj)
+                          }
+                          className="btn btn-primary btn-sm mr-1 py-0 px-2"
+                        />
                         <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2" />
                       </div>
                     </td>

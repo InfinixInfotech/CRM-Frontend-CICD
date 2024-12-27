@@ -6,11 +6,50 @@ import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButt
 import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
+import {
+  CreateDesignationThunk,
+  deleteDesignationThunk,
+  fetchByIdDesignationThunk,
+  GetAllDesignationThunk,
+  UpdateDesignationThunk,
+} from "../../../Redux/Services/thunks/DesignationThunk";
+import { useDispatch, useSelector } from "react-redux";
+import { HashLoader } from "react-spinners";
+import { Alert } from "react-bootstrap";
 
 const Designation = () => {
   const [designation, setDesignation] = useState([]);
   const [newDesignation, setNewDesignation] = useState("");
   const [newTarget, setNewTarget] = useState("");
+  const [msg, setMsg] = useState("");
+  const { data, loading, error } = useSelector((state) => state.department);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch(GetAllDesignationThunk());   
+      setIsLoading(false);
+    };
+    fetchData();
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (data?.data) {
+      const timer = setTimeout(() => {
+        setDesignation(data.data);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (msg) {
+      const alertTimer = setTimeout(() => {
+        setMsg("");
+      }, 3000); // Alert will disappear after 3 seconds
+      return () => clearTimeout(alertTimer);
+    }
+  }, [msg]);
 
   const handleAddTarget = () => {
     if (newTarget.trim() !== "" && !designation.includes(newTarget.trim())) {
@@ -18,10 +57,11 @@ const Designation = () => {
         designationName: newDesignation,
         designationTarget: newTarget,
       };
-
-      setDesignation([...designation, newaddDesignation]);
-      setNewTarget("");
-      setNewDesignation("");
+      dispatch(CreateDesignationThunk(newaddDesignation)).then(() => {
+        setDesignation([...designation, newaddDesignation]);
+        setNewTarget("");
+        setNewDesignation("");
+      });
     }
   };
 
@@ -70,39 +110,64 @@ const Designation = () => {
               <PdfButton />
               <CsvButton />
               <CopyButton />
+
+              {msg && (
+                <Alert variant="info" className="mt-2 text-center">
+                  {msg}
+                </Alert>
+              )}
             </div>
-            <table
-              id="table-data"
-              className="table table-bordered table-striped"
-            >
-              <thead>
+            <tbody>
+              {loading ? (
+                <div
+                  style={{
+                    position: "fixed",
+                    top: 0,
+                    left: 0,
+                    width: "100vw",
+                    height: "100vh",
+                    backgroundColor: "rgba(104, 102, 102, 0.5)",
+                    zIndex: 9998,
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                      zIndex: 9999,
+                      backgroundColor: "transparent",
+                    }}
+                  >
+                    <HashLoader color="#0060f1" size={50} />
+                  </div>
+                </div>
+              ) : error ? (
                 <tr>
-                  <th>Designation Target</th>
-                  <th>Designation Name</th>
-                  <th className="text-center">Action</th>
+                  <td colSpan="2" className="text-center text-danger">
+                    Error: {error}
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {designation.length > 0 ? (
-                  designation.map((designationObj, index) => (
-                    <tr key={index}>
-                      <td>{designationObj.designationName}</td>
-                      <td>{designationObj.designationTarget}</td>
-                      <td className="text-center">
-                        <div className="d-flex justify-content-center align-items-center gap-2">
-                          <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2"/>
-                          <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2 "/>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="2">No data available in table</td>
+              ) : designation.length > 0 ? (
+                designation.map((designationObj, index) => (
+                  <tr key={index}>
+                    <td>{designationObj.designationName}</td>
+                    <td>{designationObj.designationTarget}</td>
+                    <td className="text-center">
+                      <div className="d-flex justify-content-center align-items-center gap-2">
+                        <EditButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
+                        <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2 " />
+                      </div>
+                    </td>
                   </tr>
-                )}
-              </tbody>
-            </table>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="2">No data available in table</td>
+                </tr>
+              )}
+            </tbody>
           </div>
         </div>
       </div>

@@ -1,32 +1,44 @@
 import React, { useEffect, useState } from "react";
-import "./PaymentRaise.css";
+import "./EditPaymentRaise.css";
 import { useDispatch, useSelector } from "react-redux";
-import { postLeadPaymentRaiseThunk } from "../../Redux/Services/thunks/LeadPaymentRaiseThunk";
-import { useNavigate } from "react-router-dom";
+import { putLeadPaymentRaiseThunk } from "../../Redux/Services/thunks/LeadPaymentRaiseThunk";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { apiPostCallWithAuth } from "../../Utils/apiUtils";
+import { staticToken } from "../../Redux/Services/apiServer/ApiServer";
 
-const PaymentRaise = () => {
+const EditPaymentRaise = () => {
+
+  const dispatch = useDispatch(); 
+  const { state } = useLocation();
+   // Get the data passed via navigate
+  const paymentData = state?.paymentObj
+  if (!paymentData) {
+    console.error("No payment data received");
+  }
   const [AddPaymentRaise, setAddPaymentRaise] = useState({
-    clientName: "",
-    fathersName: "",
-    mothersName: "",
-    mobile: "",
-    email: "",
-    dob: "",
-    remark: "",
-    segment: "",
-    netAmount: "",
-    paidAmount: "",
-    file: null,
-    paymentDate: "",
-    paymentMode: "",
-    bankName: "",
-    transactionId: "",
-    panNo: "",
-    state: "",
-    city: "",
+    clientName: paymentData.clientDetails?.name || "",
+    fathersName: paymentData.clientDetails?.fatherName || "",
+    mothersName: paymentData.clientDetails?.motherName || "",
+    mobile: paymentData.clientDetails?.mobile || "",
+    email: paymentData.clientDetails?.email || "",
+    dob: paymentData.clientDetails?.dob || "",
+    remark: paymentData.clientDetails?.remark || "",
+    segment: paymentData.productDetails?.segment || "",
+    netAmount: paymentData.productDetails?.netAmount || "",
+    paidAmount: paymentData.productDetails?.paidAmount || "",
+    paymentDate: paymentData.paymentDetails?.paymentDate || "",
+    paymentMode: paymentData.paymentDetails?.modeOfPayment || "",
+    bankName: paymentData.paymentDetails?.bankName || "",
+    transactionId: paymentData.paymentDetails?.transactionInfo || "",
+    panNo: paymentData.paymentDetails?.panNo || "",
+    state: paymentData.paymentDetails?.state || "",
+    city: paymentData.paymentDetails?.city || "",
+    file: null, 
   });
 
- 
+  const { paymentId } = useParams(); // Retrieve paymentId from URL parameters
+  console.log("editpayment-----------------"+JSON.stringify(paymentData));
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAddPaymentRaise((prevState) => ({
@@ -34,6 +46,7 @@ const PaymentRaise = () => {
       [name]: value,
     }));
   };
+
 
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
@@ -43,16 +56,42 @@ const PaymentRaise = () => {
     }));
   };
 
-  const dispatch = useDispatch(); 
+  useEffect(() => {
+    if (paymentData) {
+      setAddPaymentRaise({
+        clientName: paymentData.clientDetails?.name || "",
+        fathersName: paymentData.clientDetails?.fatherName || "",
+        mothersName: paymentData.clientDetails?.motherName || "",
+        mobile: paymentData.clientDetails?.mobile || "",
+        email: paymentData.clientDetails?.email || "",
+        dob: paymentData.clientDetails?.dob || "",
+        remark: paymentData.clientDetails?.remark || "",
+        segment: paymentData.productDetails?.segment || "",
+        netAmount: paymentData.productDetails?.netAmount || "",
+        paidAmount: paymentData.productDetails?.paidAmount || "",
+        paymentDate: paymentData.paymentDetails?.paymentDate || "",
+        paymentMode: paymentData.paymentDetails?.modeOfPayment || "",
+        bankName: paymentData.paymentDetails?.bankName || "",
+        transactionId: paymentData.paymentDetails?.transactionInfo || "",
+        panNo: paymentData.paymentDetails?.panNo || "",
+        state: paymentData.paymentDetails?.state || "",
+        city: paymentData.paymentDetails?.city || "",
+        file: null, // You can set the file if needed
+      });
+    }
+  }, [paymentData]);
 
-const handleSubmit = (e) => {
+
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const addnewPR = {
-      id: 1,  
-      employeeCode: "string",  
-      employeeName: "string",  
-      prId: "string",  
-      leadId: "string",  
+  
+    const updatedPR = {
+      id: AddPaymentRaise.id,  // Make sure AddPaymentRaise has an id field
+      employeeCode: AddPaymentRaise.employeeCode,
+      employeeName: AddPaymentRaise.employeeName,
+      prId: AddPaymentRaise.prId,
+      leadId: AddPaymentRaise.leadId,
       clientDetails: {
         name: AddPaymentRaise.clientName,
         fatherName: AddPaymentRaise.fathersName,
@@ -76,30 +115,88 @@ const handleSubmit = (e) => {
         state: AddPaymentRaise.state,
         city: AddPaymentRaise.city,
       },
-      transactionReceipt: "string",
-      paymentStatus: 0,
+      transactionReceipt: AddPaymentRaise.transactionReceipt, // Use the updated value for transactionReceipt
+      paymentStatus: AddPaymentRaise.paymentStatus, // Use the updated value for paymentStatus
     };
-    console.log("Payload being sent:", addnewPR);
-
-    dispatch(postLeadPaymentRaiseThunk(addnewPR))
-   .then((response) => {
-     if (response.payload === null) {
-       console.error("No data received from the server");
-     }
-     alert("Payment Raise Submitted!");
-     console.log("Added successfully:", response);
-   })
-   .catch((error) => {
-     console.error("Error adding:", error); 
-   });
+  
+    console.log("Payload being sent:", updatedPR);
+  
+    // Dispatch the PUT action via Redux Thunk
+    dispatch(putLeadPaymentRaiseThunk(updatedPR))
+      .then((response) => {
+        if (response.payload === null) {
+          console.error("No data received from the server");
+        } else {
+          alert("Payment Raise Updated Successfully!");
+          console.log("Updated successfully:", response);
+        }
+      })
+      .catch((error) => {
+        console.error("Error updating:", error);
+      });
   };
   
+
+
+// const handleUpdate = async (e) => {
+//   e.preventDefault();
+//     const params = {
+//       id: 1,  
+//       employeeCode: "string",  
+//       employeeName: "string",  
+//       prId: "string",  
+//       leadId: "string",  
+//       clientDetails: {
+//         name: AddPaymentRaise.clientName,
+//         fatherName: AddPaymentRaise.fathersName,
+//         motherName: AddPaymentRaise.mothersName,
+//         mobile: AddPaymentRaise.mobile,
+//         email: AddPaymentRaise.email,
+//         dob: AddPaymentRaise.dob,
+//         remark: AddPaymentRaise.remark,
+//       },
+//       productDetails: {
+//         segment: AddPaymentRaise.segment,
+//         netAmount: AddPaymentRaise.netAmount ? parseFloat(AddPaymentRaise.netAmount) : 0,
+//         paidAmount: AddPaymentRaise.paidAmount ? parseFloat(AddPaymentRaise.paidAmount) : 0,
+//       },
+//       paymentDetails: {
+//         paymentDate: AddPaymentRaise.paymentDate,
+//         modeOfPayment: AddPaymentRaise.paymentMode,
+//         bankName: AddPaymentRaise.bankName,
+//         transactionInfo: AddPaymentRaise.transactionId,
+//         panNo: AddPaymentRaise.panNo,
+//         state: AddPaymentRaise.state,
+//         city: AddPaymentRaise.city,
+//       },
+//       transactionReceipt: "string",
+//       paymentStatus: 0,
+//     };
+
+
+
+//   try {
+//       const response = await apiPostCallWithAuth(mainUrl, params, staticToken);
+//       if (response && response.success) {
+//           setResponseMessage("Data updated successfully.");
+//           fetchData();
+//           setIsEditing(false);
+//       } else {
+//           setResponseMessage("Failed to update data.");
+//       }
+
+//   } catch (error) {
+//       console.error(error);
+//       setResponseMessage("Error occurred while editing.");
+//   }
+// };
+
 
 
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-0">
-        Payment Raise
+       Edit Payment Raise
       </h2>
       <div className="container-fluid border border-2 border-gray mt-1">
         {/* Personal Details Section */}
@@ -353,4 +450,4 @@ const handleSubmit = (e) => {
   );
 };
 
-export default PaymentRaise;
+export default EditPaymentRaise;

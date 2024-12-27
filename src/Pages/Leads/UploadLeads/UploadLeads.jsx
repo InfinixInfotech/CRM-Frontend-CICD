@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { postUploadBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 import "./UploadLeads.css";
+import { Alert } from "react-bootstrap";
 
 const UploadLeads = () => {
+  const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({
     campaignName: "harsh ",
     file: null,
@@ -13,10 +15,20 @@ const UploadLeads = () => {
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (showAlert) {
+      const timer = setTimeout(() => {
+        setShowAlert(false); // Hide the alert after 3000ms
+      }, 3000);
+
+      return () => clearTimeout(timer); // Cleanup the timer
+    }
+  }, [showAlert]);
+
   // Handle input changes
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-  
+
     if (name === "file") {
       const file = files[0];
       if (file) {
@@ -32,23 +44,28 @@ const UploadLeads = () => {
       setFormData((prevData) => ({ ...prevData, [name]: value }));
     }
   };
-  
 
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-  
-    if (!formData.campaignName || !formData.file || !formData.segmentName || !formData.leadSource) {
+    setShowAlert(true); // Show the alert
+
+    if (
+      !formData.campaignName ||
+      !formData.file ||
+      !formData.segmentName ||
+      !formData.leadSource
+    ) {
       alert("Please fill in all fields.");
       return;
     }
-  
+
     const Data = new FormData();
-    Data.append('CampaignName', formData.campaignName);
-    Data.append('LeadSourceName', formData.leadSource);
-    Data.append('SegmentName', formData.segmentName);
-    Data.append('CsvLeadFile', formData.file);
-  
+    Data.append("CampaignName", formData.campaignName);
+    Data.append("LeadSourceName", formData.leadSource);
+    Data.append("SegmentName", formData.segmentName);
+    Data.append("CsvLeadFile", formData.file);
+
     // Assuming you are using a POST method that accepts FormData
     dispatch(postUploadBulkLeadThunk(Data))
       .then((response) => {
@@ -58,7 +75,7 @@ const UploadLeads = () => {
         console.error("Error uploading file:", error);
       });
   };
-  
+
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-0">
@@ -70,6 +87,13 @@ const UploadLeads = () => {
             className="container-fluid mt-3 me-0 ms-0"
             style={{ fontSize: "14px" }}
           >
+            <div>
+              {showAlert && (
+                <Alert variant="info" className="mt-2 text-center">
+                  Leads Added Successfully
+                </Alert>
+              )}
+            </div>
             <form onSubmit={handleSubmit}>
               {/* Campaign Name */}
               <div className="mb-3">

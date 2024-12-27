@@ -16,6 +16,8 @@ import {
   putSegmentListThunk,
 } from "../../../../Redux/Services/thunks/SegmentListThunk";
 import { HashLoader } from "react-spinners";
+import { Alert } from "react-bootstrap";
+
 
 const SegmentList = () => {
   const [formData, setFormData] = useState({
@@ -37,7 +39,7 @@ const SegmentList = () => {
   useEffect(() => {
     dispatch(getAllSegmentListThunk());
   }, [dispatch]);
-
+ 
   useEffect(() => {
     if (data?.data) {
       const timer = setTimeout(() => {
@@ -54,17 +56,17 @@ const SegmentList = () => {
 
   const handleCreate = (e) => {
     e.preventDefault();
-    setFormData({
-      segmentName: "",
-      tradeSegmentName: "",
-      segmentType: "Equity",
-      segmentCategory: "High Risk",
-      highRisk: true,
-      status: false,
-    });
-    setFormData(formData);
-    dispatch(postSegmentListThunk(formData));
+    const addPayload = {
+      segmentName: formData.segmentName,
+      tradeSegmentName: formData.tradeSegmentName,
+      segmentType: formData.segmentType,
+      segmentCategory: formData.segmentCategory,
+      highRisk: formData.highRisk,
+      status: formData.status,
+    }
     setSegments(data.data);
+    dispatch(postSegmentListThunk(addPayload));
+    setFormData(addPayload);
   };
 
   const handleEditSegment = (id) => {

@@ -11,6 +11,7 @@ import salesOrderReducer from "../Reducers/SalesOrderReducer";
 import leadPaymentRaiseReducer from "../Reducers/LeadPaymentRaiseReducer"
 import addLeadReducer from "../Reducers/AddLeadReducer"
 import uploadBulkLeadReducer from "../Reducers/UploadBulkLeadReducer"
+import designationReducer from "../Reducers/DesignationReducer"
 
 
 const store = configureStore({
@@ -28,7 +29,7 @@ const store = configureStore({
     leadpaymentraise: leadPaymentRaiseReducer, 
     addlead: addLeadReducer,
     uploadbulklead: uploadBulkLeadReducer,
-
+    designation: designationReducer,
   },
 });
 

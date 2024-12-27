@@ -7,7 +7,6 @@ import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtt
 import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { useDispatch, useSelector } from "react-redux";
-import { Alert } from "react-bootstrap";
 import {
   deleteSegmentPlanThunk,
   getAllSegmentPlanThunk,
@@ -16,7 +15,7 @@ import {
   putSegmentPlanThunk,
 } from "../../../../Redux/Services/thunks/SegmentPlanThunk";
 import { HashLoader } from "react-spinners";
-
+import { Alert } from "react-bootstrap";
 
 const SegmentPlans = () => {
   const [plans, setPlans] = useState([]);

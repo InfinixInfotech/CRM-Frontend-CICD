@@ -14,7 +14,6 @@ export const postLeadStatus = async (params) => {
   }
 };
 
-
 export const getAllLeadStatus = async () => {     
   try {
     const response = await apiGetCallWithAuth(getAllLeadStatusUrl, staticToken);

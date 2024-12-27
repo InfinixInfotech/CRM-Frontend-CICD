@@ -27,7 +27,7 @@ const ViewLeads = () => {
 
   const requestData = {
     EmployeeCode: "INFSASHANT1007",
-    CampaignName: "INFDEC232024",
+    CampaignName: "sashantSir",
   };
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.uploadbulklead);
@@ -36,9 +36,9 @@ const ViewLeads = () => {
     console.log("Fetching leads with requestData:", requestData);
     dispatch(fetchAllUploadBulkLeadThunk(requestData));
     // setIsLoading(true);
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 3000);
+    setTimeout(() => {
+      window.location.reload();
+    }, 2000);
   };
 
   useEffect(() => {
@@ -64,6 +64,7 @@ const ViewLeads = () => {
       <div className="container-fluid border border-2 border-gray mt-1  ">
         <div className="outerBgBox p-2  mb-2">
           <div className="container-fluid mt-3 ms-0 me-0">
+
             <div className="dropDownContainer p-3  mb-2">
               {/* Filters */}
               <div className="row d-flex gap-2 mb-0 justify-content-between">
@@ -94,6 +95,7 @@ const ViewLeads = () => {
                 ))}
               </div>
             </div>
+            
             <div className="d-flex align-items-center justify-content-between">
               <div>
                 <PrintButton tableId="leads-table" />

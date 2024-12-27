@@ -6,6 +6,7 @@ import { postUserThunk } from "../../../../Redux/Services/thunks/UserThunk";
 import { Alert } from "react-bootstrap";
 
 const AddUser = () => {
+  
   const [showAlert, setShowAlert] = useState(false);
   const [user, setUser] = useState({
     fullName: "",
@@ -409,6 +410,7 @@ const AddUser = () => {
                 <option value="" disabled>
                   --Select Group Access--
                 </option>
+                <option value="HR">ADMIN</option>
                 <option value="HR">HR</option>
                 <option value="BA">BA</option>
                 <option value="SBA">SBA</option>

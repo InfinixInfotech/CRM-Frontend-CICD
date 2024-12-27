@@ -37,6 +37,7 @@ import PaymentRaise from "./Pages/PaymentRaise/PaymentRaise";
 import EditSalesOreder from './Pages/SalesOrder/editSalesOrder'
 import Login from './Components/Login/Login'
 import ProtectedRoute from './Components/ProtectRoute/ProtectRoute'
+import EditPaymentRaise from "./Pages/PaymentRaise/EditPaymentRaise";
 export default function App() {
   return (
     <Provider store={store}>
@@ -86,7 +87,10 @@ export default function App() {
                     <Route path="/sentmail" element={<SentMail />} />
                     <Route path="/starred" element={<Starred />} />
                     <Route path="/paymnetRaise" element={<PaymentRaise />} />
+                    
                     <Route path="/editso" element={<EditSalesOreder />} />
+                    <Route path="/editpr/:id" element={<EditPaymentRaise />} />
+                    {/* <Route path="/editpr/:id" element={<EditPage />} /> */}
                   </Routes>
                   </div>
                 </div>

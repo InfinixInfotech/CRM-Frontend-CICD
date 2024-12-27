@@ -160,7 +160,8 @@ export async function apiPostCallWithAuthFormData(endpoint, formData, token) {
 }
 
 
-export async function apiGetCallWithAuth(endpoint, token) {
+export async function apiGetCallWithAuth(endpoint,token) {
+  
   console.log(endpoint);
   try {
       const response = await fetch(endpoint, {
@@ -241,31 +242,43 @@ export async function apiDeleteCallWithAuth(endpoint, token) {
       return null;
   }
 }
+//-----------------------------------------------------------apply for both for form and raw data , put api --------------------------------------------------
 
 export async function apiPutCallWithAuth(endpoint, data, token) {
   console.log(endpoint);
   try {
-      const response = await fetch(endpoint, {
-          method: 'PUT',
-          headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`, // Add Bearer token
-          },
-          body: JSON.stringify(data),
-      });
+    const headers = {
+      'Authorization': `Bearer ${token}`, // Add Bearer token
+    };
 
-      if (response.ok) {
-          const data = await response.json();
-          console.log('Response:', data);
-          return data;
-      } else {
-          const errorData = await response.text();
-          console.error('Error:', response.status, response.statusText, errorData);
-          return null;
-      }
-  } catch (error) {
-      console.error('Fetch error:', error);
+    // Check if data is FormData (which is common for file uploads)
+    if (data instanceof FormData) {
+      // If it's FormData, we don't set Content-Type; the browser does it automatically
+      headers['Content-Type'] = 'multipart/form-data';
+    } else {
+      // If it's a regular object, convert to JSON
+      headers['Content-Type'] = 'application/json';
+      data = JSON.stringify(data);
+    }
+
+    const response = await fetch(endpoint, {
+      method: 'PUT',
+      headers: headers,
+      body: data, // Send either FormData or JSON string
+    });
+
+    if (response.ok) {
+      const responseData = await response.json();
+      console.log('Response:', responseData);
+      return responseData;
+    } else {
+      const errorData = await response.text();
+      console.error('Error:', response.status, response.statusText, errorData);
       return null;
+    }
+  } catch (error) {
+    console.error('Fetch error:', error);
+    return null;
   }
 }
 

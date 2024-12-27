@@ -30,7 +30,7 @@ const Department = () => {
     const fetchData = async () => {
       dispatch(getAllDepartmentThunk());
       setIsLoading(false);
-    };
+    };  
     fetchData();
   }, [dispatch]);
 

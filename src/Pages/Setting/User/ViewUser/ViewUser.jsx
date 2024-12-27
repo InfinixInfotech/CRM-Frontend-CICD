@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from "react";
 import "./ViewUser.css";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
+import { EditButton } from "../../../../Components/Button/EditButton/EditButton";
+import DeleteButton from "../../../../Components/Button/DeleteButton/DeleteButton";
+import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
+import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
+import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
+import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import {
   getAllUserThunk,
   getByIdUserThunk,
+  putUserThunk,
+  
 } from "../../../../Redux/Services/thunks/UserThunk";
+
 import { useDispatch, useSelector } from "react-redux";
 import { HashLoader } from "react-spinners";
+import { Alert } from "react-bootstrap";
 
 const ViewUser = () => {
   const [users, setUsers] = useState([]);
@@ -32,6 +42,15 @@ const ViewUser = () => {
     }
   }, [data]);
 
+  useEffect(() => {
+    if (msg) {
+      const alertTimer = setTimeout(() => {
+        setMsg("");
+      }, 3000); // Alert will disappear after 3 seconds
+      return () => clearTimeout(alertTimer);
+    }
+  }, [msg]);
+
   // Handle search filtering
   const filteredUsers = users.filter(
     (user) =>
@@ -39,11 +58,38 @@ const ViewUser = () => {
       (status === "All" || user.status === status)
   );
 
+  // const handleEditUser = (id) => {
+  //    if (editValue.trim() !== "") {
+  //      dispatch(putUserThunk({ id, departmentName: editValue })).then(
+  //        (response) => {
+  //          setMsg(response?.payload?.message || "updated successfully");
+  //          dispatch(getAllDepartmentThunk());
+  //          setEditDepartment(null);
+  //          setEditValue("");
+  //        }
+  //      );
+  //    }
+  //  };
+
+   const handleDeleteUser = (id) => {
+     dispatch(deleteDepartmentThunk(id))
+       .unwrap()
+       .then((response) => {
+         setMsg(response.message || "deleted successfully");
+         setAddDepartment((prevStatuses) =>
+           prevStatuses.filter((status) => status.id !== id)
+         );
+       })
+       .catch((error) => {
+         setMsg(error || "Failed to delete status");
+       });
+   };
+
   const fetchUserById = (id) => {
     dispatch(getByIdUserThunk(id)).then((response) => {
-      const userData = response.payload?.data;
-      setEditUser(userData?.id);
-      setEditValue(userData?.status);
+      const user = response.payload?.data;
+      setEditUser(user?.id);
+      setEditValue(user?.user);
     });
   };
 
@@ -72,6 +118,18 @@ const ViewUser = () => {
                 margin: "0 auto", // Center horizontally
               }}
             >
+              <div className="mb-2">
+                <PrintButton tableId={"table-data"} />
+                <PdfButton tableId={"table-data"} />
+                <CsvButton tableId={"table-data"} />
+                <CopyButton tableId={"table-data"} />
+
+                {msg && (
+                  <Alert variant="info" className="mt-2 text-center">
+                    {msg}
+                  </Alert>
+                )}
+              </div>
               {/* Status Filter Dropdown */}
               <div
                 className="status-filter"
@@ -101,15 +159,20 @@ const ViewUser = () => {
             </div>
           </div>
 
+          {msg && (
+            <Alert variant="info" className="mt-2 text-center">
+              {msg}
+            </Alert>
+          )}
+
           <table className="user-table">
             <thead>
               <tr>
                 <th>User Name</th>
                 <th>Employee Code</th>
                 <th>Extension</th>
-                <th>Change Password</th>
                 <th>Upload Pic</th>
-                <th>Action</th>
+                <th className="text-center">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -140,7 +203,7 @@ const ViewUser = () => {
                 </div>
               ) : error ? (
                 <tr>
-                  <td colSpan="2" className="text-center text-danger">
+                  <td colSpan="6" className="text-center text-danger">
                     Error: {error}
                   </td>
                 </tr>
@@ -149,21 +212,30 @@ const ViewUser = () => {
                   <tr key={user.employeeCode || index}>
                     <td>{user.userName || "N/A"}</td>
                     <td>{user.employeeCode || "N/A"}</td>
-                    <td>
-                      {user.extension?.callingExt
-                        ? user.extension.callingExt
-                        : "No Extension"}
-                    </td>
+                    <td>{user.extension?.callingExt || "No Extension"}</td>
                     <td>
                       <input type="file" className="upload-file" />
                     </td>
-                    <td className="action-buttons">
-                      <button
-                        onClick={() => fetchUserById(user.employeeCode)}
-                        className="btn btn-primary btn-sm"
-                      >
-                        Edit
-                      </button>
+                    <td>
+                      <div className="d-flex justify-content-center align-items-center gap-2">
+                        {editUser === index ? (
+                          <button
+                            // onClick={() => handle(index)}
+                            className="btn btn-success btn-sm py-0 px-2"
+                          >
+                            Save
+                          </button>
+                        ) : (
+                          <EditButton
+                            className="btn btn-primary btn-sm mr-1 py-0 px-2"
+                            onClick={() => fetchUserById(user.id)}
+                          />
+                        )}
+                        <DeleteButton
+                          className="btn btn-danger btn-sm mr-1 py-0 px-2"
+                          onDelete={() => handleDeleteUser(user.id)}
+                        />
+                      </div>
                     </td>
                   </tr>
                 ))

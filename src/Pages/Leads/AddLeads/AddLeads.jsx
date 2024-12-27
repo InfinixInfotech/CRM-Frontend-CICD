@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 
 import "./AddLeads.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { postAddLeadThunk } from "../../../Redux/Services/thunks/AddLeadThunk";
+import { Alert } from "react-bootstrap";
 
 const AddLeads = () => {
+  const [showAlert, setShowAlert] = useState(false);
   const [leads, setLeads] = useState({
     clientName: "",
     assignedTo: "",
@@ -38,6 +40,16 @@ const AddLeads = () => {
     comment: "",
   });
 
+   useEffect(() => {
+     if (showAlert) {
+       const timer = setTimeout(() => {
+         setShowAlert(false); // Hide the alert after 3000ms
+       }, 3000);
+ 
+       return () => clearTimeout(timer); // Cleanup the timer
+     }
+   }, [showAlert]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLeads((prevLeads) => ({
@@ -50,9 +62,10 @@ const AddLeads = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setShowAlert(true); // Show the alert
 
     const addNewLead = {
-      id:1 || null,
+      id: 1 || null,
       // apiType: "Leads",
       // accessType: "Create",
       leadId: "string",
@@ -114,6 +127,13 @@ const AddLeads = () => {
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-0">
         Add Leads
       </h2>
+      <div>
+        {showAlert && (
+          <Alert variant="info" className="mt-2 text-center">
+           Lead Added Successfully
+          </Alert>
+        )}
+      </div>
       <form onSubmit={handleSubmit}>
         <div className="container-fluid border border-2 border-gray mt-1 ">
           {/* Personal Details Section */}
