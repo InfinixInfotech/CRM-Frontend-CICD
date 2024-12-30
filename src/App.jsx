@@ -34,10 +34,12 @@ import Drafts from "./Pages/MailBox/Drafts/Drafts";
 import SentMail from "./Pages/MailBox/SentMail/SentMail";
 import Starred from "./Pages/MailBox/Starred/Starred";
 import PaymentRaise from "./Pages/PaymentRaise/PaymentRaise";
-import EditSalesOreder from './Pages/SalesOrder/editSalesOrder'
 import Login from './Components/Login/Login'
 import ProtectedRoute from './Components/ProtectRoute/ProtectRoute'
 import EditPaymentRaise from "./Pages/PaymentRaise/EditPaymentRaise";
+import EditUser from "./Pages/Setting/User/EditUser/EditUser";
+import EditGroups from "./Pages/Setting/Groups/EditGroups/EditGroups";
+import InsertSalesOrder from "./Pages/SalesOrder/InsertSalesOrder";
 export default function App() {
   return (
     <Provider store={store}>
@@ -87,10 +89,10 @@ export default function App() {
                     <Route path="/sentmail" element={<SentMail />} />
                     <Route path="/starred" element={<Starred />} />
                     <Route path="/paymnetRaise" element={<PaymentRaise />} />
-                    
-                    <Route path="/editso" element={<EditSalesOreder />} />
+                    <Route path="/insertso" element={<InsertSalesOrder/>} />
                     <Route path="/editpr/:id" element={<EditPaymentRaise />} />
-                    {/* <Route path="/editpr/:id" element={<EditPage />} /> */}
+                    <Route path="/edituser/:id" element={<EditUser/>} />
+                    <Route path="/editgroups/:id" element={<EditGroups/>} />
                   </Routes>
                   </div>
                 </div>

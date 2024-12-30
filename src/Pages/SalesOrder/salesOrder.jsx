@@ -14,156 +14,36 @@ import { useDispatch } from "react-redux";
 const SalesOrder = () => {
   const Navigate = useNavigate();
   const handleNavigate = () => {
-    Navigate("/editso");
+    Navigate("/insertso");
     alert("clicked");
   };
 
-  const [salesOrder, setsalesOrder] = useState([
-    {
-      clientId: "CL12345",
-      loadId: "LD56789",
-      paymentDate: "2024-12-01",
-      clientName: "John Doe",
-      mobile: "+1234567890",
-      assignedTo: "Jane Smith",
-      managerName: "Michael Johnson",
-      segment: "Retail",
-      type: "Wholesale",
-      startDate: "2024-11-15",
-      endDate: "2024-11-30",
-      netTotal: 15000.0,
-      tax: 1350.0,
-      grandTotal: 16350.0,
-      dob: "1990-05-10",
-      panNo: "ABCDE1234F",
-      email: "john.doe@example.com",
-      city: "New York",
-      state: "New York",
-      options: "Option A",
-      status: "Pending",
-      leadSource: "Online Campaign",
-      approvedBy: "Emily Davis",
-      approvedTime: "2024-12-01T10:30:00",
-      description: "Order placed for retail goods.",
-    },
-    {
-      clientId: "CL12345",
-      loadId: "LD56789",
-      paymentDate: "2024-12-01",
-      clientName: "John Doe",
-      mobile: "+1234567890",
-      assignedTo: "Jane Smith",
-      managerName: "Michael Johnson",
-      segment: "Retail",
-      type: "Wholesale",
-      startDate: "2024-11-15",
-      endDate: "2024-11-30",
-      netTotal: 15000.0,
-      tax: 1350.0,
-      grandTotal: 16350.0,
-      dob: "1990-05-10",
-      panNo: "ABCDE1234F",
-      email: "john.doe@example.com",
-      city: "New York",
-      state: "New York",
-      options: "Option A",
-      status: "Pending",
-      leadSource: "Online Campaign",
-      approvedBy: "Emily Davis",
-      approvedTime: "2024-12-01T10:30:00",
-      description: "Order placed for retail goods.",
-    },
-    {
-      clientId: "CL12345",
-      loadId: "LD56789",
-      paymentDate: "2024-12-01",
-      clientName: "John Doe",
-      mobile: "+1234567890",
-      assignedTo: "Jane Smith",
-      managerName: "Michael Johnson",
-      segment: "Retail",
-      type: "Wholesale",
-      startDate: "2024-11-15",
-      endDate: "2024-11-30",
-      netTotal: 15000.0,
-      tax: 1350.0,
-      grandTotal: 16350.0,
-      dob: "1990-05-10",
-      panNo: "ABCDE1234F",
-      email: "john.doe@example.com",
-      city: "New York",
-      state: "New York",
-      options: "Option A",
-      status: "Pending",
-      leadSource: "Online Campaign",
-      approvedBy: "Emily Davis",
-      approvedTime: "2024-12-01T10:30:00",
-      description: "Order placed for retail goods.",
-    },
-    {
-      clientId: "CL12345",
-      loadId: "LD56789",
-      paymentDate: "2024-12-01",
-      clientName: "John Doe",
-      mobile: "+1234567890",
-      assignedTo: "Jane Smith",
-      managerName: "Michael Johnson",
-      segment: "Retail",
-      type: "Wholesale",
-      startDate: "2024-11-15",
-      endDate: "2024-11-30",
-      netTotal: 15000.0,
-      tax: 1350.0,
-      grandTotal: 16350.0,
-      dob: "1990-05-10",
-      panNo: "ABCDE1234F",
-      email: "john.doe@example.com",
-      city: "New York",
-      state: "New York",
-      options: "Option A",
-      status: "Pending",
-      leadSource: "Online Campaign",
-      approvedBy: "Emily Davis",
-      approvedTime: "2024-12-01T10:30:00",
-      description: "Order placed for retail goods.",
-    },
-  ]);
+  const [salesOrder, setsalesOrder] = useState([]);
 
   const [showPopup, setShowPopup] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState(null);
 
   const dispatch = useDispatch();
 
-  // const GetAllSalesOrder = () => {
-  //   dispatch(getAllSalesOrderThunk())
-  //     .then((response) => {
-  //       if (response?.error) {
-  //         console.error('Error:', response.error);
-  //       } else {
-  //         const salesorder = response.payload?.data;
-  //         console.log(salesorder);
-  //         setsalesOrder(salesorder);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error('Request failed', error);
-  //     });
-  // };
+  const GetAllSalesOrder = () => {
+    dispatch(getAllSalesOrderThunk())
+      .then((response) => {
+        if (response?.error) {
+          console.error("Error:", response.error);
+        } else {
+          const salesorder = response.payload?.data;
+          console.log(salesorder);
+          setsalesOrder(salesorder);
+        }
+      })
+      .catch((error) => {
+        console.error("Request failed", error);
+      });
+  };
 
-  // useEffect(() => {
-  //   GetAllSalesOrder();
-  // }, [dispatch]);
-
-    useEffect(() => {
-      const fetchData = async () => {
-        dispatch(getAllSalesOrderThunk());
-      };  
-      fetchData();
-    }, [dispatch]);
-  
-    useEffect(() => {
-      setsalesOrder(data.data);
-    }, [data]);
+  useEffect(() => {
+    GetAllSalesOrder();
+  }, [dispatch]);
 
   const handleEmailPopup = (email) => {
     setSelectedEmail(email);
@@ -211,6 +91,9 @@ const SalesOrder = () => {
             <PdfButton tableId="table-data" />
             <CsvButton tableId="table-data" />
             <CopyButton tableId="table-data" />
+            <button className="btn btn-secondary btn-sm px-2 py-0 me-1 mt-3 no-print text-center" onClick={handleNavigate}>
+              Add SO
+            </button>
           </div>
           {/* Popup */}
           {showPopup && (
@@ -266,11 +149,11 @@ const SalesOrder = () => {
               <tbody>
                 {salesOrder.map((salesOrderObj, index) => (
                   <tr key={index}>
-                    <td>{salesOrderObj.clientId}</td>
+                    <td>{salesOrderObj.id}</td>
                     <td>{salesOrderObj.loadId}</td>
                     <td>{salesOrderObj.paymentDate}</td>
-                    <td>{salesOrderObj.clientName}</td>
-                    <td>{salesOrderObj.mobile}</td>
+                    <td>{salesOrderObj.personalDetails.clientName}</td>
+                    <td>{salesOrderObj.personalDetails.mobile}</td>
                     <td>{salesOrderObj.assignedTo}</td>
                     <td>{salesOrderObj.managerName}</td>
                     <td>{salesOrderObj.segment}</td>
@@ -281,12 +164,12 @@ const SalesOrder = () => {
                     <td>{salesOrderObj.tax}</td>
                     <td>{salesOrderObj.grandTotal}</td>
                     <td>{salesOrderObj.dob}</td>
-                    <td>{salesOrderObj.panNo}</td>
+                    <td>{salesOrderObj.personalDetails.panNo}</td>
                     {/* <td>{salesOrderObj.email}</td> */}
                     <td>
                       <button
                         className="btn btn-sm text-primary"
-                        onClick={() => handleEmailPopup(salesOrderObj.email)}
+                        onClick={() => handleEmailPopup(salesOrderObj.personalDetails.email)}
                       >
                         Email
                       </button>
@@ -308,10 +191,7 @@ const SalesOrder = () => {
                           Invoice
                         </button>
                         <DeleteButton className="btn btn-danger btn-sm py-0 px-2" />
-                        <EditButton
-                          onClick={handleNavigate}
-                          className="btn btn-primary btn-sm py-0 px-2"
-                        />
+                        <EditButton className="btn btn-primary btn-sm py-0 px-2" />
                       </div>
                     </td>
                   </tr>

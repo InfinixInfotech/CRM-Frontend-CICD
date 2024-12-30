@@ -32,6 +32,7 @@ export const getAllGroups = async () => {
 
 export const putGroups = async (params) => {
   try {
+    const {id} = params;
     const urlWithId = `${putGroupsUrl}?id=${id}`;
     const response = await apiPutCallWithAuth(urlWithId, params, staticToken);
     return response; 

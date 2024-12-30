@@ -1,86 +1,73 @@
 import React, { useEffect, useState } from "react";
-import "./AddUser.css";
+// import "./AddUser.css";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
 import { useDispatch, useSelector } from "react-redux";
-import { postUserThunk } from "../../../../Redux/Services/thunks/UserThunk";
+import { postUserThunk, putUserThunk } from "../../../../Redux/Services/thunks/UserThunk";
 import { Alert } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
+import { staticToken } from "../../../../Redux/Services/apiServer/ApiServer";
 
-const AddUser = () => {
+const EditUser = () => {
+  
   const [showAlert, setShowAlert] = useState(false);
-  const [user, setUser] = useState({
-    fullName: "",
-    employeeCode: "",
-    fatherName: "",
-    motherName: "",
-    mobileNumber: "",
-    userName: "",
-    password: "",
-    target: "",
-    groupid: "",
-    departmentName: "",
-    designationName: "",
-    groupName: "",
-    reportingTo: "",
-    qualificationName: "",
-    extension: "",
-    didNumber: "",
-    segmentAccess: "",
-    poolAccess: "",
-    groupAccess: "",
-    vendorAccess: "",
-    exceptVendorAccess: "",
-    customFetch: "",
-    customFetchRatio: "",
-    otpNumber: 0,
-    dateOfBirth: "2024-11-30T11:09:06.723Z",
-    dateOfJoining: "2024-11-30T11:09:06.723Z",
-    branch: "",
-    panNumber: "",
-    aadharNumber: "",
-    localAddress: " ",
-    permanentAddress: "",
-    bankName: "",
-    bankDetails: " ",
-    IFSC: "",
-    accountNumber: "",
-    esslID: "",
-    chatGroup: "",
-    fetchedLeads: [
-      {
-        fetchedDate: null,
-        totalFetchedLeads: 0,
-      },
-    ],
-    access: {
-      status: false,
-      allRights: false,
-      salesHead: false,
-      numberHide: false,
-      clickToCall: false,
-      exportPermission: false,
-      customSms: false,
-      mailBox: false,
-      chat: false,
-      invoice: false,
-      dashboard: false,
-      backDateSO: false,
-      popupDisabled: false,
-    },
-  });
-
   const dispatch = useDispatch();
 
-  const { data, loading, error } = useSelector((state) => state.user);
+   const { state } = useLocation();
+    const paymentData = state?.user
+  console.log("-----------------------"+paymentData)
+    if (!paymentData) {
+      console.error("No payment data received" +paymentData);
+    }
 
-  // useEffect(() => {
-  //   if (data && data.data) {
-  //     console.log("API Data:", data.data);
-  //     setUser(data.data);
-  //   } else {
-  //     console.log("API Data is null or undefined.");
-  //   }
-  // }, [data]);
 
+
+  const [userNameTest, setUserNameTest] = useState("Sashant")
+
+  const [user, setUser] = useState({
+      fullName: userNameTest,
+      employeeCode: paymentData.employeeCode,
+      FathersName: paymentData.fatherName,
+      MothersName: paymentData.motherName,
+      mobileNumber: paymentData.mobileNumber,
+      userName: paymentData.userName,
+      password: paymentData.password,
+      target: paymentData.target,
+      departmentName: paymentData.departmentName ? user.departmentName.toString() : "",
+      designationName: paymentData.designationName,
+      groupName: paymentData.groupName,
+      reportingTo: paymentData.reportingTo,
+      qualificationName: paymentData.qualificationName,
+      extension: {
+        callingExt: paymentData.extension,
+      },
+      didNumber: paymentData.didNumber,
+      segmentAccess: [paymentData.segmentAccess?.toString()],
+      poolAccess: [paymentData.poolAccess?.toString()],
+      groupAccess: [paymentData.groupAccess?.toString()],
+      vendorAccess: [paymentData.vendorAccess?.toString()],
+      exceptVendorAccess: [paymentData.exceptVendorAccess?.toString()],
+      customFetch: [paymentData.customFetch?.toString()],
+      customFetchRatio: paymentData.customFetchRatio,
+      otpNumber: paymentData.otpNumber,
+      dateOfBirth: paymentData.dateOfBirth,
+      dateOfJoining: paymentData.dateOfJoining,
+      branch: paymentData.branch,
+      panNumber: paymentData.panNumber,
+      aadharNumber: paymentData.aadharNumber,
+      localAddress: paymentData.localAddress,
+      permanentAddress: paymentData.permanentAddress,
+      esslID: paymentData.esslID,
+      GroupId: paymentData.groupid,
+      BankDetails: {
+        bankName: paymentData.bankName,
+        ifsc: paymentData.IFSC,
+        accountNumber: paymentData.accountNumber,
+      },
+      chatGroup: [paymentData.chatGroup?.toString()],
+      access: { ...paymentData.access }, // Spread all access fields
+   
+  });
+  console.log("editUser-----------------"+JSON.stringify(paymentData));
   useEffect(() => {
     if (showAlert) {
       const timer = setTimeout(() => {
@@ -91,34 +78,39 @@ const AddUser = () => {
     }
   }, [showAlert]);
 
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+
+  //   if (name === "dateOfBirth" || name === "dateOfJoining") {
+  //     // Format the date to dd/mm/yyyy
+  //     const date = new Date(value);
+  //     const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(
+  //       date.getMonth() + 1
+  //     )
+  //       .toString()
+  //       .padStart(2, "0")}/${date.getFullYear()}`;
+
+  //     setUser((prevUser) => ({
+  //       ...prevUser,
+  //       [name]: formattedDate,
+  //     }));
+  //   } else {
+  //     setUser((prevUser) => ({
+  //       ...prevUser,
+  //       [name]: value,
+  //     }));
+  //   }
+  // };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // if (name === "dateOfBirth" || name === "dateOfJoining") {
-    //   // Format the date to dd/mm/yyyy
-    //   const date = new Date(value);
-    //   const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(
-    //     date.getMonth() + 1
-    //   )
-    //     .toString()
-    //     .padStart(2, "0")}/${date.getFullYear()}`;
-
-    //   setUser((prevUser) => ({
-    //     ...prevUser,
-    //     [name]: formattedDate,
-    //   }));
-    // } else {
-    //   setUser((prevUser) => ({
-    //     ...prevUser,
-    //     [name]: value,
-    //   }));
-    // }
-
     setUser((prevUser) => ({
       ...prevUser,
       [name]: value,
     }));
   };
+  
+
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -131,73 +123,128 @@ const AddUser = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  useEffect(() => {
+    if (paymentData) {
+      setUser({
+        id: paymentData.id,
+        fullName: paymentData.fullName,
+        employeeCode: paymentData.employeeCode,
+        FathersName: paymentData.fatherName,
+        MothersName: paymentData.motherName,
+        mobileNumber: paymentData.mobileNumber,
+        userName: paymentData.userName,
+        password: paymentData.password,
+        target: paymentData.target,
+        departmentName: paymentData.departmentName?.toString() || "",
+        designationName: paymentData.designationName,
+        groupName: paymentData.groupName,
+        reportingTo: paymentData.reportingTo,
+        qualificationName: paymentData.qualificationName,
+        extension: {
+          callingExt: paymentData.extension,
+        },
+        didNumber: paymentData.didNumber,
+        segmentAccess: [paymentData.segmentAccess?.toString()],
+        poolAccess: [paymentData.poolAccess?.toString()],
+        groupAccess: [paymentData.groupAccess?.toString()],
+        vendorAccess: [paymentData.vendorAccess?.toString()],
+        exceptVendorAccess: [paymentData.exceptVendorAccess?.toString()],
+        customFetch: [paymentData.customFetch?.toString()],
+        customFetchRatio: paymentData.customFetchRatio,
+        otpNumber: paymentData.otpNumber,
+        dateOfBirth: paymentData.dateOfBirth,
+        dateOfJoining: paymentData.dateOfJoining,
+        branch: paymentData.branch,
+        panNumber: paymentData.panNumber,
+        aadharNumber: paymentData.aadharNumber,
+        localAddress: paymentData.localAddress,
+        permanentAddress: paymentData.permanentAddress,
+        esslID: paymentData.esslID,
+        GroupId: paymentData.groupid,
+        BankDetails: {
+          bankName: paymentData.bankName,
+          ifsc: paymentData.IFSC,
+          accountNumber: paymentData.accountNumber,
+        },
+        chatGroup: [paymentData.chatGroup?.toString()],
+        access: { ...paymentData.access }, // Spread all access fields
+      });
+    }
+  }, [paymentData]);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setShowAlert(true); // Show the alert
-
+    const userId = user.id; // Ensure the `id` exists in the user object
     const AddNewUser = {
-      fullName: user.fullName,
-      employeeCode: user.employeeCode,
-      FathersName: user.fatherName,
-      MothersName: user.motherName,
-      mobileNumber: user.mobileNumber,
-      userName: user.userName,
-      password: user.password,
-      target: user.target,
-      departmentName: user.departmentName ? user.departmentName.toString() : "",
-      designationName: user.designationName,
-      groupName: user.groupName,
-      reportingTo: user.reportingTo,
-      qualificationName: user.qualificationName,
-      extension: {
-        callingExt: user.extension,
-      },
-      didNumber: user.didNumber,
-      segmentAccess: [user.segmentAccess?.toString()],
-      poolAccess: [user.poolAccess?.toString()],
-      groupAccess: [user.groupAccess?.toString()],
-      vendorAccess: [user.vendorAccess?.toString()],
-      exceptVendorAccess: [user.exceptVendorAccess?.toString()],
-      customFetch: [user.customFetch?.toString()],
-      customFetchRatio: user.customFetchRatio,
-      otpNumber: user.otpNumber,
-      dateOfBirth: user.dateOfBirth,
-      dateOfJoining: user.dateOfJoining,
-      branch: user.branch,
-      panNumber: user.panNumber,
-      aadharNumber: user.aadharNumber,
-      localAddress: user.localAddress,
-      permanentAddress: user.permanentAddress,
-      esslID: user.esslID,
-      GroupId: user.groupid,
-      BankDetails: {
-        bankName: user.bankName,
-        ifsc: user.IFSC,
-        accountNumber: user.accountNumber,
-      },
-      fetchedLeads: [
-        {
-          fetchedDate: user.fetchedLeads.fetchedDate,
-          totalFetchedLeads: user.fetchedLeads.totalFetchedLeads,
-        },
-      ],
-      chatGroup: [user.chatGroup?.toString()],
-      access: { ...user.access },
+        //FullName: userNameTest,
+        // employeeCode: user.employeeCode,
+        // FathersName: user.fatherName,
+        // MothersName: user.motherName,
+        // mobileNumber: user.mobileNumber,
+        // userName: user.userName,
+        // password: user.password,
+        // target: user.target,
+        // departmentName: user.departmentName ? user.departmentName.toString() : "",
+        // designationName: user.designationName,
+        // groupName: user.groupName,
+        // reportingTo: user.reportingTo,
+        // qualificationName: user.qualificationName,
+        // extension: {
+        //     callingExt: user.extension,
+        // },
+        // didNumber: user.didNumber,
+        // segmentAccess: [user.segmentAccess?.toString()],
+        // poolAccess: [user.poolAccess?.toString()],
+        // groupAccess: [user.groupAccess?.toString()],
+        // vendorAccess: [user.vendorAccess?.toString()],
+        // exceptVendorAccess: [user.exceptVendorAccess?.toString()],
+        // customFetch: [user.customFetch?.toString()],
+        // customFetchRatio: user.customFetchRatio,
+        // otpNumber: user.otpNumber,
+        // dateOfBirth: user.dateOfBirth,
+        // dateOfJoining: user.dateOfJoining,
+        // branch: user.branch,
+        // panNumber: user.panNumber,
+        // aadharNumber: user.aadharNumber,
+        // localAddress: user.localAddress,
+        // permanentAddress: user.permanentAddress,
+        // esslID: user.esslID,
+        // GroupId: user.groupid,
+        // BankDetails: {
+        //     bankName: user.bankName,
+        //     ifsc: user.IFSC,
+        //     accountNumber: user.accountNumber,
+        // },
+        // chatGroup: [user.chatGroup?.toString()],
+        // access: { ...user.access }, // Spread all access fields
     };
-
-    // Make the API call using dispatch
-    dispatch(postUserThunk(AddNewUser))
-      .then((response) => {
-        console.log("User added successfully:", response);
-      })
-      .catch((error) => {
-        console.error("Error adding user:", error);
-      });
-  };
+    try {
+        const token = staticToken
+        const response = await fetch(`/api/Users/UpdateUsersById?id=${userId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify(AddNewUser),
+        });
+        if (!response.ok) throw new Error("Failed to update user.");
+        const result = await response.json();
+        console.log("User updated successfully:", result);
+       
+        alert("User updated successfully!");
+        setShowAlert(false);
+    } catch (error) {
+        console.error("Error updating user:", error);
+        alert("Failed to update user.");
+    }
+};
+  
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5">
-        Add Users
+        Edit Users
       </h2>
       <BackButton />
       <div className="container-fluid border border-2 border-gray mt-1 pb-3">
@@ -216,7 +263,7 @@ const AddUser = () => {
                 className="ps-2 inputField"
                 type="text"
                 name="fullName"
-                value={user.fullName}
+                value={userNameTest}
                 onChange={handleChange}
                 //required
               />
@@ -271,7 +318,7 @@ const AddUser = () => {
                 className="ps-2 inputField"
                 type="text"
                 name="userName"
-                value={user.userName}
+                value={userNameTest}
                 onChange={handleChange}
                 //required
               />
@@ -564,8 +611,8 @@ const AddUser = () => {
                 name="dateOfBirth"
                 value={
                   user.dateOfBirth
-                  // ? user.dateOfBirth.split("/").reverse().join("-")
-                  // : ""
+                    ? user.dateOfBirth.split("/").reverse().join("-")
+                    : ""
                 } // Convert dd/mm/yyyy to yyyy-mm-dd for the input field
                 onChange={handleChange}
               />
@@ -578,8 +625,8 @@ const AddUser = () => {
                 name="dateOfJoining"
                 value={
                   user.dateOfBirth
-                  // ? user.dateOfJoining.split("/").reverse().join("-")
-                  // : ""
+                    // ? user.dateOfJoining.split("/").reverse().join("-")
+                    // : ""
                 } // placeholder="Date of joining"
                 onChange={handleChange}
                 //required
@@ -701,7 +748,7 @@ const AddUser = () => {
             </div>
             <div className="d-flex justify-content-center">
               <button className="btn btn-primary " type="submit">
-                Create
+                Update
               </button>
             </div>
           </form>
@@ -711,4 +758,4 @@ const AddUser = () => {
   );
 };
 
-export default AddUser;
+export default EditUser;

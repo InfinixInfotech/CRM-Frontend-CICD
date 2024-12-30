@@ -18,7 +18,6 @@ import {
 import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
 
-
 const SegmentList = () => {
   const [formData, setFormData] = useState({
     segmentName: "",
@@ -39,7 +38,7 @@ const SegmentList = () => {
   useEffect(() => {
     dispatch(getAllSegmentListThunk());
   }, [dispatch]);
- 
+
   useEffect(() => {
     if (data?.data) {
       const timer = setTimeout(() => {
@@ -48,6 +47,15 @@ const SegmentList = () => {
       return () => clearTimeout(timer);
     }
   }, [data]);
+
+  useEffect(() => {
+    if (msg) {
+      const alertTimer = setTimeout(() => {
+        setMsg("");
+      }, 3000); // Alert will disappear after 3 seconds
+      return () => clearTimeout(alertTimer);
+    }
+  }, [msg]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -63,7 +71,7 @@ const SegmentList = () => {
       segmentCategory: formData.segmentCategory,
       highRisk: formData.highRisk,
       status: formData.status,
-    }
+    };
     setSegments(data.data);
     dispatch(postSegmentListThunk(addPayload));
     setFormData(addPayload);
@@ -179,24 +187,26 @@ const SegmentList = () => {
                   Active
                 </label>
               </div>
-              <button
-                type="submit"
-                className="btn btn-primary"
-              >
+              <button type="submit" className="btn btn-primary">
                 Create
               </button>
-              
             </form>
             <p className="mt-3">{msg}</p>
           </div>
 
           <h4 className="mb-2 ps-4">View Segments</h4>
           <div className="p-4 border rounded bg-light">
-            <div className="d-flex gap-2 mb-3">
+            <div className="mb-3">
               <CopyButton />
               <CsvButton />
               <PdfButton />
               <PrintButton />
+
+              {msg && (
+                <Alert variant="info" className="mt-2 text-center">
+                  {msg}
+                </Alert>
+              )}
             </div>
             <table className="table table-bordered">
               <thead className="table-dark" style={{ opacity: "0.7" }}>
@@ -212,22 +222,22 @@ const SegmentList = () => {
                 {loading ? (
                   <div
                     style={{
-                      position: "fixed", // Fixed to ensure it stays over everything
+                      position: "fixed", 
                       top: 0,
                       left: 0,
-                      width: "100vw", // Full width
-                      height: "100vh", // Full height
-                      backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
-                      zIndex: 9998, // Make sure it's above most elements
+                      width: "100vw", 
+                      height: "100vh", 
+                      backgroundColor: "rgba(104, 102, 102, 0.5)", 
+                      zIndex: 9998, 
                     }}
                   >
                     <div
                       style={{
                         position: "absolute",
-                        top: "50%", // Center vertically
-                        left: "50%", // Center horizontally
-                        transform: "translate(-50%, -50%)", // Correct alignment
-                        zIndex: 9999, // Ensure the loader is above the overlay
+                        top: "50%", 
+                        left: "50%", 
+                        transform: "translate(-50%, -50%)", 
+                        zIndex: 9999, 
                         backgroundColor: "transparent",
                       }}
                     >
@@ -240,7 +250,7 @@ const SegmentList = () => {
                       Error: {error}
                     </td>
                   </tr>
-                ) : segments.length > 0 ? (
+                ) : segments && segments.length > 0 ? (
                   segments.map((segmentObj, index) => (
                     <tr key={segmentObj.id}>
                       <td>{segmentObj.segmentType}</td>

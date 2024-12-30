@@ -32,6 +32,7 @@ export const getAllUser = async () => {
 
 export const putUser = async (params) => {
   try {
+    const { id } = params; 
     const urlWithId = `${putUserUrl}?id=${id}`;
     const response = await apiPutCallWithAuth(urlWithId, params, staticToken);
     return response; 

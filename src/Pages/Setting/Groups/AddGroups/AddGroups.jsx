@@ -58,6 +58,7 @@ export default function AddGroups() {
       from: [],
       ratio: "string",
     },
+
     Contact: {
       Create: false,
       View: false,
@@ -93,6 +94,40 @@ export default function AddGroups() {
       PaidClientAction: false,
       PaidClientActionAssign: false,
     },
+    LeadTemplate: {
+      SendSMSLead: false,
+      SendWhatsappLead: false,
+      SendEmailLead: false,
+    },
+    ClientTemplate: {
+      SendSMSClient: false,
+      SendWhatsappClient: false,
+      SendEmailClient: false,
+    },
+    TeamMembers: {
+      List: false,
+      Data: false,
+    },
+    SmsModule: {
+      SendSMS: false,
+      ViewSMS: false,
+    },
+    CallingModule: {
+      Monitoring: false,
+      Reports: false,
+      SendSMSViaGateway: false,
+      ViewSMSViaGateway: false,
+      MissCall: false,
+      LiveCall: false,
+    },
+    Mis: {
+      employee: false,
+      lead: false,
+      client: false,
+      sales: false,
+      disposeLeads: false,
+      preSales: false,
+    },
     Compliance: {
       KYC: false,
       RiskProfile: false,
@@ -119,12 +154,14 @@ export default function AddGroups() {
       Sms: false,
       Chat: false,
       Whatsapp: false,
+      Login: true,
       Extension: false,
     },
     Extra: {
       callingModule: false,
       userModule: false,
       groupModule: false,
+      poolsModule: true,
       pools: false,
       leadStatusModule: false,
       segmentModule: false,
@@ -373,12 +410,14 @@ export default function AddGroups() {
         sms: groupData.Logs.Sms,
         chat: groupData.Logs.Chat,
         whatsapp: groupData.Logs.Whatsapp,
+        login: groupData.Logs.Login,
         extension: groupData.Logs.Extension,
       },
       extra: {
         callingModule: groupData.Extra.callingModule,
         userModule: groupData.Extra.userModule,
         groupModule: groupData.Extra.groupModule,
+        poolsModule:  groupData.Extra.poolsModule,
         pools: groupData.Extra.pools,
         leadStatusModule: groupData.Extra.leadStatusModule,
         segmentModule: groupData.Extra.segmentModule,
@@ -414,30 +453,30 @@ export default function AddGroups() {
         chatLogs: groupData.Export.ChatLogs,
       },
       mis: {
-        employee: false,
-        lead: false,
-        client: false,
-        sales: false,
-        disposeLeads: false,
-        preSales: false,
+        employee: groupData.Mis.employee,
+        lead: groupData.Mis.lead,
+        client: groupData.Mis.client,
+        sales: groupData.Mis.sales,
+        disposeLeads: groupData.Mis.disposeLeads,
+        preSales: groupData.Mis.preSales,
       },
       hrExtra: {
-        orgChart: false,
-        scrapBook: false,
-        holiday: false,
+        orgChart: groupData.HRExtra.ORGChart,
+        scrapBook: groupData.HRExtra.ScrapBook,
+        holiday: groupData.HRExtra.Holiday,
       },
       reports: {
-        generalReport: false,
-        ftReport: false,
-        paidClientReport: false,
-        expiredPaidClientReport: false,
-        userReport: false,
-        callingReport: false,
-        messageReport: false,
-        smsReport: false,
-        dndReport: false,
-        tracksheet: false,
-        researchReport: false,
+        generalReport: groupData.Reports.GeneralReport,
+        ftReport: groupData.Reports.FTReport,
+        paidClientReport: groupData.Reports.PaidClientReport,
+        expiredPaidClientReport: groupData.Reports.ExpiredPaidClientReport,
+        userReport: groupData.Reports.UserReport,
+        callingReport: groupData.Reports.CallingReport,
+        messageReport: groupData.Reports.MessageReport,
+        smsReport: groupData.Reports.SMSReport,
+        dndReport: groupData.Reports.DNDReport,
+        tracksheet: groupData.Reports.Tracksheet,
+        researchReport: groupData.Reports.ResearchReport,
       },
       leadFetch: {
         active: false,
@@ -450,36 +489,36 @@ export default function AddGroups() {
         ratio: "string",
       },
       smsModule: {
-        sendSMS: false,
-        viewSMS: false,
+        sendSMS: groupData.SmsModule.SendSMS,
+        viewSMS: groupData.SmsModule.ViewSMS,
       },
       callingModule: {
-        monitoring: false,
-        reports: false,
-        sendSMSViaGateway: false,
-        viewSMSViaGateway: false,
-        missCall: false,
-        liveCall: false,
+        monitoring: groupData.CallingModule.Monitoring,
+        reports: groupData.CallingModule.Reports,
+        sendSMSViaGateway: groupData.CallingModule.SendSMSViaGateway,
+        viewSMSViaGateway: groupData.CallingModule.ViewSMSViaGateway,
+        missCall: groupData.CallingModule.MissCall,
+        liveCall: groupData.CallingModule.LiveCall,
       },
       leadTemplate: {
-        sendSMSLead: false,
-        sendWhatsappLead: false,
-        sendEmailLead: false,
+        sendSMSLead: groupData.LeadTemplate.SendSMSLead,
+        sendWhatsappLead: groupData.LeadTemplate.SendWhatsappLead,
+        sendEmailLead: groupData.LeadTemplate.SendEmailLead,
       },
       clientTemplate: {
-        sendSMSClient: false,
-        sendWhatsappClient: false,
-        sendEmailClient: false,
+        sendSMSClient: groupData.ClientTemplate.SendSMSClient,
+        sendWhatsappClient: groupData.ClientTemplate.SendWhatsappClient,
+        sendEmailClient: groupData.ClientTemplate.SendEmailClient,
       },
       supportModule: {
-        itAdmin: false,
-        hrAdmin: false,
-        complianceAdmin: false,
-        admin: false,
+        itAdmin: groupData.SupportModule.ITAdmin,
+        hrAdmin: groupData.SupportModule.HRAdmin,
+        complianceAdmin: groupData.SupportModule.ComplianceAdmin,
+        admin: groupData.SupportModule.Admin,
       },
       teamMembers: {
-        list: false,
-        data: false,
+        list: groupData.TeamMembers.List,
+        data: groupData.TeamMembers.Data,
       },
       freeTrialDays: groupData.FreeTrialDays,
       freeTrialPerContact: groupData.FreeTrialPerContact,
@@ -507,17 +546,16 @@ export default function AddGroups() {
         style={{ padding: "18px 16px" }}
       >
         <div
-          className="container-fluid border border-2 border-gray p-4"
+          className="container-fluid p-4"
           style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
         >
-
-        <div>
-        {showAlert && (
-        <Alert variant="info" className="mt-2 text-center">
-          Group Added Successfully
-        </Alert>
-      )}
-        </div>
+          <div>
+            {showAlert && (
+              <Alert variant="info" className="mt-2 text-center">
+                Group Added Successfully
+              </Alert>
+            )}
+          </div>
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
@@ -538,6 +576,28 @@ export default function AddGroups() {
               {renderSection("Mutual Fund", groupData.MutualFund, "MutualFund")}
               {renderSection("Leads", groupData.Leads, "Leads")}
               {renderSection("SO", groupData.SO, "SO")}
+              {renderSection(
+                "Lead Template",
+                groupData.LeadTemplate,
+                "LeadTemplate"
+              )}
+              {renderSection(
+                "Client Template",
+                groupData.ClientTemplate,
+                "ClientTemplate"
+              )}
+              {renderSection(
+                "Team Members",
+                groupData.TeamMembers,
+                "TeamMembers"
+              )}
+              {renderSection("SMS Module", groupData.SmsModule, "SmsModule")}
+              {renderSection(
+                "Calling Module",
+                groupData.CallingModule,
+                "CallingModule"
+              )}
+              {renderSection("Mis", groupData.Mis, "Mis")}
               {renderSection("Compliance", groupData.Compliance, "Compliance")}
               {renderSection("Export", groupData.Export, "Export")}
               {renderSection("Logs", groupData.Logs, "Logs")}

@@ -13,11 +13,10 @@ import {
   putUserThunk,
   
 } from "../../../../Redux/Services/thunks/UserThunk";
-
 import { useDispatch, useSelector } from "react-redux";
 import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
-
+import { useNavigate } from "react-router-dom";
 const ViewUser = () => {
   const [users, setUsers] = useState([]);
   const [status, setStatus] = useState("Active");
@@ -26,13 +25,11 @@ const ViewUser = () => {
   const [editValue, setEditValue] = useState("");
   const [msg, setMsg] = useState("");
   const dispatch = useDispatch();
-
   const { data, loading, error } = useSelector((state) => state.user);
-
+  const Navigate=useNavigate()
   useEffect(() => {
     dispatch(getAllUserThunk());
   }, [dispatch]);
-
   useEffect(() => {
     if (data?.data) {
       const timer = setTimeout(() => {
@@ -41,7 +38,6 @@ const ViewUser = () => {
       return () => clearTimeout(timer);
     }
   }, [data]);
-
   useEffect(() => {
     if (msg) {
       const alertTimer = setTimeout(() => {
@@ -50,27 +46,21 @@ const ViewUser = () => {
       return () => clearTimeout(alertTimer);
     }
   }, [msg]);
-
   // Handle search filtering
   const filteredUsers = users.filter(
     (user) =>
       (user.userName || "").toLowerCase().includes(search.toLowerCase()) &&
       (status === "All" || user.status === status)
   );
-
-  // const handleEditUser = (id) => {
-  //    if (editValue.trim() !== "") {
-  //      dispatch(putUserThunk({ id, departmentName: editValue })).then(
-  //        (response) => {
-  //          setMsg(response?.payload?.message || "updated successfully");
-  //          dispatch(getAllDepartmentThunk());
-  //          setEditDepartment(null);
-  //          setEditValue("");
-  //        }
-  //      );
-  //    }
-  //  };
-
+  const handleEditUser = (id,user) => {
+    if (!user) {
+      console.error("Payment object is undefined or null");
+      return;
+    }
+    console.log("User ----------------------",user);
+    Navigate(`/edituser/${id}`, { state: { user } });
+    // Navigate("/edit-page", { state: { users: user } });
+   };
    const handleDeleteUser = (id) => {
      dispatch(deleteDepartmentThunk(id))
        .unwrap()
@@ -84,7 +74,6 @@ const ViewUser = () => {
          setMsg(error || "Failed to delete status");
        });
    };
-
   const fetchUserById = (id) => {
     dispatch(getByIdUserThunk(id)).then((response) => {
       const user = response.payload?.data;
@@ -92,7 +81,6 @@ const ViewUser = () => {
       setEditValue(user?.user);
     });
   };
-
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
@@ -123,7 +111,6 @@ const ViewUser = () => {
                 <PdfButton tableId={"table-data"} />
                 <CsvButton tableId={"table-data"} />
                 <CopyButton tableId={"table-data"} />
-
                 {msg && (
                   <Alert variant="info" className="mt-2 text-center">
                     {msg}
@@ -146,7 +133,6 @@ const ViewUser = () => {
                   <option value="All">All</option>
                 </select>
               </div>
-
               {/* Search Box */}
               <input
                 type="text"
@@ -158,13 +144,11 @@ const ViewUser = () => {
               />
             </div>
           </div>
-
           {msg && (
             <Alert variant="info" className="mt-2 text-center">
               {msg}
             </Alert>
           )}
-
           <table className="user-table">
             <thead>
               <tr>
@@ -228,7 +212,9 @@ const ViewUser = () => {
                         ) : (
                           <EditButton
                             className="btn btn-primary btn-sm mr-1 py-0 px-2"
-                            onClick={() => fetchUserById(user.id)}
+                            onClick={() =>
+                              handleEditUser(user.id,user)
+                            }
                           />
                         )}
                         <DeleteButton
@@ -246,7 +232,6 @@ const ViewUser = () => {
               )}
             </tbody>
           </table>
-
           <div className="pagination">
             <button>Previous</button>
             {/* Add logic for pagination */}
@@ -257,5 +242,4 @@ const ViewUser = () => {
     </>
   );
 };
-
 export default ViewUser;

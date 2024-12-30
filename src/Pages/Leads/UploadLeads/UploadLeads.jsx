@@ -7,7 +7,7 @@ import { Alert } from "react-bootstrap";
 const UploadLeads = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({
-    campaignName: "harsh ",
+    campaignName: "INF26DEC2024",
     file: null,
     segmentName: "gold",
     leadSource: "freshpool",

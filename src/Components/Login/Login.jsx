@@ -10,11 +10,11 @@ const LoginPage = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  const url = 'http://192.168.1.xyz:5118/api/Auth/login';
+  const url = 'http://192.168.1.227:5118/api/Auth/login';
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+ 
     const userName = `INF${name}${dob}${serialNo}`;
 
     try {

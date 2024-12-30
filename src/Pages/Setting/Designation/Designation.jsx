@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
 import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";
 import BackButton from "../../../Components/Button/BackButton/BackButton";
@@ -28,7 +28,6 @@ const Designation = () => {
   useEffect(() => {
     const fetchData = async () => {
       dispatch(GetAllDesignationThunk());   
-      setIsLoading(false);
     };
     fetchData();
   }, [dispatch]);
@@ -117,6 +116,7 @@ const Designation = () => {
                 </Alert>
               )}
             </div>
+            <table className="table table-bordered table-striped">
             <tbody>
               {loading ? (
                 <div
@@ -150,8 +150,8 @@ const Designation = () => {
                   </td>
                 </tr>
               ) : designation.length > 0 ? (
-                designation.map((designationObj, index) => (
-                  <tr key={index}>
+                designation.map((designationObj) => (
+                  <tr key={designationObj.id}>
                     <td>{designationObj.designationName}</td>
                     <td>{designationObj.designationTarget}</td>
                     <td className="text-center">
@@ -168,6 +168,7 @@ const Designation = () => {
                 </tr>
               )}
             </tbody>
+            </table>
           </div>
         </div>
       </div>

@@ -248,25 +248,19 @@ export async function apiPutCallWithAuth(endpoint, data, token) {
   console.log(endpoint);
   try {
     const headers = {
-      'Authorization': `Bearer ${token}`, // Add Bearer token
+      'Authorization': `Bearer ${token}`, 
     };
-
-    // Check if data is FormData (which is common for file uploads)
     if (data instanceof FormData) {
-      // If it's FormData, we don't set Content-Type; the browser does it automatically
       headers['Content-Type'] = 'multipart/form-data';
     } else {
-      // If it's a regular object, convert to JSON
       headers['Content-Type'] = 'application/json';
       data = JSON.stringify(data);
     }
-
     const response = await fetch(endpoint, {
       method: 'PUT',
       headers: headers,
-      body: data, // Send either FormData or JSON string
+      body: data, 
     });
-
     if (response.ok) {
       const responseData = await response.json();
       console.log('Response:', responseData);

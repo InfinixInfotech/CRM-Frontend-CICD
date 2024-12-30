@@ -26,9 +26,9 @@ const ViewLeads = () => {
 
 
   const requestData = {
-    EmployeeCode: "INFSASHANT1007",
-    CampaignName: "sashantSir",
-  };
+    EmployeeCode: "INFHARSH21158",
+    CampaignName: "INF29DEC2024",
+  };   
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.uploadbulklead);
 
@@ -36,9 +36,9 @@ const ViewLeads = () => {
     console.log("Fetching leads with requestData:", requestData);
     dispatch(fetchAllUploadBulkLeadThunk(requestData));
     // setIsLoading(true);
-    setTimeout(() => {
-      window.location.reload();
-    }, 2000);
+    // setTimeout(() => {
+    //   window.location.reload();
+    // }, 2000);
   };
 
   useEffect(() => {

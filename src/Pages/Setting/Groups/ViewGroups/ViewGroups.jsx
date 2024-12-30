@@ -17,8 +17,25 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+
 
 const ViewGroups = () => {
+
+  const navigate = useNavigate();
+
+  const handleNavigate = (id, groupObj)=>{
+    if (!groupObj) {
+      console.error("groupObj is undefined or null");
+      return;
+    }
+    console.log("groupObj is ----------------", groupObj);
+    
+
+    navigate(`/editgroups/${id}`, {state: {groupObj}})
+    alert("working")
+  }
+
   const [groupsData, setGroupsData] = useState([]);
   const [editgroups, setEditGroups] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -226,7 +243,7 @@ const ViewGroups = () => {
                         ) : (
                           <EditButton
                             className="btn btn-primary btn-sm mr-1 py-0 px-2"
-                            onClick={() => fetchGroupsById(groupObj.id)}
+                            onClick={()=>{handleNavigate(groupObj.id , groupObj)}}
                           />
                         )}
                         <DeleteButton

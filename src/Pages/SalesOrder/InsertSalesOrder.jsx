@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { staticToken } from "../../Redux/Services/apiServer/ApiServer";
 import { apiPostCallWithAuth } from "../../Utils/apiUtils";
 
-const addSalesOrder = () => {
+const InsertSalesOrder = () => {
   // ________________________________________________________
   const url = "/api/SO/InsertSO";
   const apiUrl = import.meta.env.VITE_API_URL;
@@ -305,4 +305,4 @@ const addSalesOrder = () => {
   );
 };
 
-export default addSalesOrder;
+export default InsertSalesOrder;
