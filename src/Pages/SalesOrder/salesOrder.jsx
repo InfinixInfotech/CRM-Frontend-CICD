@@ -7,21 +7,32 @@ import { PdfButton } from "../../Components/Button/DataButton/DataPdfButton/Data
 import { CopyButton } from "../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { useNavigate } from "react-router-dom";
 import "./SalesOrder.css";
-
-import { getAllSalesOrderThunk } from "../../Redux/Services/thunks/SalesOrderThunk";
+import {
+  deleteSalesOrderThunk,
+  getAllSalesOrderThunk,
+} from "../../Redux/Services/thunks/SalesOrderThunk";
 import { useDispatch } from "react-redux";
+import ExportData from "../../Components/Button/DataButton/ExportButton";
 
 const SalesOrder = () => {
-  const Navigate = useNavigate();
-  const handleNavigate = () => {
-    Navigate("/insertso");
-    alert("clicked");
-  };
-
   const [salesOrder, setsalesOrder] = useState([]);
-
   const [showPopup, setShowPopup] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
+  const Navigate = useNavigate();
+  const handleNavigate = (id, salesOrderObj) => {
+    if (!salesOrderObj) {
+      console.error("salesOrderObj is undefined or null");
+      return;
+    }
+    console.log("salesOrderObj---------------", JSON.stringify(salesOrderObj));
+
+    Navigate(`/editso/${id}`, {
+      state: { salesOrderObj, soId: salesOrderObj.soId },
+    });
+  };
 
   const dispatch = useDispatch();
 
@@ -55,6 +66,29 @@ const SalesOrder = () => {
     setSelectedEmail(null);
   };
 
+  const handleDeleteSo = (id) => {
+    dispatch(deleteSalesOrderThunk(id))
+      .unwrap()
+      .then((response) => {
+        setMsg(response.message || "deleted successfully");
+        setsalesOrder((prevStatuses) =>
+          prevStatuses.filter((salesorder) => salesorder.id !== id)
+        );
+      })
+      .catch((error) => {
+        setMsg(error || "Failed to delete status");
+      });
+  };
+
+  const totalPages = Math.ceil(salesOrder.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentSO = salesOrder.slice(indexOfFirstItem, indexOfLastItem);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const nextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
@@ -86,14 +120,12 @@ const SalesOrder = () => {
           </div>
 
           {/* Buttons */}
-          <div className="mb-2 d-flex gap-2">
-            <PrintButton tableId="table-data" />
+          <div className="mb-2 ">
+            {/* <PrintButton tableId="table-data" />
             <PdfButton tableId="table-data" />
             <CsvButton tableId="table-data" />
-            <CopyButton tableId="table-data" />
-            <button className="btn btn-secondary btn-sm px-2 py-0 me-1 mt-3 no-print text-center" onClick={handleNavigate}>
-              Add SO
-            </button>
+            <CopyButton tableId="table-data" /> */}
+            <ExportData tableId="table-data" />
           </div>
           {/* Popup */}
           {showPopup && (
@@ -110,7 +142,7 @@ const SalesOrder = () => {
               </div>
             </>
           )}
-          {/* Table */}
+
           <div>
             <table
               id="table-data"
@@ -119,7 +151,7 @@ const SalesOrder = () => {
               <thead>
                 <tr>
                   <th>Client ID</th>
-                  <th>Load ID</th>
+                  <th>Lead ID</th>
                   <th>Payment Date</th>
                   <th>Client Name</th>
                   <th>Mobile</th>
@@ -147,35 +179,38 @@ const SalesOrder = () => {
                 </tr>
               </thead>
               <tbody>
-                {salesOrder.map((salesOrderObj, index) => (
+                {currentSO.map((salesOrderObj, index) => (
                   <tr key={index}>
                     <td>{salesOrderObj.id}</td>
-                    <td>{salesOrderObj.loadId}</td>
-                    <td>{salesOrderObj.paymentDate}</td>
+                    <td>{salesOrderObj.leadId}</td>
+                    <td>{salesOrderObj.paymentDetails.paymentDate}</td>
                     <td>{salesOrderObj.personalDetails.clientName}</td>
                     <td>{salesOrderObj.personalDetails.mobile}</td>
                     <td>{salesOrderObj.assignedTo}</td>
                     <td>{salesOrderObj.managerName}</td>
                     <td>{salesOrderObj.segment}</td>
                     <td>{salesOrderObj.type}</td>
-                    <td>{salesOrderObj.startDate}</td>
-                    <td>{salesOrderObj.endDate}</td>
+                    <td>{salesOrderObj.productDetails[0]?.startDate}</td>
+                    <td>{salesOrderObj.productDetails[0]?.endDate}</td>
                     <td>{salesOrderObj.netTotal}</td>
                     <td>{salesOrderObj.tax}</td>
-                    <td>{salesOrderObj.grandTotal}</td>
-                    <td>{salesOrderObj.dob}</td>
+                    <td>{salesOrderObj.productDetails[0]?.grandTotal}</td>
+                    <td>{salesOrderObj.personalDetails.dob}</td>
+
                     <td>{salesOrderObj.personalDetails.panNo}</td>
                     {/* <td>{salesOrderObj.email}</td> */}
                     <td>
                       <button
                         className="btn btn-sm text-primary"
-                        onClick={() => handleEmailPopup(salesOrderObj.personalDetails.email)}
+                        onClick={() =>
+                          handleEmailPopup(salesOrderObj.personalDetails.email)
+                        }
                       >
                         Email
                       </button>
                     </td>
-                    <td>{salesOrderObj.city}</td>
-                    <td>{salesOrderObj.state}</td>
+                    <td>{salesOrderObj.personalDetails.address.city}</td>
+                    <td>{salesOrderObj.personalDetails.address.state}</td>
                     <td>{salesOrderObj.options}</td>
                     <td>{salesOrderObj.status}</td>
                     <td>{salesOrderObj.leadSource}</td>
@@ -190,8 +225,18 @@ const SalesOrder = () => {
                         <button className="btn btn-info btn-sm py-0 px-2">
                           Invoice
                         </button>
-                        <DeleteButton className="btn btn-danger btn-sm py-0 px-2" />
-                        <EditButton className="btn btn-primary btn-sm py-0 px-2" />
+                        <DeleteButton
+                          onDelete={() => {
+                            handleDeleteSo(salesOrderObj.id);
+                          }}
+                          className="btn btn-danger btn-sm py-0 px-2"
+                        />
+                        <EditButton
+                          onClick={() => {
+                            handleNavigate(salesOrderObj.id, salesOrderObj);
+                          }}
+                          className="btn btn-primary btn-sm py-0 px-2"
+                        />
                       </div>
                     </td>
                   </tr>
@@ -201,26 +246,24 @@ const SalesOrder = () => {
           </div>
 
           {/* Pagination */}
-          <div className="d-flex justify-content-between align-items-center mt-4">
-            <div>
-              Showing <strong>1 to 10</strong> of <strong>3,445</strong> entries
-            </div>
-            <nav>
-              <ul className="pagination pagination-sm mb-0">
-                <li className="page-item">
-                  <button className="page-link">Previous</button>
-                </li>
-                <li className="page-item active">
-                  <button className="page-link">1</button>
-                </li>
-                <li className="page-item">
-                  <button className="page-link">2</button>
-                </li>
-                <li className="page-item">
-                  <button className="page-link">Next</button>
-                </li>
-              </ul>
-            </nav>
+          <div className="pagination">
+            <button onClick={prevPage} disabled={currentPage === 1}>
+              <i className="bi bi-arrow-left-circle"></i>
+            </button>
+            {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+              (number) => (
+                <button
+                  key={number}
+                  onClick={() => paginate(number)}
+                  className={currentPage === number ? "active" : ""}
+                >
+                  {number}
+                </button>
+              )
+            )}
+            <button onClick={nextPage} disabled={currentPage === totalPages}>
+              <i className="bi bi-arrow-right-circle"></i>
+            </button>
           </div>
 
           {/* Summary */}

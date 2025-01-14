@@ -14,7 +14,6 @@ export const CreateDesignationThunk = createAsyncThunk(
     }
 );
 
-
 export const GetAllDesignationThunk = createAsyncThunk(
     'designation/GetAllDesignation',
     async(_, {rejectWithValue})=>{

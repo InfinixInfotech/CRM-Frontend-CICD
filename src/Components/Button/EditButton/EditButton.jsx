@@ -12,11 +12,11 @@ export const EditButton = ({
   return (
     <button onClick={onClick} className={className} style={{
       fontWeight: "600",
-      borderRadius: "0",
-      backgroundColor: "#1F68B1",
+      // borderRadius: "0",
+      // backgroundColor: "#1F68B1",
       fontSize: "12px",
-        border: "1px solid grey",
-        color : "white"
+      //   border: "1px solid grey",
+      //   color : "white"
     }}>
     Edit
     </button>

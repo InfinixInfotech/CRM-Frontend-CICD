@@ -1,5 +1,5 @@
 import { apiDeleteCallWithAuth, apiGetCallWithAuth, apiPostCallWithAuth, apiPutCallWithAuth } from "../../../Utils/apiUtils";
-import { CreateDesignationUrl, deleteDesignationUrl, fetchByIdDesignationUrl, GetAllDesignationUrl, UpdateDesignationUrl } from "../apiServer/ApiServer";
+import { CreateDesignationUrl, deleteDesignationUrl, fetchByIdDesignationUrl, GetAllDesignationUrl, staticToken, UpdateDesignationUrl } from "../apiServer/ApiServer";
 
 
 export const CreateDesignation = async (params) => {

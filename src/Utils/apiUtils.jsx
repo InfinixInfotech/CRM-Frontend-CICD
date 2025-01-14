@@ -107,7 +107,7 @@ export async function apiPutCallWithoutAuth(endpoint, data) {
 
 
 export async function apiPostCallWithAuth(endpoint,params, token) {
-  
+  console.log(token)
   try {
     // console.log("apiPostCallWithAuthParams:-------------------   "+JSON.stringify(params))
       const response = await fetch(endpoint,{
@@ -171,12 +171,11 @@ export async function apiGetCallWithAuth(endpoint,token) {
               'Authorization': `Bearer ${token}`, 
           },
       });
-
       if (response.ok) {
           const data = await response.json();
           console.log('Response:', data);
           return data;
-      } else {
+      }else {
           console.error('Error:', response.status, response.statusText);
           return null;
       }

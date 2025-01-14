@@ -7,7 +7,7 @@ import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtt
 import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
-
+import ExportButton from "../../../../Components/Button/DataButton/ExportButton"
 import {
   putGroupsThunk,
   deleteGroupsThunk,
@@ -21,21 +21,6 @@ import { useNavigate } from "react-router-dom";
 
 
 const ViewGroups = () => {
-
-  const navigate = useNavigate();
-
-  const handleNavigate = (id, groupObj)=>{
-    if (!groupObj) {
-      console.error("groupObj is undefined or null");
-      return;
-    }
-    console.log("groupObj is ----------------", groupObj);
-    
-
-    navigate(`/editgroups/${id}`, {state: {groupObj}})
-    alert("working")
-  }
-
   const [groupsData, setGroupsData] = useState([]);
   const [editgroups, setEditGroups] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -43,13 +28,33 @@ const ViewGroups = () => {
   const [groupsPerPage] = useState(10); 
   const [msg,setMsg]=useState("")
   const dispatch = useDispatch();
-
   const { data, loading, error } = useSelector((state) => state.groups);
+  const navigate = useNavigate();
+//!--------------------------------------------PAGINATION LOGIC-------------------------------------//
+
+  const indexOfLastGroup = currentPage * groupsPerPage;
+  const indexOfFirstGroup = indexOfLastGroup - groupsPerPage;
+  const currentGroups = groupsData.slice(indexOfFirstGroup, indexOfLastGroup);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const totalPages = Math.ceil(groupsData.length / groupsPerPage);
+
+  const handleNavigate = (id, groupObj)=>{
+    if (!groupObj) {
+      console.error("groupObj is undefined or null");
+      return;
+    }
+    console.log("groupObj.groupId is ----------------", groupObj.groupId);
+    
+    navigate(`/editgroups/${id}`, {state: {groupObj, groupId: groupObj.groupId||null , id : id|| null}})
+    alert("working")
+  }
 
   useEffect(() => {
     dispatch(getAllGroupsThunk());
   }, [dispatch]);
- 
+
+
+
   useEffect(() => {
     if (data?.data) {
       const timer = setTimeout(() => {
@@ -81,42 +86,33 @@ const ViewGroups = () => {
     }
   };
 
+
   const handleDeleteGroups = (id) => {
     setGroupsData((prevGroups) =>
       prevGroups.filter((group) => group.id !== id)
     );
-
     dispatch(deleteGroupsThunk(id))
       .unwrap()
       .then((response) => {
         setMsg(response.message || "Group deleted successfully");
-
       })
       .catch((error) => {
         // Handle error in case of failure
         setMsg(error || "Failed to delete group");
-
       });
   };
 
-  const fetchGroupsById = (id) => {
-    dispatch(getByIdGroupsThunk(id)).then((response) => {
-      const status = response.payload?.data;
-      setEditStatus(status?.id);
-      setEditValue(status?.status);
-    });
-  };
+  //!----COMMENT-------------------------------------//
 
-  // Logic for pagination
-  const indexOfLastGroup = currentPage * groupsPerPage;
-  const indexOfFirstGroup = indexOfLastGroup - groupsPerPage;
-  const currentGroups = groupsData.slice(indexOfFirstGroup, indexOfLastGroup);
-
-  // Change page
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const totalPages = Math.ceil(groupsData.length / groupsPerPage);
-
+  //TODO    const fetchGroupsById = (id) => {
+  //TODO    dispatch(getByIdGroupsThunk(id)).then((response) => {
+  //TODO     const status = response.payload?.data;
+  //TODO     setEditStatus(status?.id);
+  //TODO     setEditValue(status?.status);
+  //TODO      });
+  //TODO    };
+  //!------------------------------------------------------------------//
+ 
   return (
     <>
     <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2" style={{ position: "relative" }}>
@@ -134,10 +130,11 @@ const ViewGroups = () => {
       >
         <div className="px-2 mt-1">
           <div className="mb-2">
-            <PrintButton tableId={"table-data"} />
+            {/* <PrintButton tableId={"table-data"} />
             <PdfButton tableId={"table-data"} />
             <CsvButton tableId={"table-data"} />
-            <CopyButton tableId={"table-data"} />
+            <CopyButton tableId={"table-data"} /> */}
+            <ExportButton tableId={"table-data"} />
   
             {msg && (
               <Alert variant="info" className="mt-2 text-center">
@@ -284,8 +281,6 @@ const ViewGroups = () => {
       </div>
     </div>
   </>
-  
   );
 };
-
 export default ViewGroups;

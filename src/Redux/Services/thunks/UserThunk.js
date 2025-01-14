@@ -20,7 +20,7 @@ export const getAllUserThunk = createAsyncThunk(
     async(_, {rejectWithValue})=>{
         try {
             const response = await getAllUser();
-            return response;
+            return response;   
         } catch (error) {
            return rejectWithValue(error);
         }

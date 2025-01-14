@@ -11,12 +11,12 @@ import {
   getAllUserThunk,
   getByIdUserThunk,
   putUserThunk,
-  
 } from "../../../../Redux/Services/thunks/UserThunk";
 import { useDispatch, useSelector } from "react-redux";
 import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
+import ExportData from "../../../../Components/Button/DataButton/ExportButton";
 const ViewUser = () => {
   const [users, setUsers] = useState([]);
   const [status, setStatus] = useState("Active");
@@ -24,12 +24,50 @@ const ViewUser = () => {
   const [editUser, setEditUser] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [msg, setMsg] = useState("");
+  const [currentPage, setCurrentPage] = useState(1); // Page state
+  const [usersPerPage] = useState(10);
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.user);
-  const Navigate=useNavigate()
+
+  const Navigate = useNavigate();
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(users.length / usersPerPage);
+
+  // Generate page numbers around the current page
+  const pageNumbers = [];
+  const pageRange = 2; // Show 2 pages before and 2 pages after the current page (3 to 4 total pages)
+  for (
+    let i = Math.max(1, currentPage - pageRange);
+    i <= Math.min(totalPages, currentPage + pageRange);
+    i++
+  ) {
+    pageNumbers.push(i);
+  }
+
+  // Pagination handlers
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const nextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   useEffect(() => {
     dispatch(getAllUserThunk());
   }, [dispatch]);
+
   useEffect(() => {
     if (data?.data) {
       const timer = setTimeout(() => {
@@ -38,42 +76,56 @@ const ViewUser = () => {
       return () => clearTimeout(timer);
     }
   }, [data]);
+
   useEffect(() => {
     if (msg) {
       const alertTimer = setTimeout(() => {
         setMsg("");
-      }, 3000); // Alert will disappear after 3 seconds
+      }, 3000);
       return () => clearTimeout(alertTimer);
     }
   }, [msg]);
-  // Handle search filtering
-  const filteredUsers = users.filter(
-    (user) =>
-      (user.userName || "").toLowerCase().includes(search.toLowerCase()) &&
-      (status === "All" || user.status === status)
-  );
-  const handleEditUser = (id,user) => {
+
+  // const filteredUsers = users.filter(
+  //   (user) =>
+  //     (user.userName || "").toLowerCase().includes(search.toLowerCase()) &&
+  //     (status === "All" || user.status === status)
+  // );
+
+  // !  <---------------------------------------Edit Functionality------------------->
+
+  const handleEditUser = (id, user) => {
     if (!user) {
       console.error("Payment object is undefined or null");
       return;
     }
-    console.log("User ----------------------",user);
-    Navigate(`/edituser/${id}`, { state: { user } });
+    console.log("User ----------------------", user);
+    Navigate(`/edituser/${id}`, {
+      state: {
+        user,
+        employeeCode: user.employeeCode || null,
+        id: id || null,
+      },
+    });
     // Navigate("/edit-page", { state: { users: user } });
-   };
-   const handleDeleteUser = (id) => {
-     dispatch(deleteDepartmentThunk(id))
-       .unwrap()
-       .then((response) => {
-         setMsg(response.message || "deleted successfully");
-         setAddDepartment((prevStatuses) =>
-           prevStatuses.filter((status) => status.id !== id)
-         );
-       })
-       .catch((error) => {
-         setMsg(error || "Failed to delete status");
-       });
-   };
+  };
+
+  // !  <--------------------------------------- Delete Functionality------------------->
+
+  const handleDeleteUser = (id) => {
+    dispatch(deleteDepartmentThunk(id))
+      .unwrap()
+      .then((response) => {
+        setMsg(response.message || "deleted successfully");
+        setAddDepartment((prevStatuses) =>
+          prevStatuses.filter((status) => status.id !== id)
+        );
+      })
+      .catch((error) => {
+        setMsg(error || "Failed to delete status");
+      });
+  };
+
   const fetchUserById = (id) => {
     dispatch(getByIdUserThunk(id)).then((response) => {
       const user = response.payload?.data;
@@ -81,6 +133,7 @@ const ViewUser = () => {
       setEditValue(user?.user);
     });
   };
+
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
@@ -107,10 +160,13 @@ const ViewUser = () => {
               }}
             >
               <div className="mb-2">
-                <PrintButton tableId={"table-data"} />
+                {/* <PrintButton tableId={"table-data"} />
                 <PdfButton tableId={"table-data"} />
                 <CsvButton tableId={"table-data"} />
-                <CopyButton tableId={"table-data"} />
+                <CopyButton tableId={"table-data"} /> */}
+
+                <ExportData tableId="table-data" />
+
                 {msg && (
                   <Alert variant="info" className="mt-2 text-center">
                     {msg}
@@ -149,13 +205,14 @@ const ViewUser = () => {
               {msg}
             </Alert>
           )}
-          <table className="user-table">
+          <table id="table-data" className="user-table">
             <thead>
               <tr>
                 <th>User Name</th>
                 <th>Employee Code</th>
                 <th>Extension</th>
                 <th>Upload Pic</th>
+                <th>password</th>
                 <th className="text-center">Action</th>
               </tr>
             </thead>
@@ -191,8 +248,8 @@ const ViewUser = () => {
                     Error: {error}
                   </td>
                 </tr>
-              ) : users.length > 0 ? (
-                users.map((user, index) => (
+              ) : currentUsers.length > 0 ? (
+                currentUsers.map((user, index) => (
                   <tr key={user.employeeCode || index}>
                     <td>{user.userName || "N/A"}</td>
                     <td>{user.employeeCode || "N/A"}</td>
@@ -200,6 +257,10 @@ const ViewUser = () => {
                     <td>
                       <input type="file" className="upload-file" />
                     </td>
+                    <td className="text-success">
+                      {user.password || "No Extension"}
+                    </td>
+
                     <td>
                       <div className="d-flex justify-content-center align-items-center gap-2">
                         {editUser === index ? (
@@ -212,11 +273,24 @@ const ViewUser = () => {
                         ) : (
                           <EditButton
                             className="btn btn-primary btn-sm mr-1 py-0 px-2"
-                            onClick={() =>
-                              handleEditUser(user.id,user)
-                            }
+                            onClick={() => handleEditUser(user.id, user)}
                           />
                         )}
+
+                        <button
+                          style={{
+                            fontWeight: "600",
+                            // borderRadius: "0",
+                            // backgroundColor: "#1F68B1",
+                            fontSize: "12px",
+                            //   border: "1px solid grey",
+                            //   color : "white"
+                          }}
+                          className="btn btn-warning btn-sm mr-1 py-0 px-2"
+                        >
+                          Login As
+                        </button>
+
                         <DeleteButton
                           className="btn btn-danger btn-sm mr-1 py-0 px-2"
                           onDelete={() => handleDeleteUser(user.id)}
@@ -232,10 +306,23 @@ const ViewUser = () => {
               )}
             </tbody>
           </table>
+          {/* Pagination Controls */}
           <div className="pagination">
-            <button>Previous</button>
-            {/* Add logic for pagination */}
-            <button>Next</button>
+            <button onClick={prevPage} disabled={currentPage === 1}>
+              <i class="bi bi-arrow-left-circle"></i>
+            </button>
+            {pageNumbers.map((number) => (
+              <button
+                key={number}
+                onClick={() => paginate(number)}
+                className={currentPage === number ? "active" : ""}
+              >
+                {number}
+              </button>
+            ))}
+            <button onClick={nextPage} disabled={currentPage === totalPages}>
+              <i class="bi bi-arrow-right-circle"></i>
+            </button>
           </div>
         </div>
       </div>

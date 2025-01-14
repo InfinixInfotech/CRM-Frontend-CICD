@@ -13,10 +13,11 @@ import {
   postLeadStatusThunk,
   deleteLeadStatusThunk,
   putLeadStatusThunk,
-  getByIdLeadStatusThunk,
 } from "../../../../Redux/Services/thunks/LeadStatusThunk";
 import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
+import { staticToken } from "../../../../Redux/Services/apiServer/ApiServer";
+import ExportData from "../../../../Components/Button/DataButton/ExportButton";
 
 const LeadStatus = () => {
   const [statuses, setStatuses] = useState([]);
@@ -24,9 +25,22 @@ const LeadStatus = () => {
   const [editStatus, setEditStatus] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [msg, setMsg] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const dispatch = useDispatch();
 
   const { data, loading, error } = useSelector((state) => state.leadstatus);
+
+  //!<---------------------------------------------------------------------------------Pagination Functionality---------------------------------------------------------------------->
+
+  const totalPages = Math.ceil(statuses.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentStatuses = statuses.slice(indexOfFirstItem, indexOfLastItem);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const nextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
   useEffect(() => {
     dispatch(getAllLeadStatusThunk());
@@ -50,6 +64,8 @@ const LeadStatus = () => {
     }
   }, [msg]);
 
+  //!<---------------------------------------------------------------------------------ADD DATA Functionality---------------------------------------------------------------------->
+
   const handleAddStatus = (e) => {
     e.preventDefault();
     if (
@@ -66,18 +82,42 @@ const LeadStatus = () => {
     }
   };
 
-  const handleEditStatus = (id) => {
+  //!<---------------------------------------------------------------------------------EDIT Functionality---------------------------------------------------------------------->
+
+  const handleEditStatus = async (id) => {
     if (editValue.trim() !== "") {
-      dispatch(putLeadStatusThunk({ id, status: editValue })).then(
-        (response) => {
-          setMsg(response?.payload?.message || "Status updated successfully");
-          dispatch(getAllLeadStatusThunk());
-          setEditStatus(null);
-          setEditValue("");
+      try {
+        const token = staticToken; // Replace with your token retrieval logic
+        const response = await fetch(`/api/LeadStatus/UpdateLeadStatus`, {
+          method: "POST", // Changed to POST
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Adding the token
+          },
+          body: JSON.stringify({ id, status: editValue }), // Ensure `id` is included in the payload
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to update status");
         }
-      );
+
+        const data = await response.json();
+        setMsg(data?.message || "Status updated successfully");
+
+        setStatuses((prevStatuses) =>
+          prevStatuses.map((status) =>
+            status.id === id ? { ...status, status: editValue } : status
+          )
+        );
+        setEditStatus(null);
+        setEditValue("");
+      } catch (error) {
+        setMsg(error.message || "Failed to update status");
+      }
     }
   };
+
+  //!<---------------------------------------------------------------------------------DELETE DATA Functionality---------------------------------------------------------------------->
 
   const handleDeleteStatus = (id) => {
     dispatch(deleteLeadStatusThunk(id))
@@ -91,14 +131,6 @@ const LeadStatus = () => {
       .catch((error) => {
         setMsg(error || "Failed to delete status");
       });
-  };
-
-  const fetchStatusById = (id) => {
-    dispatch(getByIdLeadStatusThunk(id)).then((response) => {
-      const status = response.payload?.data;
-      setEditStatus(status?.id);
-      setEditValue(status?.status);
-    });
   };
 
   return (
@@ -120,27 +152,48 @@ const LeadStatus = () => {
           }}
         >
           <div className="addLeadscontainer add-status p-2 ">
-            <h4 className=" p-0  text-dark ">Add New Lead Status</h4>
-            <form onSubmit={handleAddStatus}>
+            <h4 className="p-0 text-dark">Add New Lead Status</h4>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (editStatus !== null) {
+                  // Update functionality
+                  handleEditStatus(editStatus);
+                } else {
+                  // Create functionality
+                  handleAddStatus(e);
+                }
+              }}
+            >
               <input
                 type="text"
-                value={newStatus}
-                onChange={(e) => setNewStatus(e.target.value)}
+                value={editStatus !== null ? editValue : newStatus}
+                onChange={(e) =>
+                  editStatus !== null
+                    ? setEditValue(e.target.value)
+                    : setNewStatus(e.target.value)
+                }
                 placeholder="Enter Lead Status"
               />
-              <button type="submit" className="btn btn-primary">
-                Create
+              <button
+                type="submit"
+                className={`btn px-3 py-1 ${
+                  editStatus !== null ? "btn-warning" : "btn-primary"
+                }`}
+              >
+                {editStatus !== null ? "Update" : "Create"}
               </button>
             </form>
-            <p className="mt-3 text-success"></p>
+            {msg && <p className="mt-3 text-success">{msg}</p>}
           </div>
           <div className="bg-white p-4 rounded border border-4 border-gray">
             <h5>View Lead Status</h5>
             <div className="mb-4">
-              <PrintButton />
+              {/* <PrintButton />
               <PdfButton />
               <CsvButton />
-              <CopyButton />
+              <CopyButton /> */}
+              <ExportData tableId="table-data" />
 
               {msg && (
                 <Alert variant="info" className="mt-2 text-center">
@@ -154,71 +207,48 @@ const LeadStatus = () => {
             >
               <thead>
                 <tr>
-                  <th>Lead Status</th>
+                  <th className="text-center">S.NO</th>
+                  <th className="text-center">Lead Status</th>
                   <th className="text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <div
-                    style={{
-                      position: "fixed", // Fixed to ensure it stays over everything
-                      top: 0,
-                      left: 0,
-                      width: "100vw", // Full width
-                      height: "100vh", // Full height
-                      backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
-                      zIndex: 9998, // Make sure it's above most elements
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "50%", // Center vertically
-                        left: "50%", // Center horizontally
-                        transform: "translate(-50%, -50%)", // Correct alignment
-                        zIndex: 9999, // Ensure the loader is above the overlay
-                        backgroundColor: "transparent",
-                      }}
-                    >
+                  <tr>
+                    <td colSpan="2" className="text-center">
                       <HashLoader color="#0060f1" size={50} />
-                    </div>
-                  </div>
+                    </td>
+                  </tr>
                 ) : error ? (
                   <tr>
                     <td colSpan="2" className="text-center text-danger">
                       Error: {error}
                     </td>
                   </tr>
-                ) : statuses.length > 0 ? (
-                  statuses.map((statusObj) => (
+                ) : currentStatuses.length > 0 ? (
+                  currentStatuses.map((statusObj) => (
                     <tr key={statusObj.id}>
+                      <td>{statusObj.id}</td>
                       <td>
-                        {editStatus === statusObj.id ? (
+                        {/* {editStatus === statusObj.id ? (
                           <input
                             type="text"
                             value={editValue}
                             onChange={(e) => setEditValue(e.target.value)}
                           />
-                        ) : (
-                          statusObj.status
-                        )}
+                        ) : ( */}
+                        {statusObj.status}
+                        {/* )} */}
                       </td>
                       <td className="text-center">
                         <div className="d-flex justify-content-center align-items-center gap-2">
-                          {editStatus === statusObj.id ? (
-                            <button
-                              onClick={() => handleEditStatus(statusObj.id)}
-                              className="btn btn-success"
-                            >
-                              Save
-                            </button>
-                          ) : (
-                            <EditButton
-                              className="btn btn-primary btn-sm mr-1 py-0 px-2"
-                              onClick={() => fetchStatusById(statusObj.id)}
-                            />
-                          )}
+                          <EditButton
+                            className="btn btn-primary btn-sm mr-1 py-0 px-2"
+                            onClick={() => {
+                              setEditStatus(statusObj.id);
+                              setEditValue(statusObj.status);
+                            }}
+                          />
                           <DeleteButton
                             className="btn btn-danger btn-sm mr-1 py-0 px-2"
                             onDelete={() => handleDeleteStatus(statusObj.id)}
@@ -236,6 +266,27 @@ const LeadStatus = () => {
                 )}
               </tbody>
             </table>
+            {/* //!<---------------------------------------------------------------------------------Pagination BUTTON----------------------------------------------------------------------> */}
+
+            <div className="pagination">
+              <button onClick={prevPage} disabled={currentPage === 1}>
+                <i className="bi bi-arrow-left-circle"></i>
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    className={currentPage === number ? "active" : ""}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button onClick={nextPage} disabled={currentPage === totalPages}>
+                <i className="bi bi-arrow-right-circle"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>

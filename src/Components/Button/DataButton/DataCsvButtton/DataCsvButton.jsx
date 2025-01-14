@@ -1,4 +1,6 @@
 import React from 'react';
+import { FaFileCsv } from "react-icons/fa";
+
 
 const handleCsv = (tableId) => {
   // Get the table data using the provided table ID
@@ -35,14 +37,15 @@ const handleCsv = (tableId) => {
 export const CsvButton = ({
   tableId = "table-data", // Default to "table-data" if no tableId is provided
   onClick = () => handleCsv(tableId),
-  className = "btn dataCopyButton btn-secondary btn-sm px-2 py-0  me-1 mt-3 no-print ",
+  className = "btn dataCopyButton  btn-sm px-2 py-0  me-1 mt-3 no-print ",
 }) => {
   return (
     <button
       onClick={() => handleCsv(tableId)} // Call handleCsv with the dynamic tableId
       className={className}
-      style={{fontWeight:"600" ,borderRadius: "0" ,backgroundColor:"rgb(166, 174, 191)"  }}
+      style={{fontWeight:"600" ,borderRadius: "0" , backgroundColor: "none", fontSize:"18px"}}
     >
+      <FaFileCsv className="me-1 fs-5 colorful-icon text-secondary" />
       Csv
     </button>
   );

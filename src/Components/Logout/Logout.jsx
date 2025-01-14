@@ -4,16 +4,12 @@ import { useNavigate } from "react-router-dom";
 const LogoutPage = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
-    // Clear authentication token
-  
-    localStorage.removeItem("authToken");
     navigate("/");
-
+    localStorage.removeItem("authToken");
     localStorage.removeItem("employcode");
     localStorage.removeItem("groupName");
+    localStorage.removeItem("username");
   };
-
-  
   return (
     <div >
     

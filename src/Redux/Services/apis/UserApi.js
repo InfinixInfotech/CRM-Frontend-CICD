@@ -33,8 +33,9 @@ export const getAllUser = async () => {
 export const putUser = async (params) => {
   try {
     const { id } = params; 
-    const urlWithId = `${putUserUrl}?id=${id}`;
-    const response = await apiPutCallWithAuth(urlWithId, params, staticToken);
+    const { employeeCode } = params;     
+    const urlWithId = `${putUserUrl}?id=${id}&employeeCode=${employeeCode}`;
+    const response = await apiPostCallWithAuth(urlWithId, params, staticToken);
     return response; 
   } catch (error) {
     console.error("Error updating lead status:", error);

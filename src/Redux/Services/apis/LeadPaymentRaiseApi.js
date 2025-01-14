@@ -43,7 +43,7 @@ export const putLeadPaymentRaise = async (params) => {
   try {
     const { id } = params;  // Extract the id from the params object
     const urlWithId = `${putLeadPaymentRaiseUrl}?id=${id}`;  // Use the id from params to construct the URL
-    const response = await apiPutCallWithAuth(urlWithId, params, staticToken);
+    const response = await apiPostCallWithAuth(urlWithId, params, staticToken);
     return response;
   } catch (error) {
     console.error("Error updating lead status:", error);

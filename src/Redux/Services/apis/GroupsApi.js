@@ -33,8 +33,9 @@ export const getAllGroups = async () => {
 export const putGroups = async (params) => {
   try {
     const {id} = params;
-    const urlWithId = `${putGroupsUrl}?id=${id}`;
-    const response = await apiPutCallWithAuth(urlWithId, params, staticToken);
+    const {groupId} = params;
+    const urlWithId = `${putGroupsUrl}?id=${id}&groupId=${groupId}`;
+    const response = await apiPostCallWithAuth(urlWithId, params, staticToken);
     return response; 
   } catch (error) {
     console.error("Error updating lead status:", error);

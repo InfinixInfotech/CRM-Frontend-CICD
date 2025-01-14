@@ -1,70 +1,79 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { emp, staticToken } from "../../Redux/Services/apiServer/ApiServer";
+import { staticToken } from "../../Redux/Services/apiServer/ApiServer";
+import { useLocation } from "react-router-dom";
 import { Alert } from "react-bootstrap";
 import BackButton from "../../Components/Button/BackButton/BackButton";
-import { useLocation, useParams } from "react-router-dom";
-const InsertSalesOrder = () => {
-  const { id } = useParams();
-  const { state } = useLocation();
-  const SoData = state?.leadObj;
-  const lead = SoData?.lead;
-  const userName = localStorage.getItem("username");
-  const [data, setData] = useState(null);
+const EditSalesOrder = () => {
+  const [data, setData] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { state } = useLocation();
   const [showAlert, setShowAlert] = useState(false);
-// console.log("lead.employeeName----------", lead);
+  const recievedSoData = state?.salesOrderObj;
   const [formData, setFormData] = useState({
-    employeeCode: emp,
-    employeeName:  userName,
-    soId:  lead.soId,
-    so:  lead.so,
-    leadId:  lead.leadId,
+    id: recievedSoData?.id || "",
+    soId: recievedSoData?.soId || "SO12345",
+    employeeCode: recievedSoData?.employeeCode,
+    employeeName: recievedSoData?.employeeName || "John Doe",
+    so: recievedSoData?.so || "wge",
+    leadId: recievedSoData?.leadId || "L67890",
     personalDetails: {
-      createdDate:  lead.createdDate,
-      clientName:  lead.clientName,
-      fatherName:  lead.fatherName,
-      motherName:  lead.motherName,
-      mobile:  lead.mobile,
-      email:  lead.email,
-      dob:  lead.dob,
+      createdDate:
+        recievedSoData?.personalDetails?.createdDate ||
+        "2024-12-17T07:19:15.663Z",
+      clientName: recievedSoData?.personalDetails?.clientName || "",
+      fatherName:
+        recievedSoData?.personalDetails?.fatherName || "Father's Name",
+      motherName:
+        recievedSoData?.personalDetails?.motherName || "Mother's Name",
+      mobile: recievedSoData?.personalDetails?.mobile || "1234567890",
+      email: recievedSoData?.personalDetails?.email || "email@example.com",
+      dob: recievedSoData?.personalDetails?.dob || "2000-01-01",
       address: {
-        city:  lead.city,
-        state:  lead.state,
-        pinCode:  lead.pinCode,
+        city: recievedSoData?.personalDetails?.address?.city || "CityName",
+        state: recievedSoData?.personalDetails?.address?.state || "StateName",
+        pinCode: recievedSoData?.personalDetails?.address?.pinCode || "123456",
       },
-      aadhar:  lead.aadhar,
-      panNo:  lead.panNo,
-      gstin:  lead.gstin,
-      sac:  lead.sac,
+      aadhar: recievedSoData?.personalDetails?.aadhar || "123456789012",
+      panNo: recievedSoData?.personalDetails?.panNo || "ABCDE1234F",
+      gstin: recievedSoData?.personalDetails?.gstin || "GSTIN12345678",
+      sac: recievedSoData?.personalDetails?.sac || "SAC123",
     },
     paymentDetails: {
-      paymentDate:  lead.paymentDate,
-      modeOfPayment:  lead.modeOfPayment,
-      bankName:  lead.bankName,
-      paymentGateway:  lead.paymentGateway,
-      serviceMode:  lead.serviceMode,
-      terms:  lead.terms,
-      paymentIdOrRefNo:  lead.paymentIdOrRefNo,
-      serviceStatus:  lead.serviceStatus,
+      paymentDate:
+        recievedSoData?.paymentDetails?.paymentDate ||
+        "2024-12-17T07:19:15.663Z",
+      modeOfPayment:
+        recievedSoData?.paymentDetails?.modeOfPayment || "Online Payment",
+      bankName: recievedSoData?.paymentDetails?.bankName || "BankName",
+      paymentGateway:
+        recievedSoData?.paymentDetails?.paymentGateway || "Gateway",
+      serviceMode: recievedSoData?.paymentDetails?.serviceMode || "SMS",
+      terms: recievedSoData?.paymentDetails?.terms || "Daily",
+      paymentIdOrRefNo:
+        recievedSoData?.paymentDetails?.paymentIdOrRefNo || "PAY123456",
+      serviceStatus:
+        recievedSoData?.paymentDetails?.serviceStatus || "Activate",
     },
     businessDetails: {
-      businessType:  lead.businessType,
-      comment:  lead.comment,
+      businessType:
+        recievedSoData?.businessDetails?.businessType || "New Business",
+      comment: recievedSoData?.businessDetails?.comment || "Some comment here",
     },
-    productDetails: [
+    productDetails: recievedSoData?.productDetails || [
       {
-        product:  lead.product,
-        startDate:  lead.startDate,
-        endDate:  lead.endDate,
-        grandTotal: 0,
-        remaining: 0,
-        discount: 0,
-        adjustment: 0,
+        product: "Product A",
+        startDate: "2024-12-17T07:19:15.663Z",
+        endDate: "2024-12-31T07:19:15.663Z",
+        grandTotal: 1000,
+        remaining: 500,
+        discount: 10,
+        adjustment: 5,
       },
     ],
   });
+  // console.log("recievedSoData?.employeeCode------------------------" ,recievedSoData?.employeeCode)
   useEffect(() => {
     if (showAlert) {
       const timer = setTimeout(() => {
@@ -73,10 +82,78 @@ const InsertSalesOrder = () => {
       return () => clearTimeout(timer); // Cleanup the timer
     }
   }, [showAlert]);
-  //!<---------------------------------------------------------------------------------HANDLE CHANGE---------------------------------------------------------------------->
+  useEffect(() => {
+    if (recievedSoData) {
+      setFormData({
+        id: recievedSoData?.id || "",
+        soId: recievedSoData?.soId || "SO12345",
+        employeeCode: recievedSoData?.employeeCode || "",
+        employeeName: recievedSoData?.employeeName || "John Doe",
+        so: recievedSoData?.so || "wge",
+        leadId: recievedSoData?.leadId || "L67890",
+        personalDetails: {
+          createdDate:
+            recievedSoData?.personalDetails?.createdDate ||
+            "2024-12-17T07:19:15.663Z",
+          clientName: recievedSoData?.personalDetails?.clientName || "",
+          fatherName:
+            recievedSoData?.personalDetails?.fatherName || "Father's Name",
+          motherName:
+            recievedSoData?.personalDetails?.motherName || "Mother's Name",
+          mobile: recievedSoData?.personalDetails?.mobile || "1234567890",
+          email: recievedSoData?.personalDetails?.email || "email@example.com",
+          dob: recievedSoData?.personalDetails?.dob || "2000-01-01",
+          address: {
+            city: recievedSoData?.personalDetails?.address?.city || "CityName",
+            state:
+              recievedSoData?.personalDetails?.address?.state || "StateName",
+            pinCode:
+              recievedSoData?.personalDetails?.address?.pinCode || "123456",
+          },
+          aadhar: recievedSoData?.personalDetails?.aadhar || "123456789012",
+          panNo: recievedSoData?.personalDetails?.panNo || "ABCDE1234F",
+          gstin: recievedSoData?.personalDetails?.gstin || "GSTIN12345678",
+          sac: recievedSoData?.personalDetails?.sac || "SAC123",
+        },
+        paymentDetails: {
+          paymentDate:
+            recievedSoData?.paymentDetails?.paymentDate ||
+            "2024-12-17T07:19:15.663Z",
+          modeOfPayment:
+            recievedSoData?.paymentDetails?.modeOfPayment || "Online Payment",
+          bankName: recievedSoData?.paymentDetails?.bankName || "BankName",
+          paymentGateway:
+            recievedSoData?.paymentDetails?.paymentGateway || "Gateway",
+          serviceMode: recievedSoData?.paymentDetails?.serviceMode || "SMS",
+          terms: recievedSoData?.paymentDetails?.terms || "Daily",
+          paymentIdOrRefNo:
+            recievedSoData?.paymentDetails?.paymentIdOrRefNo || "PAY123456",
+          serviceStatus:
+            recievedSoData?.paymentDetails?.serviceStatus || "Activate",
+        },
+        businessDetails: {
+          businessType:
+            recievedSoData?.businessDetails?.businessType || "New Business",
+          comment:
+            recievedSoData?.businessDetails?.comment || "Some comment here",
+        },
+        productDetails: recievedSoData?.productDetails || [
+          {
+            product: "Product A",
+            startDate: "2024-12-17T07:19:15.663Z",
+            endDate: "2024-12-31T07:19:15.663Z",
+            grandTotal: 1000,
+            remaining: 500,
+            discount: 10,
+            adjustment: 5,
+          },
+        ],
+      });
+    }
+  }, [recievedSoData]);
+  //!<----------------------------------------------------------------------------------- HANDLE CHANGE ---------------------------------------------------------------------------------
   const handleChange = (e) => {
     const { name, value } = e.target;
-    // Check for array pattern (e.g., items[0].field)
     const match = name.match(/(\w+)\[(\d+)\]\.(\w+)/);
     if (match) {
       const [, arrayName, index, field] = match;
@@ -98,8 +175,10 @@ const InsertSalesOrder = () => {
         let current = newFormData;
         keys.forEach((key, index) => {
           if (index === keys.length - 1) {
+            // If last key, set the value
             current[key] = value;
           } else {
+            // Traverse or create nested objects
             if (!current[key]) current[key] = {};
             current = current[key];
           }
@@ -110,13 +189,13 @@ const InsertSalesOrder = () => {
       setFormData((prevState) => ({ ...prevState, [name]: value }));
     }
   };
-  //!<---------------------------------------------------------------------------------MAIN URL FOR API CALL---------------------------------------------------------------------->
+  //!<--------------------------------------------------------------------------- URL FOR API CALL -------------------------------------------------------------------------
   // ________________________________________________________
-  const url = "/api/SO/InsertSO";
+  const url = `/api/SO/UpdateSO?id=${formData.id}&soId=${formData.soId}`;
   const apiUrl = import.meta.env.VITE_API_URL;
   const mainUrl = `${apiUrl}${url}`;
   // ________________________________________________________
-  //!<----------------------------------------------------------------------------------- HANDLE SUBMIT---------------------------------------------------------------------->
+  //!<--------------------------------------------------------------------------- HANDLE SUBMIT --------------------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowAlert(true);
@@ -134,7 +213,7 @@ const InsertSalesOrder = () => {
         setData(data); // Store the API response
       } else {
         const errorData = await response.json();
-        setError(errorData);
+        setError(errorData); // Store the error response
       }
     } catch (err) {
       console.error("Error fetching data:", err);
@@ -151,9 +230,9 @@ const InsertSalesOrder = () => {
   return (
     <div>
       <h2 className="text-center bg-dark text-white py-2 mt-5">
-        Add Sales Order
+        Edit Sales Order
       </h2>
-      <BackButton to="/viewleads"/>
+      <BackButton to="/salesorder" />
       <div
         className="container-fluid border border-secondary w-75 py-3 rounded"
         style={{ backgroundColor: "#E3E3E3" }}
@@ -161,13 +240,15 @@ const InsertSalesOrder = () => {
         <div>
           {showAlert && (
             <Alert variant="info" className="mt-2 text-center">
-              SO Added Successfully
+              SO Updated Successfully
             </Alert>
           )}
         </div>
+        {/* //!<--------------------------------------------------------------------------------- FORM STARTING POINT ----------------------------------------------------------------------> */}
         <form onSubmit={handleSubmit}>
           <div className="row">
-            {/* Personal Details Section */}
+            {/*  */}
+            {/* //!<--------------------------------------------------------------------------------- FORM STARTING POINT ----------------------------------------------------------------------> */}
             <div className="col-md-6">
               <h5 className="fw-bold text-dark mb-3 border-bottom">
                 Personal Details
@@ -180,8 +261,6 @@ const InsertSalesOrder = () => {
                 { label: "Mobile Number", name: "mobile", type: "number" },
                 { label: "Personal Email", name: "email", type: "email" },
                 { label: "Date of Birth", name: "dob", type: "date" },
-                // { label: "City", name: "address.city", type: "text" },
-                { label: "Pin Code", name: "address.pinCode", type: "number" },
                 { label: "Aadhar", name: "aadhar", type: "text" },
                 { label: "Pan No.", name: "panNo", type: "text" },
                 { label: "GSTIN", name: "gstin", type: "text" },
@@ -202,6 +281,16 @@ const InsertSalesOrder = () => {
                   />
                 </div>
               ))}
+              <div>
+                <label>Pin Code</label>
+                <input
+                  type="text"
+                  name="personalDetails.address.pinCode"
+                  value={formData.personalDetails.address.pinCode || ""}
+                  onChange={handleChange}
+                  className="form-control"
+                />
+              </div>
               <div>
                 <label>Address</label>
                 <input
@@ -293,10 +382,9 @@ const InsertSalesOrder = () => {
                   placeholder="Enter Comments"
                 ></textarea>
               </div>
-            </div>
-            {/* Product Details Section */}
-            <div className="col-md-12">
-              <h5 className="fw-bold text-dark mt-4 border-bottom">
+              {/* //!----------------------------------------------------------------------------PRODUCT DETAILS SECTION-------------------------------------------------------------------- */}
+              <div className="col-md-12" style={{marginTop:"8vh"}}>
+              <h5 className="fw-bold text-dark  border-bottom">
                 Product Details
               </h5>
               {[
@@ -318,6 +406,7 @@ const InsertSalesOrder = () => {
                 </div>
               ))}
             </div>
+            </div>
             {/* Submit Button */}
             <div className="col-md-12 text-center mt-3">
               <button type="submit" className="btn btn-primary">
@@ -330,4 +419,4 @@ const InsertSalesOrder = () => {
     </div>
   );
 };
-export default InsertSalesOrder;
+export default EditSalesOrder;

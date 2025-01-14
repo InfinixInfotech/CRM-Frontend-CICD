@@ -78,10 +78,11 @@ export const deleteDesignationUrl = `${apiUrl}/api/Designation/DeleteDesignation
 export const postUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/UploadBulkLead`;
 export const fetchAllUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/CustomeFetchLeads`;
 export const GetByIdUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/GetLeadByEmployeeCode`;
+export const UpdateByIdBulkLeadUrl = `${apiUrl}/api/BulkLead/UpdateLeadById`;
 
-
-export const staticToken ='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIyMzg2MDI5Mi04NzAzLTRmMzEtYjIzYS0zZjgwODUyYzFjNzkiLCJodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL3dzLzIwMDgvMDYvaWRlbnRpdHkvY2xhaW1zL3JvbGUiOiJhZG1pbiIsImlhdCI6MTczNDYwNDM0OCwiSXNBZG1pbiI6InRydWUiLCJleHAiOjE3NjYxNDAzNDgsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcyODIvIn0.Mmaz8WaZrAbJ1IVIxsRDtgkIaAb7VxBAGrNhFRum6vA'
-
+export const staticToken =localStorage.getItem("authToken")
+export const emp= localStorage.getItem("employcode")
+// export  const username=  localStorage.getItem("username")
 
 export default function ApiServer() {
   return (

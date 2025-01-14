@@ -1,4 +1,5 @@
 import React from "react";
+import { FaPrint } from "react-icons/fa";
 
 const handlePrint = (tableId) => {
   // Get the table element by its ID
@@ -43,22 +44,23 @@ const handlePrint = (tableId) => {
   }
 };
 
-export const PrintButton = ({ 
-  tableId, 
-  className = "btn dataCopyButton btn-secondary btn-sm px-2 py-0 mt-3 me-1 ms-0 no-print" 
+export const PrintButton = ({
+  tableId,
+  className = "btn dataCopyButton  btn-sm px-2 py-0 mt-3 me-1 ms-0 no-print",
 }) => {
   return (
-    <button 
-      onClick={() => handlePrint(tableId)} 
-      className={className} 
+    <button
+      onClick={() => handlePrint(tableId)}
+      className={className}
       style={{
-        fontWeight: "600", 
-        borderRadius: "0" ,
-        backgroundColor:"rgb(166, 174, 191)" 
+        fontWeight: "600",
+        borderRadius: "0",
+        backgroundColor: "none",
+        fontSize: "18px",
       }}
     >
+      <FaPrint className="me-1 fs-5 colorful-icon text-secondary" />
       Print
     </button>
   );
 };
-

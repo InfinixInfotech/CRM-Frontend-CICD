@@ -5,8 +5,9 @@ import { FaUser, FaCog } from "react-icons/fa";
 import LogoutPage from "../Logout/Logout";
 const Navbar = () => {
   const navigate = useNavigate();
-
+  const username = localStorage.getItem("username");
   const handleNavigation = (route) => {
+  
     if (route) {
       navigate(route);
     }
@@ -48,6 +49,7 @@ const Navbar = () => {
               </li>
             </ul>
           </li>
+          {username && ["admin", "Admin", "ADMIN"].includes(username) && (
           <li className="nav-item mx-2">
             <button
               className="btn btn-outline-light btn-sm"
@@ -57,6 +59,7 @@ const Navbar = () => {
               <FaCog />
             </button>
           </li>
+            )}
         </ul>
       </div>
     </nav>

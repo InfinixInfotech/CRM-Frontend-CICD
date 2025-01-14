@@ -34,17 +34,24 @@ import Drafts from "./Pages/MailBox/Drafts/Drafts";
 import SentMail from "./Pages/MailBox/SentMail/SentMail";
 import Starred from "./Pages/MailBox/Starred/Starred";
 import PaymentRaise from "./Pages/PaymentRaise/PaymentRaise";
+// import EditSalesOreder from './Pages/SalesOrder/editSalesOrder'
 import Login from './Components/Login/Login'
 import ProtectedRoute from './Components/ProtectRoute/ProtectRoute'
 import EditPaymentRaise from "./Pages/PaymentRaise/EditPaymentRaise";
 import EditUser from "./Pages/Setting/User/EditUser/EditUser";
 import EditGroups from "./Pages/Setting/Groups/EditGroups/EditGroups";
-import InsertSalesOrder from "./Pages/SalesOrder/InsertSalesOrder";
+import UserHistory from "./Pages/UserHistory/UserHistory";
+ import InsertSalesorder from "./Pages/SalesOrder/InsertSalesOrder"
+import EditSalesOrder from "./Pages/SalesOrder/EditSalesOrder";
+import FollowUp from "./Pages/FollowUp/FollowUp"
+import EditLeads from "./Pages/Leads/EditLeads/EditLeads";
+
 export default function App() {
+  const username = localStorage.getItem("username");
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <Routes>
+        <Routes> 
           <Route path="/" element={<Login/>} />
           <Route
             path="/*"
@@ -61,7 +68,10 @@ export default function App() {
                     {/* <Route path="/salesdashboard" element={<Dashboard />} /> */}
                     <Route path="/salesdashboard" element={<SalesDashboard />} />
                     <Route path="/callingdashboard" element={<CallingDashboard />} />
-                    <Route path="/settingdashboard" element={<SettingDashboard />} />
+                    
+                    {username && ["admin", "Admin", "ADMIN"].includes(username) && (
+                          <Route path="/settingdashboard" element={<SettingDashboard />} />
+                        )}
                     <Route path="/profiledashbord" element={<ProfileDashbord />} />
                     <Route path="/viewgroups" element={<ViewGroups />} />
                     <Route path="/addgroups" element={<AddGroups />} />
@@ -84,15 +94,18 @@ export default function App() {
                     <Route path="/uploadleads" element={<UploadLeads />} />
                     <Route path="/viewmarketingleads" element={<ViewMarketingLeads />} />
                     <Route path="/mailbox" element={<MailBox />} />
-                    {/* <Route path="/compose" element={<Compose />} /> */}
+                    <Route path="/followup" element={<FollowUp/>} />
                     <Route path="/drafts" element={<Drafts />} />
                     <Route path="/sentmail" element={<SentMail />} />
                     <Route path="/starred" element={<Starred />} />
-                    <Route path="/paymnetRaise" element={<PaymentRaise />} />
-                    <Route path="/insertso" element={<InsertSalesOrder/>} />
+                    <Route path="/paymnetRaise/:id" element={<PaymentRaise />} />
+                    <Route path="/addsalesorder/:id" element={<InsertSalesorder />} />
+                    <Route path="/editso/:id" element={<EditSalesOrder/>} />
                     <Route path="/editpr/:id" element={<EditPaymentRaise />} />
                     <Route path="/edituser/:id" element={<EditUser/>} />
                     <Route path="/editgroups/:id" element={<EditGroups/>} />
+                    <Route path="/editleads/:id" element={<EditLeads/>} />
+                    <Route path="/userhistory" element={<UserHistory/>} />
                   </Routes>
                   </div>
                 </div>

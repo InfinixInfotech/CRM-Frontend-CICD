@@ -16,6 +16,8 @@ import {
 } from "../../../../Redux/Services/thunks/LeadSourceThunk";
 import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
+import { staticToken } from "../../../../Redux/Services/apiServer/ApiServer";
+import ExportData from "../../../../Components/Button/DataButton/ExportButton";
 
 const LeadSource = () => {
   const [leadSource, setLeadSource] = useState([]);
@@ -23,9 +25,21 @@ const LeadSource = () => {
   const [editLeadSource, setEditLeadSource] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [msg, setMsg] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const dispatch = useDispatch();
 
   const { data, loading, error } = useSelector((state) => state.leadsource);
+
+  //!----------------------------------------------------------------------------------------------<---Pagination Logic------------->------------------------------------------------------
+  const totalPages = Math.ceil(leadSource.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentStatuses = leadSource.slice(indexOfFirstItem, indexOfLastItem);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const nextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
   useEffect(() => {
     dispatch(getAllLeadSourceThunk());
@@ -64,21 +78,43 @@ const LeadSource = () => {
         ]);
         setNewLeadSource("");
         setMsg(response.message || "Status added successfully");
-
       });
     }
   };
 
-  const handleEditLeadSource = (id) => {
+  //!<---------------------------------------------------------------------------------EDIT Functionality---------------------------------------------------------------------->
+
+  const handleEditSource = async (id) => {
     if (editValue.trim() !== "") {
-      dispatch(putLeadSourceThunk({ id, leadSourceValue: editValue })).then(
-        (response) => {
-          setMsg(response?.payload?.message || "Status updated successfully");
-          dispatch(getAllLeadSourceThunk());
-          setEditStatus(null);
-          setEditValue("");
+      try {
+        const token = staticToken;
+        const response = await fetch(`/api/LeadSource/UpdateLeadSource`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ id, leadSourceValue: editValue }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to update lead source");
         }
-      );
+
+        const data = await response.json();
+        setMsg(data.message || "Lead source updated successfully");
+        setLeadSource((prevStatuses) =>
+          prevStatuses.map((status) =>
+            status.id === id
+              ? { ...status, leadSourceValue: editValue }
+              : status
+          )
+        );
+        setEditLeadSource(null);
+        setEditValue("");
+      } catch (err) {
+        setMsg(err.message);
+      }
     }
   };
 
@@ -96,14 +132,6 @@ const LeadSource = () => {
       });
   };
 
-  const fetchLeadSourceById = (id) => {
-    dispatch(getByIdLeadSourceThunk(id)).then((response) => {
-      const leadSourceValue = response.payload?.data;
-      setEditStatus(leadSourceValue?.id);
-      setEditValue(leadSourceValue?.status);
-    });
-  };
-
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
@@ -119,25 +147,47 @@ const LeadSource = () => {
           style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
         >
           <div className="addLeadscontainer add-status p-2 mb-2">
-            <h4 className="p-0 mb-3 text-dark ">Add New Pool</h4>
-            <form onSubmit={handleAddLeadSource}>
+            <h4 className="p-0 mb-3 text-dark">Add New Lead Source</h4>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (editLeadSource !== null) {
+                  // Update functionality
+                  handleEditSource(editLeadSource);
+                } else {
+                  // Create functionality
+                  handleAddLeadSource(e);
+                }
+              }}
+            >
               <input
                 type="text"
-                value={newLeadSource}
-                onChange={(e) => setNewLeadSource(e.target.value)}
-                placeholder="Pool Name"
+                value={editLeadSource ? editValue : newLeadSource}
+                onChange={(e) =>
+                  editLeadSource
+                    ? setEditValue(e.target.value)
+                    : setNewLeadSource(e.target.value)
+                }
+                placeholder="Lead Source Name"
               />
-              <button className="btn btn-primary ">Create</button>
+              <button
+                className={`btn px-3 py-1 ${
+                  editLeadSource !== null ? "btn-warning" : "btn-primary"
+                }`}
+              >
+                {editLeadSource ? "Update" : "Create"}
+              </button>
             </form>
           </div>
 
           <div className="bg-white p-4 rounded border border-4 border-gray">
-            <h5>View Pools</h5>
-            <div className=" mb-4 ">
-              <PrintButton />
+            <h5>View Lead Sources</h5>
+            <div className="mb-4">
+              {/* <PrintButton />
               <PdfButton />
               <CsvButton />
-              <CopyButton />
+              <CopyButton /> */}
+              <ExportData tableId="table-data" />
 
               {msg && (
                 <Alert variant="info" className="mt-2 text-center">
@@ -151,77 +201,40 @@ const LeadSource = () => {
             >
               <thead>
                 <tr>
-                  <th>Pool Name</th>
+                  <th>S.No</th>
+                  <th>Lead Source Name</th>
                   <th className="text-center">Action</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <div
-                    style={{
-                      position: "fixed", // Fixed to ensure it stays over everything
-                      top: 0,
-                      left: 0,
-                      width: "100vw", // Full width
-                      height: "100vh", // Full height
-                      backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
-                      zIndex: 9998, // Make sure it's above most elements
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "50%", // Center vertically
-                        left: "50%", // Center horizontally
-                        transform: "translate(-50%, -50%)", // Correct alignment
-                        zIndex: 9999, // Ensure the loader is above the overlay
-                        backgroundColor: "transparent",
-                      }}
-                    >
+                  <tr>
+                    <td colSpan="3" className="text-center">
                       <HashLoader color="#0060f1" size={50} />
-                    </div>
-                  </div>
+                    </td>
+                  </tr>
                 ) : error ? (
                   <tr>
-                    <td colSpan="2" className="text-center text-danger">
+                    <td colSpan="3" className="text-center text-danger">
                       Error: {error}
                     </td>
                   </tr>
-                ) : leadSource.length > 0 ? (
-                  leadSource.map((leadSourceObj, index) => (
-                    <tr key={leadSourceObj.id || index}>
-                      <td>
-                        {editLeadSource === leadSourceObj.id ? (
-                          <input
-                            type="text"
-                            value={editValue}
-                            onChange={(e) => setEditValue(e.target.value)}
-                          />
-                        ) : (
-                          leadSourceObj.leadSourceValue
-                        )}
-                      </td>
+                ) : currentStatuses.length > 0 ? (
+                  currentStatuses.map((leadSourceObj) => (
+                    <tr key={leadSourceObj.id}>
+                      <td>{leadSourceObj.id}</td>
+                      <td>{leadSourceObj.leadSourceValue}</td>
                       <td className="text-center">
                         <div className="d-flex justify-content-center align-items-center gap-2">
-                          {editLeadSource === leadSourceObj.id ? (
-                            <button
-                              onClick={() =>
-                                handleEditLeadSource(leadSourceObj.id)
-                              }
-                              className="btn btn-success"
-                            >
-                              Save
-                            </button>
-                          ) : (
-                            <EditButton
-                              className="btn btn-primary btn-sm mr-1 py-0 px-2"
-                              onClick={() =>
-                                fetchLeadSourceById(leadSourceObj.id)
-                              }
-                            />
-                          )}
+                          <EditButton
+                            className="btn btn-primary btn-sm"
+                            onClick={() => {
+                              setEditLeadSource(leadSourceObj.id);
+                              setEditValue(leadSourceObj.leadSourceValue);
+                            }}
+                          />
                           <DeleteButton
-                            className="btn btn-danger btn-sm mr-1  py-0 px-2"
+                            className="btn btn-danger btn-sm"
                             onDelete={() =>
                               handleDeleteLeadSource(leadSourceObj.id)
                             }
@@ -232,13 +245,34 @@ const LeadSource = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="2" className="text-center">
-                      No statuses available.
+                    <td colSpan="3" className="text-center">
+                      No lead sources available.
                     </td>
                   </tr>
                 )}
               </tbody>
             </table>
+
+            {/* //!<---------------------------------------------------------------------------------Pagination BUTTON----------------------------------------------------------------------> */}
+            <div className="pagination">
+              <button onClick={prevPage} disabled={currentPage === 1}>
+                <i className="bi bi-arrow-left-circle"></i>
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    className={currentPage === number ? "active" : ""}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button onClick={nextPage} disabled={currentPage === totalPages}>
+                <i className="bi bi-arrow-right-circle"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -11,10 +11,10 @@ export default function AddGroups() {
   useEffect(() => {
     if (showAlert) {
       const timer = setTimeout(() => {
-        setShowAlert(false); // Hide the alert after 3000ms
+        setShowAlert(false);
       }, 3000);
 
-      return () => clearTimeout(timer); // Cleanup the timer
+      return () => clearTimeout(timer); 
     }
   }, [showAlert]);
 
@@ -53,12 +53,16 @@ export default function AddGroups() {
       CreateAgreement: false,
       AddRPM: false,
     },
-    leadFetch: {
-      active: false,
-      from: [],
-      ratio: "string",
+    LeadFetch: {
+      Active: false,
+      From: [],
+      Ratio: "",
     },
-
+    ClientFetch: {
+      Active: false,
+      From: [],
+      Ratio: "",
+    },
     Contact: {
       Create: false,
       View: false,
@@ -154,14 +158,14 @@ export default function AddGroups() {
       Sms: false,
       Chat: false,
       Whatsapp: false,
-      Login: true,
+      Login: false,
       Extension: false,
     },
     Extra: {
       callingModule: false,
       userModule: false,
       groupModule: false,
-      poolsModule: true,
+      poolsModule: false,
       pools: false,
       leadStatusModule: false,
       segmentModule: false,
@@ -239,16 +243,28 @@ export default function AddGroups() {
     setGroupData((prevData) => {
       const newData = { ...prevData };
       const pathArray = path.split(".");
+  
 
       let current = newData;
       for (let i = 0; i < pathArray.length - 1; i++) {
-        current = current[pathArray[i]];
+        const key = pathArray[i];
+        if (!current[key]) {
+          current[key] = {};  
+        }
+        current = current[key];
       }
-      current[pathArray[pathArray.length - 1]] = value;
-
+  
+      // Ensure that 'From' is an array of strings
+      if (pathArray[pathArray.length - 1] === "From") {
+        current[pathArray[pathArray.length - 1]] = [value];  // Make sure the value is an array
+      } else {
+        current[pathArray[pathArray.length - 1]] = value;
+      }
+  
       return newData;
     });
   };
+  
 
   const renderCheckbox = (label, path, checked) => (
     <div className="form-check form-check-inline mb-2" key={path}>
@@ -275,7 +291,7 @@ export default function AddGroups() {
         className="form-control"
         id={path}
         value={value}
-        onChange={(e) => handleChange(path, parseInt(e.target.value) || 0)}
+        onChange={(e) => handleChange(path, Number(e.target.value) || 0)}
       />
     </div>
   );
@@ -323,12 +339,12 @@ export default function AddGroups() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setShowAlert(true); // Show the alert
+    setShowAlert(true);
 
     const AddGroups = {
       id: 0,
       groupName: groupData.groupName,
-      groupId: "string",
+      groupId: "",
       dashboard: {
         salesDashboard: groupData.Dashboard.SalesDashboard,
         callingDashboard: groupData.Dashboard.CallingDashboard,
@@ -353,11 +369,6 @@ export default function AddGroups() {
         leadActionAssign: groupData.Leads.LeadActionAssign,
         createAgreement: groupData.Leads.CreateAgreement,
         addRPM: groupData.Leads.AddRPM,
-      },
-      leadFetch: {
-        active: groupData.leadFetch.active,
-        from: groupData.leadFetch.from,
-        ratio: groupData.leadFetch.ratio,
       },
       contact: {
         create: groupData.Contact.Create,
@@ -417,7 +428,7 @@ export default function AddGroups() {
         callingModule: groupData.Extra.callingModule,
         userModule: groupData.Extra.userModule,
         groupModule: groupData.Extra.groupModule,
-        poolsModule:  groupData.Extra.poolsModule,
+        poolsModule: groupData.Extra.poolsModule,
         pools: groupData.Extra.pools,
         leadStatusModule: groupData.Extra.leadStatusModule,
         segmentModule: groupData.Extra.segmentModule,
@@ -479,14 +490,14 @@ export default function AddGroups() {
         researchReport: groupData.Reports.ResearchReport,
       },
       leadFetch: {
-        active: false,
-        from: [],
-        ratio: "string",
+        active: groupData.LeadFetch.Active,
+        from: groupData.LeadFetch.From,
+        ratio: groupData.LeadFetch.Ratio,
       },
       clientFetch: {
-        active: false,
-        from: [],
-        ratio: "string",
+        active: groupData.ClientFetch.Active,
+        from: groupData.ClientFetch.From,
+        ratio: groupData.ClientFetch.Ratio,
       },
       smsModule: {
         sendSMS: groupData.SmsModule.SendSMS,
@@ -576,6 +587,8 @@ export default function AddGroups() {
               {renderSection("Mutual Fund", groupData.MutualFund, "MutualFund")}
               {renderSection("Leads", groupData.Leads, "Leads")}
               {renderSection("SO", groupData.SO, "SO")}
+              {renderSection("Client Fetch", groupData.ClientFetch, "ClientFetch")}
+              {renderSection("Lead Fetch", groupData.LeadFetch, "LeadFetch")}
               {renderSection(
                 "Lead Template",
                 groupData.LeadTemplate,
@@ -610,6 +623,7 @@ export default function AddGroups() {
               {renderSection("WhatsApp Module", groupData.Whatsapp, "Whatsapp")}
               {renderSection("Reports", groupData.Reports, "Reports")}
               {renderSection("Extra", groupData.Extra, "Extra")}
+              
 
               <div className="col-md-6">
                 <h5 className="fw-semibold">Other Settings</h5>
@@ -621,67 +635,143 @@ export default function AddGroups() {
                     backgroundColor: "white",
                   }}
                 >
-                  {renderNumberInput(
-                    "Free Trial Days",
-                    "FreeTrialDays",
-                    groupData.FreeTrialDays
-                  )}
-                  {renderNumberInput(
-                    "Free Trial Per Contact",
-                    "FreeTrialPerContact",
-                    groupData.FreeTrialPerContact
-                  )}
-                  {renderNumberInput(
-                    "Total CRM Lead Limit",
-                    "TotalCRMLeadLimit",
-                    groupData.TotalCRMLeadLimit
-                  )}
-                  {renderNumberInput(
-                    "Lead Fetch Ratio",
-                    "LeadFetchRatio",
-                    groupData.LeadFetchRatio
-                  )}
-                  {renderNumberInput(
-                    "Client Fetch Ratio",
-                    "ClientFetchRatio",
-                    groupData.ClientFetchRatio
-                  )}
-                  {renderNumberInput(
-                    "Unread Fetch",
-                    "UnreadFetch",
-                    groupData.UnreadFetch
-                  )}
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="FreeTrialDays">
+                      Free Trial Days
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="FreeTrialDays"
+                      value={groupData.FreeTrialDays}
+                      onChange={(e) =>
+                        handleChange(
+                          "FreeTrialDays",
+                          Number(e.target.value) || 0
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="FreeTrialPerContact">
+                      Free Trial Per Contact
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="FreeTrialPerContact"
+                      value={groupData.FreeTrialPerContact}
+                      onChange={(e) =>
+                        handleChange(
+                          "FreeTrialPerContact",
+                          Number(e.target.value) || 0
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="TotalCRMLeadLimit">
+                      Total CRM Lead Limit
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="TotalCRMLeadLimit"
+                      value={groupData.TotalCRMLeadLimit}
+                      onChange={(e) =>
+                        handleChange(
+                          "TotalCRMLeadLimit",
+                          Number(e.target.value) || 0
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="LeadFetchRatio">
+                      Lead Fetch Ratio
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="LeadFetchRatio"
+                      value={groupData.LeadFetch.Ratio}
+                      onChange={(e) =>
+                        handleChange("LeadFetch.Ratio", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="ClientFetchRatio">
+                      Client Fetch Ratio
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="ClientFetchRatio"
+                      value={groupData.ClientFetch.Ratio}
+                      onChange={(e) =>
+                        handleChange("ClientFetch.Ratio", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="UnreadFetch">
+                      Unread Fetch
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="UnreadFetch"
+                      value={groupData.UnreadFetch}
+                      onChange={(e) =>
+                        handleChange("UnreadFetch", Number(e.target.value) || 0)
+                      }
+                    />
+                  </div>
 
                   <div>
                     <label className="form-label">Lead Fetch From</label>
                     <select
                       className="form-select"
-                      value={groupData.leadFetch.from}
+                      value={groupData.LeadFetch.From} // Make sure groupData.LeadFetch.From is a valid value
                       onChange={(e) =>
-                        handleChange("leadFetch.from", e.target.value)
-                      }
+                        handleChange("LeadFetch.From", e.target.value)
+                      } 
                     >
                       <option value="" disabled>
                         Select Some Option
                       </option>
-                      <option value="dispose pool">Dispose Pool</option>
-                      <option value="fresh pool">Fresh Pool</option>
-                      <option value="Diamond pool HNI pool">
+                      <option value="DisposePool">Dispose Pool</option>
+                      <option value="FreshPool">Fresh Pool</option>
+                      <option value="DiamondPoolHNIPool">
                         Diamond Pool HNI Pool
                       </option>
                     </select>
                   </div>
 
-                  <div className="mb-3">
-                    <label className="form-label">Lead Fetch Ratio</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={groupData.leadFetch.ratio}
+                  <div>
+                    <label className="form-label">Client Fetch From</label>
+                    <select
+                      className="form-select"
+                      value={groupData.ClientFetch.From} 
                       onChange={(e) =>
-                        handleChange("leadFetch.ratio", e.target.value)
+                        handleChange("ClientFetch.From", e.target.value)
                       }
-                    />
+                    >
+                      <option value="" disabled>
+                        Select Some Option
+                      </option>
+                      <option value="DisposePool">Dispose Pool</option>
+                      <option value="FreshPool">Fresh Pool</option>
+                      <option value="DiamondPoolHNIPool">
+                        Diamond Pool HNI Pool
+                      </option>
+                    </select>
                   </div>
                 </div>
               </div>

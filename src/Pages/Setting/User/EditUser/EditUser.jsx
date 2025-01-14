@@ -1,116 +1,65 @@
 import React, { useEffect, useState } from "react";
 // import "./AddUser.css";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
-import { useDispatch, useSelector } from "react-redux";
-import { postUserThunk, putUserThunk } from "../../../../Redux/Services/thunks/UserThunk";
 import { Alert } from "react-bootstrap";
-import { useLocation } from "react-router-dom";
-import { staticToken } from "../../../../Redux/Services/apiServer/ApiServer";
+import { useLocation, useNavigate } from "react-router-dom";
+// import { staticToken } from "../../../../Redux/Services/apiServer/ApiServer";
+import {
+  postUserThunk,
+  putUserThunk,
+} from "../../../../Redux/Services/thunks/UserThunk";
+import { useDispatch } from "react-redux";
 
 const EditUser = () => {
-  
   const [showAlert, setShowAlert] = useState(false);
+  const [user, setUser] = useState({});
+  const { state } = useLocation();
+  const paymentData = state?.user;
   const dispatch = useDispatch();
 
-   const { state } = useLocation();
-    const paymentData = state?.user
-  console.log("-----------------------"+paymentData)
-    if (!paymentData) {
-      console.error("No payment data received" +paymentData);
-    }
-
-
-
-  const [userNameTest, setUserNameTest] = useState("Sashant")
-
-  const [user, setUser] = useState({
-      fullName: userNameTest,
-      employeeCode: paymentData.employeeCode,
-      FathersName: paymentData.fatherName,
-      MothersName: paymentData.motherName,
-      mobileNumber: paymentData.mobileNumber,
-      userName: paymentData.userName,
-      password: paymentData.password,
-      target: paymentData.target,
-      departmentName: paymentData.departmentName ? user.departmentName.toString() : "",
-      designationName: paymentData.designationName,
-      groupName: paymentData.groupName,
-      reportingTo: paymentData.reportingTo,
-      qualificationName: paymentData.qualificationName,
-      extension: {
-        callingExt: paymentData.extension,
-      },
-      didNumber: paymentData.didNumber,
-      segmentAccess: [paymentData.segmentAccess?.toString()],
-      poolAccess: [paymentData.poolAccess?.toString()],
-      groupAccess: [paymentData.groupAccess?.toString()],
-      vendorAccess: [paymentData.vendorAccess?.toString()],
-      exceptVendorAccess: [paymentData.exceptVendorAccess?.toString()],
-      customFetch: [paymentData.customFetch?.toString()],
-      customFetchRatio: paymentData.customFetchRatio,
-      otpNumber: paymentData.otpNumber,
-      dateOfBirth: paymentData.dateOfBirth,
-      dateOfJoining: paymentData.dateOfJoining,
-      branch: paymentData.branch,
-      panNumber: paymentData.panNumber,
-      aadharNumber: paymentData.aadharNumber,
-      localAddress: paymentData.localAddress,
-      permanentAddress: paymentData.permanentAddress,
-      esslID: paymentData.esslID,
-      GroupId: paymentData.groupid,
-      BankDetails: {
-        bankName: paymentData.bankName,
-        ifsc: paymentData.IFSC,
-        accountNumber: paymentData.accountNumber,
-      },
-      chatGroup: [paymentData.chatGroup?.toString()],
-      access: { ...paymentData.access }, // Spread all access fields
-   
-  });
-  console.log("editUser-----------------"+JSON.stringify(paymentData));
+  const navigate = useNavigate();
+  // console.log("editUser-----------------"+JSON.stringify(paymentData));
   useEffect(() => {
     if (showAlert) {
       const timer = setTimeout(() => {
-        setShowAlert(false); // Hide the alert after 3000ms
+        setShowAlert(false);
       }, 3000);
 
-      return () => clearTimeout(timer); // Cleanup the timer
+      return () => clearTimeout(timer);
     }
   }, [showAlert]);
 
-  // const handleChange = (e) => {
-  //   const { name, value } = e.target;
-
-  //   if (name === "dateOfBirth" || name === "dateOfJoining") {
-  //     // Format the date to dd/mm/yyyy
-  //     const date = new Date(value);
-  //     const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(
-  //       date.getMonth() + 1
-  //     )
-  //       .toString()
-  //       .padStart(2, "0")}/${date.getFullYear()}`;
-
-  //     setUser((prevUser) => ({
-  //       ...prevUser,
-  //       [name]: formattedDate,
-  //     }));
-  //   } else {
-  //     setUser((prevUser) => ({
-  //       ...prevUser,
-  //       [name]: value,
-  //     }));
-  //   }
-  // };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setUser((prevUser) => ({
-      ...prevUser,
-      [name]: value,
-    }));
-  };
-  
 
+    if (name === "dateOfBirth" || name === "dateOfJoining") {
+      // Format the date to dd/mm/yyyy
+      const date = new Date(value);
+      const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(
+        date.getMonth() + 1
+      )
+        .toString()
+        .padStart(2, "0")}/${date.getFullYear()}`;
+
+      setUser((prevUser) => ({
+        ...prevUser,
+        [name]: formattedDate,
+      }));
+    } else {
+      setUser((prevUser) => ({
+        ...prevUser,
+        [name]: value,
+      }));
+    }
+  };
+
+  // const handleChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setUser((prevUser) => ({
+  //     ...prevUser,
+  //     [name]: value,
+  //   }));
+  // };
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
@@ -172,75 +121,98 @@ const EditUser = () => {
     }
   }, [paymentData]);
 
+  // ! <----------------------------Update Butoon--------------------------------------->
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowAlert(true); // Show the alert
-    const userId = user.id; // Ensure the `id` exists in the user object
+    // Ensure the `id` exists in the user object
     const AddNewUser = {
-        //FullName: userNameTest,
-        // employeeCode: user.employeeCode,
-        // FathersName: user.fatherName,
-        // MothersName: user.motherName,
-        // mobileNumber: user.mobileNumber,
-        // userName: user.userName,
-        // password: user.password,
-        // target: user.target,
-        // departmentName: user.departmentName ? user.departmentName.toString() : "",
-        // designationName: user.designationName,
-        // groupName: user.groupName,
-        // reportingTo: user.reportingTo,
-        // qualificationName: user.qualificationName,
-        // extension: {
-        //     callingExt: user.extension,
-        // },
-        // didNumber: user.didNumber,
-        // segmentAccess: [user.segmentAccess?.toString()],
-        // poolAccess: [user.poolAccess?.toString()],
-        // groupAccess: [user.groupAccess?.toString()],
-        // vendorAccess: [user.vendorAccess?.toString()],
-        // exceptVendorAccess: [user.exceptVendorAccess?.toString()],
-        // customFetch: [user.customFetch?.toString()],
-        // customFetchRatio: user.customFetchRatio,
-        // otpNumber: user.otpNumber,
-        // dateOfBirth: user.dateOfBirth,
-        // dateOfJoining: user.dateOfJoining,
-        // branch: user.branch,
-        // panNumber: user.panNumber,
-        // aadharNumber: user.aadharNumber,
-        // localAddress: user.localAddress,
-        // permanentAddress: user.permanentAddress,
-        // esslID: user.esslID,
-        // GroupId: user.groupid,
-        // BankDetails: {
-        //     bankName: user.bankName,
-        //     ifsc: user.IFSC,
-        //     accountNumber: user.accountNumber,
-        // },
-        // chatGroup: [user.chatGroup?.toString()],
-        // access: { ...user.access }, // Spread all access fields
+      id: user.id,
+      employeeCode: user.employeeCode,
+      FullName: user.fullName,
+      FathersName: user.fatherName,
+      MothersName: user.motherName,
+      mobileNumber: user.mobileNumber,
+      userName: user.userName,
+      password: user.password,
+      target: user.target,
+      departmentName: user.departmentName ? user.departmentName.toString() : "",
+      designationName: user.designationName,
+      groupName: user.groupName,
+      reportingTo: user.reportingTo,
+      qualificationName: user.qualificationName,
+      extension: {
+        callingExt: user.extension,
+      },
+      didNumber: user.didNumber,
+      segmentAccess: [user.segmentAccess?.toString()],
+      poolAccess: [user.poolAccess?.toString()],
+      groupAccess: [user.groupAccess?.toString()],
+      vendorAccess: [user.vendorAccess?.toString()],
+      exceptVendorAccess: [user.exceptVendorAccess?.toString()],
+      customFetch: [user.customFetch?.toString()],
+      customFetchRatio: user.customFetchRatio,
+      otpNumber: user.otpNumber,
+      dateOfBirth: user.dateOfBirth,
+      dateOfJoining: user.dateOfJoining,
+      branch: user.branch,
+      panNumber: user.panNumber,
+      aadharNumber: user.aadharNumber,
+      localAddress: user.localAddress,
+      permanentAddress: user.permanentAddress,
+      esslID: user.esslID,
+      GroupId: user.groupid,
+      BankDetails: {
+        bankName: user.bankName,
+        ifsc: user.IFSC,
+        accountNumber: user.accountNumber,
+      },
+      chatGroup: [user.chatGroup?.toString()],
+      fetchedLeads: [
+        {
+          fetchedDate: null,
+          totalFetchedLeads: 0,
+        },
+      ],
+      access: { ...user.access },
     };
-    try {
-        const token = staticToken
-        const response = await fetch(`/api/Users/UpdateUsersById?id=${userId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify(AddNewUser),
-        });
-        if (!response.ok) throw new Error("Failed to update user.");
-        const result = await response.json();
-        console.log("User updated successfully:", result);
-       
-        alert("User updated successfully!");
-        setShowAlert(false);
-    } catch (error) {
-        console.error("Error updating user:", error);
-        alert("Failed to update user.");
-    }
-};
-  
+
+    // ! <----------------------------Api Fetch--------------------------------------->
+
+    // try {
+    //   const token = staticToken;
+    //   const response = await fetch(`/api/Users/UpdateUsersById?id=${user.id}&employeeCode=${user.employeeCode}`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //     body: JSON.stringify(AddNewUser),
+    //   });
+
+    //   if (!response.ok) throw new Error("Failed to update user.");
+    //   // const updatedUser = await response.json();
+    //   // setUser(updatedUser);
+    //   alert("User updated successfully!");
+    //   navigate("/viewuser", { state: { updated: AddNewUser } });
+
+    // } catch (error) {
+    //   console.error("Error updating user:", error);
+    //   alert("Failed to update user.");
+    // }
+
+    dispatch(putUserThunk(AddNewUser))
+      .then((response) => {
+        console.log("User Updated successfully:", response);
+      })
+      .catch((error) => {
+        console.error("Error updateing user:", error);
+      });
+  };
+
+  // ! <----------------------------User Interface--------------------------------------->
+
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5">
@@ -263,7 +235,7 @@ const EditUser = () => {
                 className="ps-2 inputField"
                 type="text"
                 name="fullName"
-                value={userNameTest}
+                value={user.fullName}
                 onChange={handleChange}
                 //required
               />
@@ -318,7 +290,7 @@ const EditUser = () => {
                 className="ps-2 inputField"
                 type="text"
                 name="userName"
-                value={userNameTest}
+                value={user.userName}
                 onChange={handleChange}
                 //required
               />
@@ -342,15 +314,15 @@ const EditUser = () => {
                 name="target"
                 value={user.target}
                 onChange={handleChange}
-                required
+                // required
               />
             </div>
 
             <div className="dropdown">
               <label>Reporting To:</label>
               <select className="inputField">
-                <option value="">Person 1</option>
-                <option value="">Person 2</option>
+                <option value="Person 1">Person 1</option>
+                <option value="Person 2">Person 2</option>
               </select>
             </div>
 
@@ -625,8 +597,8 @@ const EditUser = () => {
                 name="dateOfJoining"
                 value={
                   user.dateOfBirth
-                    // ? user.dateOfJoining.split("/").reverse().join("-")
-                    // : ""
+                  // ? user.dateOfJoining.split("/").reverse().join("-")
+                  // : ""
                 } // placeholder="Date of joining"
                 onChange={handleChange}
                 //required

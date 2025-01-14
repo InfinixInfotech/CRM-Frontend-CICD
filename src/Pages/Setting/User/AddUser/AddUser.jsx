@@ -4,18 +4,33 @@ import BackButton from "../../../../Components/Button/BackButton/BackButton";
 import { useDispatch, useSelector } from "react-redux";
 import { postUserThunk } from "../../../../Redux/Services/thunks/UserThunk";
 import { Alert } from "react-bootstrap";
+import { getAllDepartmentThunk } from "../../../../Redux/Services/thunks/DepartmentThunk";
+import { getAllGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
+import { getAllQualificationThunk } from "../../../../Redux/Services/thunks/QualificationThunk";
+import { emp } from "../../../../Redux/Services/apiServer/ApiServer";
 
 const AddUser = () => {
   const [showAlert, setShowAlert] = useState(false);
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
+  const [departments, setDepartments] = useState([]);
+  const [groupsData, setGroupsData] = useState([]);
+  const [qualification, setQualification] = useState([]);
+
+  // console.log("groupsData----------------", JSON.stringify(groupsData));
+  // console.log("DepartmentData----------------", JSON.stringify(departments));
+
+  const { data, loading, error } = useSelector((state) => state.user);
+
   const [user, setUser] = useState({
     fullName: "",
-    employeeCode: "",
+    employeeCode:"",
     fatherName: "",
     motherName: "",
     mobileNumber: "",
     userName: "",
     password: "",
-    target: "",
+    target: 0,
     groupid: "",
     departmentName: "",
     designationName: "",
@@ -32,8 +47,8 @@ const AddUser = () => {
     customFetch: "",
     customFetchRatio: "",
     otpNumber: 0,
-    dateOfBirth: "2024-11-30T11:09:06.723Z",
-    dateOfJoining: "2024-11-30T11:09:06.723Z",
+    dateOfBirth: "",
+    dateOfJoining: "",
     branch: "",
     panNumber: "",
     aadharNumber: "",
@@ -68,51 +83,8 @@ const AddUser = () => {
     },
   });
 
-  const dispatch = useDispatch();
-
-  const { data, loading, error } = useSelector((state) => state.user);
-
-  // useEffect(() => {
-  //   if (data && data.data) {
-  //     console.log("API Data:", data.data);
-  //     setUser(data.data);
-  //   } else {
-  //     console.log("API Data is null or undefined.");
-  //   }
-  // }, [data]);
-
-  useEffect(() => {
-    if (showAlert) {
-      const timer = setTimeout(() => {
-        setShowAlert(false); // Hide the alert after 3000ms
-      }, 3000);
-
-      return () => clearTimeout(timer); // Cleanup the timer
-    }
-  }, [showAlert]);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    // if (name === "dateOfBirth" || name === "dateOfJoining") {
-    //   // Format the date to dd/mm/yyyy
-    //   const date = new Date(value);
-    //   const formattedDate = `${date.getDate().toString().padStart(2, "0")}/${(
-    //     date.getMonth() + 1
-    //   )
-    //     .toString()
-    //     .padStart(2, "0")}/${date.getFullYear()}`;
-
-    //   setUser((prevUser) => ({
-    //     ...prevUser,
-    //     [name]: formattedDate,
-    //   }));
-    // } else {
-    //   setUser((prevUser) => ({
-    //     ...prevUser,
-    //     [name]: value,
-    //   }));
-    // }
 
     setUser((prevUser) => ({
       ...prevUser,
@@ -133,7 +105,7 @@ const AddUser = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setShowAlert(true); // Show the alert
+    setShowAlert(true);
 
     const AddNewUser = {
       fullName: user.fullName,
@@ -175,17 +147,19 @@ const AddUser = () => {
         ifsc: user.IFSC,
         accountNumber: user.accountNumber,
       },
+      chatGroup: [user.chatGroup?.toString()],
       fetchedLeads: [
         {
           fetchedDate: user.fetchedLeads.fetchedDate,
           totalFetchedLeads: user.fetchedLeads.totalFetchedLeads,
         },
       ],
-      chatGroup: [user.chatGroup?.toString()],
       access: { ...user.access },
     };
 
-    // Make the API call using dispatch
+   
+    //!<-------------------------------------------------------------------------------ADD USER----------------------------------------------------------------------------------------------------------->
+
     dispatch(postUserThunk(AddNewUser))
       .then((response) => {
         console.log("User added successfully:", response);
@@ -194,6 +168,95 @@ const AddUser = () => {
         console.error("Error adding user:", error);
       });
   };
+
+
+
+
+  useEffect(() => {
+    if (showAlert) {
+      const timer = setTimeout(() => {
+        setShowAlert(false);
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [showAlert]);
+
+  //!<-------------------------------------------------------------------------------VIEW DEPARTMENT----------------------------------------------------------------------------------------------------------->
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await dispatch(getAllDepartmentThunk()).unwrap();
+        // console.log("API Response: ", response);
+
+        if (response.success && Array.isArray(response.data)) {
+          setDepartments(response.data);
+        } else {
+          console.error("Invalid response format: ", response);
+          setDepartments([]);
+        }
+      } catch (error) {
+        console.error("Error fetching departments: ", error);
+        setDepartments([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [dispatch]);
+
+  //!<-------------------------------------------------------------------------------VIEW GROUPS----------------------------------------------------------------------------------------------------------->
+
+  useEffect(() => {
+    const fetchGroupData = async () => {
+      try {
+        const response = await dispatch(getAllGroupsThunk()).unwrap();
+        console.log("API Response: ", response);
+
+        if (response.success && Array.isArray(response.data)) {
+          setGroupsData(response.data);
+        } else {
+          console.error("Invalid response format: ", response);
+          setGroupsData([]);
+        }
+      } catch (error) {
+        console.error("Error fetching GroupsData: ", error);
+        setGroupsData([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchGroupData();
+  }, [dispatch]);
+
+  //!<-------------------------------------------------------------------------------QUALIFICATION----------------------------------------------------------------------------------------------------------->
+
+  useEffect(() => {
+    const fetchQualificationData = async () => {
+      try {
+        const response = await dispatch(getAllQualificationThunk()).unwrap();
+        console.log("API Response: ", response);
+
+        if (response.success && Array.isArray(response.data)) {
+          setQualification(response.data);
+        } else {
+          console.error("Invalid response format: ", response);
+          setQualification([]);
+        }
+      } catch (error) {
+        console.error("Error fetching Qualification: ", error);
+        setQualification([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchQualificationData();
+  }, [dispatch]);
+
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5">
@@ -284,7 +347,7 @@ const AddUser = () => {
                 name="password"
                 value={user.password}
                 onChange={handleChange}
-                //required
+                required
               />
             </div>
             <div>
@@ -295,7 +358,7 @@ const AddUser = () => {
                 name="target"
                 value={user.target}
                 onChange={handleChange}
-                required
+                // required
               />
             </div>
 
@@ -306,7 +369,7 @@ const AddUser = () => {
                 <option value="">Person 2</option>
               </select>
             </div>
-
+            {/* //!----------------------------------------------------------------------------------------GROUP NAME---------------------------------------------------------------------------------// */}
             <div className="dropdown">
               <label>Group Name:</label>
               <select
@@ -318,14 +381,19 @@ const AddUser = () => {
                 <option value="" disabled>
                   --Select Group Name--
                 </option>
-                <option value="HR">HR</option>
-                <option value="BA">BA</option>
-                <option value="SBA">SBA</option>
-                <option value="ARM">ARM</option>
-                <option value="Manager">Manager</option>
-                <option value="DSH">DSH</option>
+                {Array.isArray(groupsData) && groupsData.length > 0 ? (
+                  groupsData.map((dept) => (
+                    <option key={dept.id} value={dept.groupName}>
+                      {dept.groupName}
+                    </option>
+                  ))
+                ) : (
+                  <option disabled>No Groups Available</option>
+                )}
               </select>
             </div>
+
+            {/* //!----------------------------------------------------------------------------------------Department dropdown---------------------------------------------------------------------------------// */}
 
             <div className="dropdown">
               <label>Department Name:</label>
@@ -336,10 +404,14 @@ const AddUser = () => {
                 value={user.departmentName || ""}
               >
                 <option value="" disabled>
-                  --Select Department--
+                  {isLoading ? "Loading..." : "--Select Department--"}
                 </option>
-                <option value="management">Management</option>
-                <option value="sales">Sales</option>
+                {Array.isArray(departments) &&
+                  departments.map((dept) => (
+                    <option key={dept.id} value={dept.departmentName}>
+                      {dept.departmentName}
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -354,6 +426,9 @@ const AddUser = () => {
                 //required
               />
             </div>
+
+            {/* //!----------------------------------------------------------------------------------------Qualification dropdown---------------------------------------------------------------------------------// */}
+
             <div className="dropdown">
               <label>Qualification Name:</label>
               <select
@@ -363,12 +438,14 @@ const AddUser = () => {
                 value={user.qualificationName || ""}
               >
                 <option value="" disabled>
-                  --Select Qualification--
+                  {isLoading ? "Loading..." : "--Select Qualification--"}
                 </option>
-                <option value="10th">10th</option>
-                <option value="12th">12th</option>
-                <option value="UG">UG</option>
-                <option value="PG">PG</option>
+                {Array.isArray(qualification) &&
+                  qualification.map((quali) => (
+                    <option key={quali.id} value={quali.qualificationName}>
+                      {quali.qualificationName}
+                    </option>
+                  ))}
               </select>
             </div>
             <div className="dropdown">
@@ -464,7 +541,7 @@ const AddUser = () => {
                 <option value="" disabled>
                   --Select Branch--
                 </option>
-                <option value="">kotakmahendraidfc</option>
+                <option value="kotakmahendraidfc">kotakmahendraidfc</option>
                 <option value="idfc">idfc</option>
               </select>
             </div>
@@ -560,7 +637,7 @@ const AddUser = () => {
               <label>Date Of Birth</label>
               <input
                 className="ps-2 inputField inputField"
-                type="text"
+                type="date"
                 name="dateOfBirth"
                 value={
                   user.dateOfBirth
@@ -568,16 +645,17 @@ const AddUser = () => {
                   // : ""
                 } // Convert dd/mm/yyyy to yyyy-mm-dd for the input field
                 onChange={handleChange}
+                required
               />
             </div>
             <div>
               <label>Date Of Joining</label>
               <input
                 className="ps-2 inputField inputField"
-                type="text"
+                type="date"
                 name="dateOfJoining"
                 value={
-                  user.dateOfBirth
+                  user.dateOfJoining
                   // ? user.dateOfJoining.split("/").reverse().join("-")
                   // : ""
                 } // placeholder="Date of joining"

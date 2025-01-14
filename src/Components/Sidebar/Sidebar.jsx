@@ -36,7 +36,7 @@ const Sidebar = () => {
     //   id: "salesdashboard",
     //   path: "/salesdashboard",
     // },
-    {
+    { 
       icon: FileText,
       text: "Sales Order",
       id: "salesorder",
@@ -59,6 +59,19 @@ const Sidebar = () => {
       text: "Policies",
       id: "policies",
       path: "/policies",
+    },
+    {
+      icon: BookOpen,
+      text: "UserHistory",
+      id: "userhistory",
+      path: "/userhistory",
+    },
+
+    {
+      icon: BookOpen,
+      text: "FollowUp",
+      id: "followup",
+      path: "/followup",
     },
   ];
 

@@ -1,32 +1,53 @@
 import React, { useEffect, useState } from "react";
 import "./PaymentRaise.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { postLeadPaymentRaiseThunk } from "../../Redux/Services/thunks/LeadPaymentRaiseThunk";
-import { useNavigate } from "react-router-dom";
-
+import { useLocation, useParams } from "react-router-dom";
+import { emp } from "../../Redux/Services/apiServer/ApiServer";
+import { Alert } from "react-bootstrap";
+import BackButton from "../../Components/Button/BackButton/BackButton";
 const PaymentRaise = () => {
-  const [AddPaymentRaise, setAddPaymentRaise] = useState({
-    clientName: "",
-    fathersName: "",
-    mothersName: "",
-    mobile: "",
-    email: "",
-    dob: "",
-    remark: "",
-    segment: "",
-    netAmount: "",
-    paidAmount: "",
-    file: null,
-    paymentDate: "",
-    paymentMode: "",
-    bankName: "",
-    transactionId: "",
-    panNo: "",
-    state: "",
-    city: "",
-  });
+  const { state } = useLocation();  
+ const paymentData = state?.leadObj;
+  const lead = paymentData?.lead;
+  const userName = localStorage.getItem("username");
+  // console.log(userName);
+  
 
- 
+  const dispatch = useDispatch();
+  const [showAlert, setShowAlert] = useState(false);
+  const [AddPaymentRaise, setAddPaymentRaise] = useState({
+    employeeCode: emp,
+    employeeName: userName ,
+    leadId : lead.leadId ,
+    clientName: lead.clientName || "",
+    fathersName: lead.fatherName || "",
+    mothersName: lead.motherName || "",
+    mobile: lead.mobile || "",
+    email: lead.email || "",
+    dob: lead.dob || "",
+    remark: lead.remark || "",
+    segment: lead.segment || "",
+    netAmount: lead.netAmount || "",
+    paidAmount: lead.paidAmount || "",
+    paymentDate: lead.paymentDate || "",
+    paymentMode: lead.modeOfPayment || "",
+    bankName: lead.bankName || "",
+    transactionId: lead.transactionInfo || "",
+    panNo: lead.panNo || "",
+    state: lead.state || "",
+    city: lead.city || "",
+    file: null,
+  });
+  useEffect(() => {
+    if (showAlert) {
+      const timer = setTimeout(() => {
+        setShowAlert(false); 
+      }, 3000);
+      return () => clearTimeout(timer); 
+    }
+  }, [showAlert]);
+  //!<----------------------------------------------------------------------------------- HANDLE FIELDS CHANGE ---------------------------------------------------------------------------------
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAddPaymentRaise((prevState) => ({
@@ -34,7 +55,6 @@ const PaymentRaise = () => {
       [name]: value,
     }));
   };
-
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
     setAddPaymentRaise((prevState) => ({
@@ -42,17 +62,15 @@ const PaymentRaise = () => {
       file: uploadedFile,
     }));
   };
-
-  const dispatch = useDispatch(); 
-
-const handleSubmit = (e) => {
+  //!<----------------------------------------------------------------------------------- HANDLE SUBMIT---------------------------------------------------------------------------------
+  const handleSubmit = (e) => {
     e.preventDefault();
+    setShowAlert(true);
     const addnewPR = {
-      id: 1,  
-      employeeCode: "string",  
-      employeeName: "string",  
-      prId: "string",  
-      leadId: "string",  
+      employeeCode: AddPaymentRaise.employeeCode,
+      employeeName: AddPaymentRaise.employeeName,
+      prId: "",
+      leadId: AddPaymentRaise.leadId,
       clientDetails: {
         name: AddPaymentRaise.clientName,
         fatherName: AddPaymentRaise.fathersName,
@@ -64,8 +82,12 @@ const handleSubmit = (e) => {
       },
       productDetails: {
         segment: AddPaymentRaise.segment,
-        netAmount: AddPaymentRaise.netAmount ? parseFloat(AddPaymentRaise.netAmount) : 0,
-        paidAmount: AddPaymentRaise.paidAmount ? parseFloat(AddPaymentRaise.paidAmount) : 0,
+        netAmount: AddPaymentRaise.netAmount
+          ? parseFloat(AddPaymentRaise.netAmount)
+          : 0,
+        paidAmount: AddPaymentRaise.paidAmount
+          ? parseFloat(AddPaymentRaise.paidAmount)
+          : 0,
       },
       paymentDetails: {
         paymentDate: AddPaymentRaise.paymentDate,
@@ -80,29 +102,33 @@ const handleSubmit = (e) => {
       paymentStatus: 0,
     };
     console.log("Payload being sent:", addnewPR);
-
     dispatch(postLeadPaymentRaiseThunk(addnewPR))
-   .then((response) => {
-     if (response.payload === null) {
-       console.error("No data received from the server");
-     }
-     alert("Payment Raise Submitted!");
-     console.log("Added successfully:", response);
-   })
-   .catch((error) => {
-     console.error("Error adding:", error); 
-   });
+      .then((response) => {
+        if (response.payload === null) {
+          console.error("No data received from the server");
+        }
+        // alert("Payment Raise Submitted!");
+        console.log("Added successfully:", response);
+      })
+      .catch((error) => {
+        console.error("Error adding:", error);
+      });
   };
-  
-
-
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-0">
         Payment Raise
       </h2>
-      <div className="container-fluid border border-2 border-gray mt-1">
-        {/* Personal Details Section */}
+      <BackButton to="/viewleads"/>
+      <div className="container-fluid border border-2 border-gray mt-2">
+        <div>
+          {showAlert && (
+            <Alert variant="info" className="mt-2 text-center">
+              PR Added Successfully
+            </Alert>
+          )}
+        </div>
+        {/* //!<-----------------------------------------------------------------------------------Personal Details Section --------------------------------------------------------------------------------- */}
         <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded mb-4">
           <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-1 text-white tw-bold fs-5">
             Personal Details
@@ -188,8 +214,7 @@ const handleSubmit = (e) => {
             </div>
           </div>
         </div>
-
-        {/* Product Details Section */}
+        {/* //!<-----------------------------------------------------------------------------------Product Details Section--------------------------------------------------------------------------------- */}
         <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded mb-4">
           <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5">
             Product Details
@@ -245,8 +270,7 @@ const handleSubmit = (e) => {
             </div>
           </div>
         </div>
-
-        {/* Payment Details Section */}
+        {/* //!<----------------------------------------------------------------------------------- Payment Details Section --------------------------------------------------------------------------------- */}
         <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded mb-0">
           <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5">
             Payment Detail
@@ -256,7 +280,7 @@ const handleSubmit = (e) => {
               <div className="col-md-4 ">
                 <label className="form-label">Payment Date</label>
                 <input
-                  type="text"
+                  type="date"
                   className="form-control"
                   name="paymentDate"
                   value={AddPaymentRaise.paymentDate}
@@ -338,7 +362,6 @@ const handleSubmit = (e) => {
             </div>
           </div>
         </div>
-
         <div className="text-center">
           <button
             type="submit"
@@ -352,5 +375,4 @@ const handleSubmit = (e) => {
     </>
   );
 };
-
 export default PaymentRaise;

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAllUploadBulkLead, getByIdUploadBulkLead, postUploadBulkLead } from "../apis/UploadBulkLeadApi";
+import { fetchAllUploadBulkLead, getByIdUploadBulkLead, postUploadBulkLead, UpdateBulkLead } from "../apis/UploadBulkLeadApi";
 
 
 export const postUploadBulkLeadThunk = createAsyncThunk(
@@ -42,33 +42,32 @@ export const fetchAllUploadBulkLeadThunk = createAsyncThunk(
     }
 );
 
-// export const deleteSegmentPlanThunk = createAsyncThunk(
-//     'segmentplan/deleteSegmentPlan',
-//     async (id, { rejectWithValue }) => {
-//       try {
-//         const response = await deleteSegmentPlan(id); // Assuming you are passing the id in the body
-//         if (response?.success) {
-//           return response; // Return the successful response data
-//         }
-//         return rejectWithValue(response?.message || 'Failed to delete lead status');
-//       } catch (error) {
-//         return rejectWithValue(error.message || 'An error occurred while deleting lead status');
-//       }
-//     }
-//   );
+export const UpdateBulkLeadThunk = createAsyncThunk(
+    'uploadbulklead/updateUploadBulkLead',
+    async(param, {rejectWithValue}) => {
+        try {
+            const response = await UpdateBulkLead(param);
+            if (response?.success) {
+                return response;
+            }
+            return rejectWithValue(response?.message || 'Failed to update lead status');
+        } catch (error) {
+            return rejectWithValue(error.message || 'An error occurred while updating lead status');
+        }
+    }
+);
 
-// // Update a lead status
-// export const putSegmentPlanThunk = createAsyncThunk(
-//     'segmentplan/putSegmentPlan',
+// export const getByIdLeadPaymentRaiseThunk = createAsyncThunk(
+//     'leadpaymentraise/getByIdLeadPaymentRaise',
 //     async(param, {rejectWithValue}) => {
 //         try {
-//             const response = await putSegmentPlan(param);
+//             const response = await getByIdLeadPaymentRaise(param);
 //             if (response?.success) {
-//                 return response;
+//                 return response.data;
 //             }
-//             return rejectWithValue(response?.message || 'Failed to update lead status');
+//             return rejectWithValue(response?.message || 'Failed to fetch lead status by ID');
 //         } catch (error) {
-//             return rejectWithValue(error.message || 'An error occurred while updating lead status');
+//             return rejectWithValue(error.message || 'An error occurred while fetching lead status by ID');
 //         }
 //     }
 // );

@@ -11,14 +11,14 @@ const Delete = ({ id, onDelete }) => {
     };
     return (
         <>
-            <button onClick={handleDeleteClick} 
+            <button onClick={handleDeleteClick}    className="btn btn-danger btn-sm mr-1 py-0 px-2"
          style={{
             fontWeight: "600",
-            borderRadius: "0",
-            backgroundColor: "#D2322D",
+            // borderRadius: "0",
+            // backgroundColor: "#D2322D",
             fontSize: "12px",
-            border: "1px solid grey",
-            color : "white"
+            // border: "1px solid grey",
+            // color : "white"
           }}>
                Delete
             </button>

@@ -8,41 +8,56 @@ import { PdfButton } from "../../Components/Button/DataButton/DataPdfButton/Data
 import { CopyButton } from "../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { StatusButton } from "../../Components/Button/StatusButton/StatusButton";
 
-import { getAllLeadPaymentRaiseThunk } from "../../Redux/Services/thunks/LeadPaymentRaiseThunk";
-import { useDispatch } from "react-redux";
+import {
+  deleteLeadPaymentRaiseThunk,
+  getAllLeadPaymentRaiseThunk,
+} from "../../Redux/Services/thunks/LeadPaymentRaiseThunk";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ExportData from "../../Components/Button/DataButton/ExportButton";
+
 const Payment = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedEmail, setSelectedEmail] = useState(null);
-  // const [payments, setPayments] = useState([]);
-  const [data, setdata] = useState([]);
+  const [AddPaymentRaise, setAddPaymentRaise] = useState([]);
+  const [msg, setMsg] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { data, loading, error } = useSelector(
+    (state) => state.leadpaymentraise
+  );
+
+  // !<--------------------------------------------------------------------------- HANDLE NAVIGATE --------------------------------------------------------------------------
 
   const handleNavigate = (id, paymentObj) => {
     if (!paymentObj) {
       console.error("Payment object is undefined or null");
       return;
     }
-  
-    // console.log("payment ----------------------",paymentObj);
-    navigate(`/editpr/${id}`, { state: { paymentObj } });
-  };
-  
-  const fetchPaymentAll = () => {
-    dispatch(getAllLeadPaymentRaiseThunk()).then((response) => {
-      const payment = response.payload?.data;
-      console.log(payment);
-      setdata(payment);
-      // setEditStatus(payment?.id);
-      // setEditValue(payment?.payment);
+
+    navigate(`/editpr/${id}`, {
+      state: {
+        paymentObj,
+        prId: paymentObj.prId,
+        id: id,
+      },
     });
   };
 
   useEffect(() => {
-    fetchPaymentAll();
+    dispatch(getAllLeadPaymentRaiseThunk());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (data?.data) {
+      setAddPaymentRaise(data.data);
+    }
+  }, [data]);
+
+  // !<--------------------------------------------------------------------------- EMAIL POPUP FUNCTIONALITY--------------------------------------------------------------------------
 
   const handleEmailPopup = (email) => {
     setSelectedEmail(email);
@@ -53,6 +68,30 @@ const Payment = () => {
     setSelectedEmail(null);
   };
 
+  // !<--------------------------------------------------------------------------- DELETE PAYMENT FUNCTIONALITY-------------------------------------------------------------------------
+
+  const handleDeletePayment = (id) => {
+    dispatch(deleteLeadPaymentRaiseThunk(id))
+      .unwrap()
+      .then((response) => {
+        setMsg(response.message || "deleted successfully");
+      })
+      .catch((error) => {
+        setMsg(error || "Failed to delete status");
+      });
+  };
+
+  // !<--------------------------------------------------------------------------- PAGINATION LOGIC -------------------------------------------------------------------------
+
+  const totalPages = Math.ceil(AddPaymentRaise.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentPR = AddPaymentRaise.slice(indexOfFirstItem, indexOfLastItem);
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const nextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
@@ -61,7 +100,8 @@ const Payment = () => {
 
       <div className="container-fluid border border-2 border-gray mt-1 ">
         <div className="outerBgBox mb-2">
-          {/* Popup */}
+          {/* // !<------------------------------------------------------------------------------------ POPUP ----------------------------------------------------------------------------  */}
+
           {showPopup && (
             <>
               <div className="popup-overlay" onClick={handleClosePopup}></div>
@@ -78,7 +118,8 @@ const Payment = () => {
           )}
 
           <div className="dropDownContainer p-3 m-3 ">
-            {/* Filters */}
+            {/* // !<------------------------------------------------------------------------------------ FILTERS ----------------------------------------------------------------------------  */}
+
             <div className="row d-flex gap-2 mb-0 ">
               {[
                 "Status",
@@ -109,10 +150,16 @@ const Payment = () => {
           </div>
 
           <div className="paymentTable container-fluid mt-2">
-            <table className="table table-bordered table-striped text-center">
+            {/* // !<----------------------------------------------------------------------------------- MAIN TABLE STARTING ----------------------------------------------------------------------------  */}
+            <ExportData tableId="table-dataOne" />
+
+            <table
+              id="table-dataOne"
+              className="table table-bordered table-striped text-center"
+            >
               <thead className="thead-dark">
                 <tr>
-                <th>S.No.</th>
+                  <th>S.No.</th>
                   <th>Lead Id</th>
                   <th>Payment Date</th>
                   <th>Client Name</th>
@@ -131,9 +178,9 @@ const Payment = () => {
                 </tr>
               </thead>
               <tbody>
-                {data.map((paymentObj, index) => (
-                  <tr key={index}>
-                     <td>{paymentObj.id}</td>
+                {currentPR.map((paymentObj) => (
+                  <tr key={paymentObj.id}>
+                    <td>{paymentObj.id}</td>
                     <td>{paymentObj.leadId}</td>
                     <td>{paymentObj.paymentDetails?.paymentDate || "N/A"}</td>
                     <td>{paymentObj.clientDetails?.name || "N/A"}</td>
@@ -166,7 +213,10 @@ const Payment = () => {
                           }
                           className="btn btn-primary btn-sm mr-1 py-0 px-2"
                         />
-                        <DeleteButton className="btn btn-danger btn-sm mr-1  py-0 px-2" />
+                        <DeleteButton
+                          onDelete={() => handleDeletePayment(paymentObj.id)}
+                          className="btn btn-danger btn-sm mr-1  py-0 px-2"
+                        />
                       </div>
                     </td>
                   </tr>
@@ -174,29 +224,28 @@ const Payment = () => {
               </tbody>
             </table>
 
-            {/* Pagination and Summary */}
-            <div className="d-flex justify-content-between align-items-center mt-4">
-              <div>
-                Showing <strong>1 to 10</strong> of <strong>3,445</strong>{" "}
-                entries
-              </div>
-              <nav>
-                <ul className="pagination pagination-sm mb-0">
-                  <li className="page-item">
-                    <button className="page-link px-2 py-0">Previous</button>
-                  </li>
-                  <li className="page-item active">
-                    <button className="page-link px-2 py-0">1</button>
-                  </li>
-                  <li className="page-item">
-                    <button className="page-link px-2 py-0">2</button>
-                  </li>
-                  <li className="page-item">
-                    <button className="page-link px-2 py-0">Next</button>
-                  </li>
-                </ul>
-              </nav>
+            {/* // !<------------------------------------------------------------------------------------ PAGINATION SUMMARY ----------------------------------------------------------------------------  */}
+
+            <div className="pagination">
+              <button onClick={prevPage} disabled={currentPage === 1}>
+                <i className="bi bi-arrow-left-circle"></i>
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    className={currentPage === number ? "active" : ""}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button onClick={nextPage} disabled={currentPage === totalPages}>
+                <i className="bi bi-arrow-right-circle"></i>
+              </button>
             </div>
+            {/* // !<------------------------------------------------------------------------------------ TABLE TWO CONTAINER ----------------------------------------------------------------------------  */}
 
             <div className=" mb-0 ">
               <PrintButton tableId="payment-table1" />
@@ -223,28 +272,28 @@ const Payment = () => {
               </table>
             </div>
             {/* Pagination and Summary */}
-            <div className="d-flex justify-content-between align-items-center mt-4">
-              <div>
-                Showing <strong>1 to 10</strong> of <strong>3,445</strong>{" "}
-                entries
-              </div>
-              <nav>
-                <ul className="pagination pagination-sm mb-0">
-                  <li className="page-item ">
-                    <button className="page-link px-2 py-0">Previous</button>
-                  </li>
-                  <li className="page-item active">
-                    <button className="page-link px-2 py-0">1</button>
-                  </li>
-
-                  <li className="page-item">
-                    <button className="page-link px-2 py-0">Next</button>
-                  </li>
-                </ul>
-              </nav>
+            <div className="pagination">
+              <button onClick={prevPage} disabled={currentPage === 1}>
+                <i className="bi bi-arrow-left-circle"></i>
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    className={currentPage === number ? "active" : ""}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button onClick={nextPage} disabled={currentPage === totalPages}>
+                <i className="bi bi-arrow-right-circle"></i>
+              </button>
             </div>
 
-            {/* Summary */}
+            {/* // !<------------------------------------------------------------------------------------ TABLE THIRD CONTAINER ----------------------------------------------------------------------------  */}
+
             <div className=" mb-0">
               <PrintButton tableId="payment-table2" />
               <PdfButton tableId="payment-table2" />
@@ -270,26 +319,27 @@ const Payment = () => {
               </table>
             </div>
             {/* Pagination and Summary */}
-            <div className="d-flex justify-content-between align-items-center mt-4">
-              <div>
-                Showing <strong>1 to 10</strong> of <strong>3,445</strong>{" "}
-                entries
-              </div>
-              <nav>
-                <ul className="pagination pagination-sm mb-0">
-                  <li className="page-item">
-                    <button className="page-link px-2 py-0">Previous</button>
-                  </li>
-                  <li className="page-item active">
-                    <button className="page-link px-2 py-0">1</button>
-                  </li>
-
-                  <li className="page-item">
-                    <button className="page-link px-2 py-0">Next</button>
-                  </li>
-                </ul>
-              </nav>
+            <div className="pagination">
+              <button onClick={prevPage} disabled={currentPage === 1}>
+                <i className="bi bi-arrow-left-circle"></i>
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    className={currentPage === number ? "active" : ""}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button onClick={nextPage} disabled={currentPage === totalPages}>
+                <i className="bi bi-arrow-right-circle"></i>
+              </button>
             </div>
+
+            {/* // !<------------------------------------------------------------------------------------ TABLE FOURTH CONTAINER ----------------------------------------------------------------------------  */}
 
             {/* Summary */}
             <div className=" mb-0">
@@ -323,24 +373,24 @@ const Payment = () => {
               </table>
             </div>
             {/* Pagination and Summary */}
-            <div className="d-flex justify-content-between align-items-center mt-4">
-              <div>
-                Showing <strong>1 to 10</strong> of <strong>3,445</strong>{" "}
-                entries
-              </div>
-              <nav>
-                <ul className="pagination pagination-sm mb-0">
-                  <li className="page-item">
-                    <button className="page-link px-2 py-0">Previous</button>
-                  </li>
-                  <li className="page-item active">
-                    <button className="page-link px-2 py-0">1</button>
-                  </li>
-                  <li className="page-item">
-                    <button className="page-link px-2 py-0">Next</button>
-                  </li>
-                </ul>
-              </nav>
+            <div className="pagination">
+              <button onClick={prevPage} disabled={currentPage === 1}>
+                <i className="bi bi-arrow-left-circle"></i>
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    className={currentPage === number ? "active" : ""}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button onClick={nextPage} disabled={currentPage === totalPages}>
+                <i className="bi bi-arrow-right-circle"></i>
+              </button>
             </div>
           </div>
         </div>

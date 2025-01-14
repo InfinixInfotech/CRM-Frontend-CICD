@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaCopy } from "react-icons/fa";
 
 const handleCopy = (tableId) => {
   // Get the table data by its ID
@@ -20,8 +21,8 @@ const handleCopy = (tableId) => {
   rows.forEach((row) => {
     const cells = row.querySelectorAll("td, th");
     const rowData = Array.from(cells)
-      .map(cell => cell.textContent.trim()) // Get the text content from each cell
-      .join("\t"); // Join cells with tab for separation (to mimic CSV)
+      .map(cell => cell.textContent.trim())
+      .join("\t"); 
     copiedContent += rowData + "\n"; 
   });
 
@@ -40,16 +41,17 @@ const handleCopy = (tableId) => {
 export const CopyButton = ({
   tableId = "table-data", 
   onClick = () => handleCopy(tableId),
-  // className = "btn btn-secondary btn-sm px-3 py-1 fw-light mt-3 no-print",
-  className = "btn dataCopyButton btn-secondary btn-sm px-2 py-0 me-1 mt-3 no-print text-center",
+  className = "btn dataCopyButton btn-sm px-2 py-0 me-1 mt-3 no-print text-center",
 
 }) => {
   return (
     <button
       onClick={() => handleCopy(tableId)} 
       className={className}
-      style={{fontWeight:"600" , borderRadius: "0" , backgroundColor:"rgb(166, 174, 191)" }}
+      style={{ fontWeight: "500", borderRadius: "0", backgroundColor: "none", fontSize:"18px" }}
     >
+      <FaCopy className="me-1 fs-5 colorful-icon text-secondary" />
+
       Copy
     </button>
   );

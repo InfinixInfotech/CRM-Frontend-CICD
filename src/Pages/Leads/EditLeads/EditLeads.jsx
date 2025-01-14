@@ -1,45 +1,55 @@
 import React, { useEffect, useState } from "react";
-
-import "./AddLeads.css";
 import { useDispatch } from "react-redux";
-import { postAddLeadThunk } from "../../../Redux/Services/thunks/AddLeadThunk";
 import { Alert } from "react-bootstrap";
-import { emp } from "../../../Redux/Services/apiServer/ApiServer";
+import { emp, staticToken } from "../../../Redux/Services/apiServer/ApiServer";
+import { postAddLeadThunk } from "../../../Redux/Services/thunks/AddLeadThunk";
+import { useLocation } from "react-router-dom";
+import { UpdateBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 
-const AddLeads = () => {
+const EditLeads = () => {
   const [showAlert, setShowAlert] = useState(false);
+  const dispatch = useDispatch();
+  const { state } = useLocation();
+  const recievedLeadData = state?.leadObj.lead;
+
+  console.log(
+    "recievedLeadData-----------------------",
+    recievedLeadData.leadId
+  );
+
   const [leads, setLeads] = useState({
-    CampaignName: "INF26DEC2024",
-    ClientName: "",
-    AssignedTo: "",
-    LeadSource: "",
-    Mobile: "",
-    AlternateMobile: "",
-    OtherMobile1: "",
-    OtherMobile2: "",
-    Email: "",
-    City: "",
-    State: "",
-    Dob: "",
-    Investment: "",
-    Profile: "",
-    Trading: "",
-    TradingExp: "",
-    Lot: 0,
-    AnnualIncome: "",
-    InvestmentGoal: "",
-    MarketValue: "",
-    MinInvestment: "",
-    SourceOfIncome: "",
-    PanNo: "",
-    UidAadhaar: "",
-    Language: "",
-    LeadStatus: "",
-    Segment: "",
-    FreeTrialStartDate: "",
-    FreeTrialEndDate: "",
-    FollowUp: "",
-    Comment: "",
+    leadId: recievedLeadData.leadId,
+    CampaignName: recievedLeadData?.campaignName || "",
+    ClientName: recievedLeadData?.clientName || "",
+    AssignedTo: recievedLeadData?.assignedTo || "",
+    LeadSource: recievedLeadData?.leadSource || "",
+    Mobile: recievedLeadData?.mobile || "",
+    AlternateMobile: recievedLeadData?.alternateMobile || "",
+    OtherMobile1: recievedLeadData?.otherMobile1 || "",
+    OtherMobile2: recievedLeadData?.otherMobile2 || "",
+    Email: recievedLeadData?.email || "",
+    City: recievedLeadData?.city || "",
+    State: recievedLeadData?.state || "",
+    Dob: recievedLeadData?.dob || "",
+    Investment: recievedLeadData?.investment || "",
+    Profile: recievedLeadData?.profile || "",
+    Trading: recievedLeadData?.trading || "",
+    TradingExp: recievedLeadData?.tradingExp || "",
+    Lot: recievedLeadData?.lot || 0,
+    AnnualIncome: recievedLeadData?.annualIncome || "",
+    InvestmentGoal: recievedLeadData?.investmentGoal || "",
+    MarketValue: recievedLeadData?.marketValue || "",
+    MinInvestment: recievedLeadData?.minInvestment || "",
+    SourceOfIncome: recievedLeadData?.sourceOfIncome || "",
+    PanNo: recievedLeadData?.panNo || "",
+    UidAadhaar: recievedLeadData?.uidAadhaar || "",
+    Language: recievedLeadData?.language || "",
+    LeadStatus: recievedLeadData?.leadStatus || "",
+    Segment: recievedLeadData?.segment || "",
+    FreeTrialStartDate: recievedLeadData?.freeTrialStartDate || "",
+    FreeTrialEndDate: recievedLeadData?.freeTrialEndDate || "",
+    FollowUp: recievedLeadData?.followUp || "",
+    Comment: recievedLeadData?.comment || "",
   });
 
   useEffect(() => {
@@ -52,6 +62,45 @@ const AddLeads = () => {
     }
   }, [showAlert]);
 
+  useEffect(() => {
+    setLeads({
+      leadId: recievedLeadData.leadId,
+      CampaignName: recievedLeadData?.campaignName || "",
+      ClientName: recievedLeadData?.clientName || "",
+      AssignedTo: recievedLeadData?.assignedTo || "",
+      LeadSource: recievedLeadData?.leadSource || "",
+      Mobile: recievedLeadData?.mobile || "",
+      AlternateMobile: recievedLeadData?.alternateMobile || "",
+      OtherMobile1: recievedLeadData?.otherMobile1 || "",
+      OtherMobile2: recievedLeadData?.otherMobile2 || "",
+      Email: recievedLeadData?.email || "",
+      City: recievedLeadData?.city || "",
+      State: recievedLeadData?.state || "",
+      Dob: recievedLeadData?.dob || "",
+      Investment: recievedLeadData?.investment || "",
+      Profile: recievedLeadData?.profile || "",
+      Trading: recievedLeadData?.trading || "",
+      TradingExp: recievedLeadData?.tradingExp || "",
+      Lot: recievedLeadData?.lot || 0,
+      AnnualIncome: recievedLeadData?.annualIncome || "",
+      InvestmentGoal: recievedLeadData?.investmentGoal || "",
+      MarketValue: recievedLeadData?.marketValue || "",
+      MinInvestment: recievedLeadData?.minInvestment || "",
+      SourceOfIncome: recievedLeadData?.sourceOfIncome || "",
+      PanNo: recievedLeadData?.panNo || "",
+      UidAadhaar: recievedLeadData?.uidAadhaar || "",
+      Language: recievedLeadData?.language || "",
+      LeadStatus: recievedLeadData?.leadStatus || "",
+      Segment: recievedLeadData?.segment || "",
+      FreeTrialStartDate: recievedLeadData?.freeTrialStartDate || "",
+      FreeTrialEndDate: recievedLeadData?.freeTrialEndDate || "",
+      FollowUp: recievedLeadData?.followUp || "",
+      Comment: recievedLeadData?.comment || "",
+    });
+  }, [recievedLeadData]);
+
+  //!<---------------------------------------------------------------------------------HANDLE CHANGE Functionality---------------------------------------------------------------------->
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setLeads((prevLeads) => ({
@@ -60,15 +109,14 @@ const AddLeads = () => {
     }));
   };
 
-  const dispatch = useDispatch();
+  //!<---------------------------------------------------------------------------------HANDLE SUBMIT Functionality---------------------------------------------------------------------->
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setShowAlert(true); // Show the alert
 
     const addNewLead = {
+      leadId: leads.leadId,
       campaignName: leads.CampaignName,
-      leadId: "string",
       clientName: leads.ClientName,
       assignedTo: leads.AssignedTo,
       employeeCode: emp,
@@ -87,15 +135,15 @@ const AddLeads = () => {
         trading: leads.Trading,
 
         lot: leads.Lot,
-        tradingExp: "string",
-        annualIncome: "string",
+        tradingExp: "",
+        annualIncome: "",
         investmentGoal: leads.InvestmentGoal,
         marketValue: leads.MarketValue,
         minInvestment: leads.MinInvestment,
         sourceOfIncome: leads.SourceOfIncome,
         panNo: leads.PanNo,
         uidAadhaar: leads.UidAadhaar,
-        amountCapping: "string",
+        amountCapping: "",
       },
       language: leads.Language,
       followupDetail: {
@@ -106,27 +154,48 @@ const AddLeads = () => {
         followUpDate: leads.FollowUp,
         comment: leads.Comment,
       },
-    };
 
-    console.log("Lead Data Submitted:", leads);
-    // Add your submission logic here
-    dispatch(postAddLeadThunk(addNewLead))
-      .then((response) => {
-        if (response.payload === null) {
-          console.error("No data received from the server");
-        }
-        alert("Payment Raise Submitted!");
-        console.log("Added successfully:", response);
-      })
-      .catch((error) => {
-        console.error("Error adding:", error);
-      });
+      
+    };
+  
+    // try {
+    //   const token = staticToken;
+    //   console.log("Payload being sent:", JSON.stringify(addNewLead));
+    //   const response = await fetch(`/api/BulkLead/UpdateLeadById`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       Authorization: `Bearer ${token}`,
+    //     },
+    //     body: JSON.stringify(addNewLead),
+    //   });
+
+    //   if (!response.ok)
+    //     throw new Error(`Failed with status: ${response.status}`);
+    //   const result = await response.json();
+    //   console.log("Updated successfully:", result);
+    // } catch (error) {
+    //   console.error("Error updating:", error);
+    // }
+
+    dispatch(UpdateBulkLeadThunk(addNewLead))
+    .then((response) => {
+      if (response.payload === null) {
+        console.error("No data received from the server");
+      }
+      alert("Payment Raise Submitted!");
+      console.log("Added successfully:", response);
+    })
+    .catch((error) => {
+      console.error("Error adding:", error);
+    });
+
   };
 
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-0">
-        Add Leads
+        Edit Leads
       </h2>
       <div>
         {showAlert && (
@@ -137,7 +206,8 @@ const AddLeads = () => {
       </div>
       <form onSubmit={handleSubmit}>
         <div className="container-fluid border border-2 border-gray mt-1 ">
-          {/* Personal Details Section */}
+          {/*//!<------------------------------------------------------------------------------Personal Details Section------------------------------------------------------------------> */}
+
           <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded   mb-4">
             <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-1 text-white tw-bold fs-5">
               Personal Details
@@ -285,7 +355,8 @@ const AddLeads = () => {
             </div>
           </div>
 
-          {/* Investment Details Section */}
+          {/*//!<------------------------------------------------------------------------------Investment Details Section--------------------------------------------------------------------> */}
+
           <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded   mb-4">
             <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5">
               Investment Detail
@@ -459,7 +530,8 @@ const AddLeads = () => {
             </div>
           </div>
 
-          {/* Followup Details Section */}
+          {/*//!<------------------------------------------------------------------------------Followup Details Section--------------------------------------------------------------------> */}
+
           <div className=" addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded">
             <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5">
               Followup Detail
@@ -545,4 +617,4 @@ const AddLeads = () => {
   );
 };
 
-export default AddLeads;
+export default EditLeads;

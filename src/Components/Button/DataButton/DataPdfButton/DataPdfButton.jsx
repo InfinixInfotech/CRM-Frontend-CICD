@@ -1,7 +1,8 @@
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import React from 'react';
-import '../../DataButton/DataButton.css';
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import React from "react";
+import "../../DataButton/DataButton.css";
+import { FaFilePdf } from "react-icons/fa";
 
 const handlePdf = (tableId) => {
   // Select the content of the table by its ID
@@ -29,14 +30,20 @@ const handlePdf = (tableId) => {
 export const PdfButton = ({
   tableId = "table-data", // Default to "table-data" if no tableId is provided
   onClick = () => handlePdf(tableId),
-  className = "btn dataCopyButton btn-secondary btn-sm px-2 py-0  me-1 mt-3 no-print ",
+  className = "btn dataCopyButton btn-sm px-2 py-0  me-1 mt-3 no-print ",
 }) => {
   return (
     <button
-      onClick={() => handlePdf(tableId)}  // Call handlePdf with the dynamic tableId
+      onClick={() => handlePdf(tableId)} // Call handlePdf with the dynamic tableId
       className={className}
-      style={{fontWeight:"600" , borderRadius: "0" ,backgroundColor:"rgb(166, 174, 191)"  }}
+      style={{
+        fontWeight: "600",
+        borderRadius: "0",
+        backgroundColor: "none",
+        fontSize: "18px",
+      }}
     >
+      <FaFilePdf className="me-1 fs-5 colorful-icon text-secondary" />
       Pdf
     </button>
   );

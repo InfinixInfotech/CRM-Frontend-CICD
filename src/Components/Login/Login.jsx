@@ -28,6 +28,7 @@ const LoginPage = () => {
         localStorage.setItem("authToken",data.response.token);
         localStorage.setItem("employcode", data.response.employeeCode);
         localStorage.setItem("groupName", data.response.groupName);
+        localStorage.setItem("username", data.response.userName);
 
         navigate("/salesdashboard");
       } else {

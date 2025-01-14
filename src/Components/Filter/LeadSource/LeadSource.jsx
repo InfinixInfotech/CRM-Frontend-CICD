@@ -22,9 +22,15 @@ const LeadSource = () => {
   const [editLeadSource, setEditLeadSource] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [msg, setMsg] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
+
   const dispatch = useDispatch();
 
   const { data, loading, error } = useSelector((state) => state.leadsource);
+
+
+   
 
   useEffect(() => {
     dispatch(getAllLeadSourceThunk());
@@ -60,16 +66,16 @@ const LeadSource = () => {
 
   const handleEditLeadSource = (id) => {
     if (editValue.trim() !== "") {
-      dispatch(putLeadSourceThunk({ id, leadSourceValue: editValue })).then(
-        (response) => {
-          setMsg(response?.payload?.message || "Status updated successfully");
-          dispatch(getAllLeadSourceThunk());
-          setEditStatus(null);
-          setEditValue("");
-        }
+      setLeadSource((prevState) =>
+        prevState.map((source) =>
+          source.id === id ? { ...source, leadSourceValue: editValue } : source
+        )
       );
+      setEditLeadSource(null); // Exit editing mode
+      setEditValue(""); // Clear the input field
     }
   };
+
 
   const handleDeleteLeadSource = (id) => {
     dispatch(deleteLeadSourceThunk(id))
@@ -85,13 +91,7 @@ const LeadSource = () => {
       });
   };
 
-  const fetchLeadSourceById = (id) => {
-    dispatch(getByIdLeadSourceThunk(id)).then((response) => {
-      const leadSourceValue = response.payload?.data;
-      setEditStatus(leadSourceValue?.id);
-      setEditValue(leadSourceValue?.status);
-    });
-  };
+
 
   return (
     <>
@@ -162,8 +162,8 @@ const LeadSource = () => {
                       Error: {error}
                     </td>
                   </tr>
-                ) : leadSource.length > 0 ? (
-                  leadSource.map((leadSourceObj, index) => (
+                ) : currentStatuses.length > 0 ? (
+                  currentStatuses.map((leadSourceObj, index) => (
                     <tr key={leadSourceObj.id || index}>
                       <td>
                         {editLeadSource === leadSourceObj.id ? (
@@ -190,9 +190,7 @@ const LeadSource = () => {
                           ) : (
                             <EditButton
                               className="btn btn-primary btn-sm mr-1 py-0 px-2"
-                              onClick={() =>
-                                fetchLeadSourceById(leadSourceObj.id)
-                              }
+                              onClick={handleEditLeadSource}
                             />
                           )}
                           <DeleteButton
@@ -214,6 +212,30 @@ const LeadSource = () => {
                 )}
               </tbody>
             </table>
+
+            {/* //!<---------------------------------------------------------------------------------Pagination BUTTON----------------------------------------------------------------------> */}
+            <div className="pagination">
+              <button onClick={prevPage} disabled={currentPage === 1}>
+                <i className="bi bi-arrow-left-circle"></i>
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    className={currentPage === number ? "active" : ""}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button onClick={nextPage} disabled={currentPage === totalPages}>
+                <i className="bi bi-arrow-right-circle"></i>
+              </button>
+            </div>
+
+
+
           </div>
         </div>
       </div>

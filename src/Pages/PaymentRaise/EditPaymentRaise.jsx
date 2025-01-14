@@ -1,44 +1,18 @@
 import React, { useEffect, useState } from "react";
 import "./EditPaymentRaise.css";
-import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { emp, staticToken } from "../../Redux/Services/apiServer/ApiServer";
+import { Alert } from "react-bootstrap";
+import BackButton from "../../Components/Button/BackButton/BackButton";
 import { putLeadPaymentRaiseThunk } from "../../Redux/Services/thunks/LeadPaymentRaiseThunk";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { apiPostCallWithAuth } from "../../Utils/apiUtils";
-import { staticToken } from "../../Redux/Services/apiServer/ApiServer";
-
+import { useDispatch } from "react-redux";
 const EditPaymentRaise = () => {
-
-  const dispatch = useDispatch(); 
+  const [AddPaymentRaise, setAddPaymentRaise] = useState({});
   const { state } = useLocation();
-   // Get the data passed via navigate
-  const paymentData = state?.paymentObj
-  if (!paymentData) {
-    console.error("No payment data received");
-  }
-  const [AddPaymentRaise, setAddPaymentRaise] = useState({
-    clientName: paymentData.clientDetails?.name || "",
-    fathersName: paymentData.clientDetails?.fatherName || "",
-    mothersName: paymentData.clientDetails?.motherName || "",
-    mobile: paymentData.clientDetails?.mobile || "",
-    email: paymentData.clientDetails?.email || "",
-    dob: paymentData.clientDetails?.dob || "",
-    remark: paymentData.clientDetails?.remark || "",
-    segment: paymentData.productDetails?.segment || "",
-    netAmount: paymentData.productDetails?.netAmount || "",
-    paidAmount: paymentData.productDetails?.paidAmount || "",
-    paymentDate: paymentData.paymentDetails?.paymentDate || "",
-    paymentMode: paymentData.paymentDetails?.modeOfPayment || "",
-    bankName: paymentData.paymentDetails?.bankName || "",
-    transactionId: paymentData.paymentDetails?.transactionInfo || "",
-    panNo: paymentData.paymentDetails?.panNo || "",
-    state: paymentData.paymentDetails?.state || "",
-    city: paymentData.paymentDetails?.city || "",
-    file: null, 
-  });
-
-  const { paymentId } = useParams(); // Retrieve paymentId from URL parameters
-  console.log("editpayment-----------------"+JSON.stringify(paymentData));
-  
+  const [showAlert, setShowAlert] = useState(false);
+  const paymentData = state?.paymentObj;
+  const dispatch = useDispatch();
+  //!<--------------------------------------------------------------------------- HANDLE FIELDS CHANGE --------------------------------------------------------------------------
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAddPaymentRaise((prevState) => ({
@@ -46,8 +20,6 @@ const EditPaymentRaise = () => {
       [name]: value,
     }));
   };
-
-
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
     setAddPaymentRaise((prevState) => ({
@@ -55,17 +27,19 @@ const EditPaymentRaise = () => {
       file: uploadedFile,
     }));
   };
-
+console.log("paymentData.clientDetails?.remark --------------", paymentData.clientDetails?.remark );
   useEffect(() => {
     if (paymentData) {
       setAddPaymentRaise({
+        id: paymentData.id,
+        prId: paymentData.prId,
         clientName: paymentData.clientDetails?.name || "",
         fathersName: paymentData.clientDetails?.fatherName || "",
         mothersName: paymentData.clientDetails?.motherName || "",
         mobile: paymentData.clientDetails?.mobile || "",
         email: paymentData.clientDetails?.email || "",
         dob: paymentData.clientDetails?.dob || "",
-        remark: paymentData.clientDetails?.remark || "",
+        remark: paymentData.clientDetails?.remark ,
         segment: paymentData.productDetails?.segment || "",
         netAmount: paymentData.productDetails?.netAmount || "",
         paidAmount: paymentData.productDetails?.paidAmount || "",
@@ -76,21 +50,28 @@ const EditPaymentRaise = () => {
         panNo: paymentData.paymentDetails?.panNo || "",
         state: paymentData.paymentDetails?.state || "",
         city: paymentData.paymentDetails?.city || "",
-        file: null, // You can set the file if needed
+        file: null,
       });
     }
   }, [paymentData]);
-
-
-
+  useEffect(() => {
+    if (showAlert) {
+      const timer = setTimeout(() => {
+        setShowAlert(false); // Hide the alert after 3000ms
+      }, 3000);
+      return () => clearTimeout(timer); // Cleanup the timer
+    }
+  }, [showAlert]);
+  //!<--------------------------------------------------------------------------- HANDLE SUBMIT --------------------------------------------------------------------------
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    setShowAlert(true);
+                                           
     const updatedPR = {
-      id: AddPaymentRaise.id,  // Make sure AddPaymentRaise has an id field
-      employeeCode: AddPaymentRaise.employeeCode,
-      employeeName: AddPaymentRaise.employeeName,
+      id: AddPaymentRaise.id,
       prId: AddPaymentRaise.prId,
+      employeeCode: emp,
+      employeeName: AddPaymentRaise.employeeName,
       leadId: AddPaymentRaise.leadId,
       clientDetails: {
         name: AddPaymentRaise.clientName,
@@ -103,8 +84,12 @@ const EditPaymentRaise = () => {
       },
       productDetails: {
         segment: AddPaymentRaise.segment,
-        netAmount: AddPaymentRaise.netAmount ? parseFloat(AddPaymentRaise.netAmount) : 0,
-        paidAmount: AddPaymentRaise.paidAmount ? parseFloat(AddPaymentRaise.paidAmount) : 0,
+        netAmount: AddPaymentRaise.netAmount
+          ? parseFloat(AddPaymentRaise.netAmount)
+          : 0,
+        paidAmount: AddPaymentRaise.paidAmount
+          ? parseFloat(AddPaymentRaise.paidAmount)
+          : 0,
       },
       paymentDetails: {
         paymentDate: AddPaymentRaise.paymentDate,
@@ -115,91 +100,58 @@ const EditPaymentRaise = () => {
         state: AddPaymentRaise.state,
         city: AddPaymentRaise.city,
       },
-      transactionReceipt: AddPaymentRaise.transactionReceipt, // Use the updated value for transactionReceipt
-      paymentStatus: AddPaymentRaise.paymentStatus, // Use the updated value for paymentStatus
+      transactionReceipt: AddPaymentRaise.transactionReceipt,
+      paymentStatus: AddPaymentRaise.paymentStatus,
     };
-  
-    console.log("Payload being sent:", updatedPR);
-  
-    // Dispatch the PUT action via Redux Thunk
-    dispatch(putLeadPaymentRaiseThunk(updatedPR))
-      .then((response) => {
-        if (response.payload === null) {
-          console.error("No data received from the server");
-        } else {
-          alert("Payment Raise Updated Successfully!");
-          console.log("Updated successfully:", response);
-        }
-      })
-      .catch((error) => {
-        console.error("Error updating:", error);
-      });
+    
+    // try {
+    //   const token = staticToken;
+    //   const response = await fetch(
+    //     `/api/LeadPaymentRaise/UpdateLeadPRById?id=${AddPaymentRaise.id}&PRId=${AddPaymentRaise.prId}`,
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //       body: JSON.stringify(updatedPR),
+    //     }
+    //   );
+    //   if (!response.ok) throw new Error("Failed to update user.");
+    //   const result = await response.json();
+    //   console.log("User updated successfully:", result);
+    //   // alert("User updated successfully!");
+    // } catch (error) {
+    //   console.error("Error updating user:", error);
+    //   alert("Failed to update user.");
+    // }
+        dispatch(putLeadPaymentRaiseThunk(updatedPR))
+              .then((response) => {
+                if (response.payload === null) {
+                  console.error("No data received from the server");
+                }
+                alert("Payment Raise Updated!");
+                console.log("Added successfully:", response);
+              })
+              .catch((error) => {
+                console.error("Error adding:", error);
+              });
   };
-  
-
-
-// const handleUpdate = async (e) => {
-//   e.preventDefault();
-//     const params = {
-//       id: 1,  
-//       employeeCode: "string",  
-//       employeeName: "string",  
-//       prId: "string",  
-//       leadId: "string",  
-//       clientDetails: {
-//         name: AddPaymentRaise.clientName,
-//         fatherName: AddPaymentRaise.fathersName,
-//         motherName: AddPaymentRaise.mothersName,
-//         mobile: AddPaymentRaise.mobile,
-//         email: AddPaymentRaise.email,
-//         dob: AddPaymentRaise.dob,
-//         remark: AddPaymentRaise.remark,
-//       },
-//       productDetails: {
-//         segment: AddPaymentRaise.segment,
-//         netAmount: AddPaymentRaise.netAmount ? parseFloat(AddPaymentRaise.netAmount) : 0,
-//         paidAmount: AddPaymentRaise.paidAmount ? parseFloat(AddPaymentRaise.paidAmount) : 0,
-//       },
-//       paymentDetails: {
-//         paymentDate: AddPaymentRaise.paymentDate,
-//         modeOfPayment: AddPaymentRaise.paymentMode,
-//         bankName: AddPaymentRaise.bankName,
-//         transactionInfo: AddPaymentRaise.transactionId,
-//         panNo: AddPaymentRaise.panNo,
-//         state: AddPaymentRaise.state,
-//         city: AddPaymentRaise.city,
-//       },
-//       transactionReceipt: "string",
-//       paymentStatus: 0,
-//     };
-
-
-
-//   try {
-//       const response = await apiPostCallWithAuth(mainUrl, params, staticToken);
-//       if (response && response.success) {
-//           setResponseMessage("Data updated successfully.");
-//           fetchData();
-//           setIsEditing(false);
-//       } else {
-//           setResponseMessage("Failed to update data.");
-//       }
-
-//   } catch (error) {
-//       console.error(error);
-//       setResponseMessage("Error occurred while editing.");
-//   }
-// };
-
-
-
   return (
     <>
       <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-0">
-       Edit Payment Raise
+        Edit Payment Raise
       </h2>
+      <BackButton to="/payment"/>
       <div className="container-fluid border border-2 border-gray mt-1">
-        {/* Personal Details Section */}
+        {/* //!<--------------------------------------------------------------------------- PERSONAL DETAILS SECTIONS -------------------------------------------------------------------------- */}
+        <div>
+          {showAlert && (
+            <Alert variant="info" className="mt-2 text-center">
+              PR Updated Successfully
+            </Alert>
+          )}
+        </div>
         <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded mb-4">
           <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-1 text-white tw-bold fs-5">
             Personal Details
@@ -285,8 +237,7 @@ const EditPaymentRaise = () => {
             </div>
           </div>
         </div>
-
-        {/* Product Details Section */}
+        {/* //!<--------------------------------------------------------------------------- PRODUCT DETAILS SECTION -------------------------------------------------------------------------- */}
         <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded mb-4">
           <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5">
             Product Details
@@ -342,8 +293,7 @@ const EditPaymentRaise = () => {
             </div>
           </div>
         </div>
-
-        {/* Payment Details Section */}
+        {/* //!<--------------------------------------------------------------------------- PAYMENT DETAILS SECTION -------------------------------------------------------------------------- */}
         <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded mb-0">
           <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5">
             Payment Detail
@@ -435,7 +385,6 @@ const EditPaymentRaise = () => {
             </div>
           </div>
         </div>
-
         <div className="text-center">
           <button
             type="submit"
@@ -449,5 +398,4 @@ const EditPaymentRaise = () => {
     </>
   );
 };
-
 export default EditPaymentRaise;

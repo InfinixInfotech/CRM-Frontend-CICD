@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
 import { useDispatch } from "react-redux";
-import { postGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
+import { postGroupsThunk, putGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
 import { Alert } from "react-bootstrap";
 import { useLocation } from "react-router-dom";
 import { staticToken } from "../../../../Redux/Services/apiServer/ApiServer";
@@ -12,7 +12,7 @@ export default function EditGroups() {
 
   const { state } = useLocation();
   const recievedGroupData = state?.groupObj;
-//   console.log("recievedGroupData is-----------------------" +  JSON.stringify(recievedGroupData)); 
+  // console.log("recievedGroupData is-----------------------" +  JSON.stringify(recievedGroupData.groupId));
   if (!recievedGroupData) {
     console.error("No group data received" + JSON.stringify(recievedGroupData));
   }
@@ -36,21 +36,28 @@ export default function EditGroups() {
   };
 
   const [groupData, setGroupData] = useState({
+    id: recievedGroupData?.id,
+    groupId: recievedGroupData?.groupId,
     groupName: recievedGroupData?.groupName || "",
 
     Dashboard: {
-        ...recievedGroupData?.dashboard, // Spread the existing properties
-
-      },
-      
-    Leads: {
-      ...recievedGroupData?.leads,
-
+      ...recievedGroupData?.dashboard, // Spread the existing properties
     },
 
-    leadFetch: {
-      ...recievedGroupData?.leadFetch,
+    Leads: {
+      ...recievedGroupData?.leads,
+    },
 
+    LeadFetch: {
+      Active: recievedGroupData?.LeadFetch?.active ,
+      From: recievedGroupData?.LeadFetch?.from,
+      Ratio: recievedGroupData?.LeadFetch?.ratio,
+    },
+
+    ClientFetch: {
+      Active: recievedGroupData?.ClientFetch?.active,
+      From: recievedGroupData?.ClientFetch?.from,
+      Ratio: recievedGroupData?.ClientFetch?.ratio,
     },
 
     Contact: {
@@ -59,58 +66,66 @@ export default function EditGroups() {
 
     MutualFund: {
       ...recievedGroupData?.mutualFund,
-
     },
 
     FreeTrial: {
       ...recievedGroupData?.freeTrial,
-
     },
 
     SO: {
       ...recievedGroupData?.so,
-  
     },
-
+    LeadTemplate: {
+      ...recievedGroupData?.leadTemplate,
+    },
+    ClientTemplate: {
+      ...recievedGroupData?.clientTemplate,
+    },
+    TeamMembers: {
+      ...recievedGroupData?.teamMembers,
+    },
+    SmsModule: {
+      ...recievedGroupData?.smsModule,
+    },
+    CallingModule: {
+      ...recievedGroupData?.callingModule,
+    },
+    Mis: {
+      ...recievedGroupData?.mis,
+    },
     Compliance: {
       ...recievedGroupData?.compliance,
-
     },
 
     Export: {
       ...recievedGroupData?.export,
-
     },
 
     Logs: {
       ...recievedGroupData?.logs,
-
     },
 
     Extra: {
-        ...recievedGroupData?.extra,
-
+      ...recievedGroupData?.extra,
     },
 
     HRExtra: {
-        ...recievedGroupData?.hrExtra,
-
+      ...recievedGroupData?.hrExtra,
     },
     SupportModule: {
-        ...recievedGroupData?.supportModule,
-
+      ...recievedGroupData?.supportModule,
     },
     CallingModule: {
-        ...recievedGroupData?.callingModule,
+      ...recievedGroupData?.callingModule,
     },
     Reports: {
-        ...recievedGroupData?.reports,
+      ...recievedGroupData?.reports,
     },
     MIS: {
-        ...recievedGroupData?.mis,
+      ...recievedGroupData?.mis,
     },
     Whatsapp: {
-        ...recievedGroupData?.whatsapp,
+      ...recievedGroupData?.whatsapp,
     },
     FreeTrialDays: recievedGroupData?.freeTrialDays ?? null,
     FreeTrialPerContact: recievedGroupData?.freeTrialPerContact ?? null,
@@ -119,7 +134,7 @@ export default function EditGroups() {
     ClientFetchRatio: recievedGroupData?.clientFetchRatio ?? null,
     UnreadFetch: recievedGroupData?.unreadFetch ?? null,
   });
-//   console.log(groupData);
+  //   console.log(groupData);
 
   const handleChange = (path, value) => {
     setGroupData((prevData) => {
@@ -128,9 +143,19 @@ export default function EditGroups() {
 
       let current = newData;
       for (let i = 0; i < pathArray.length - 1; i++) {
-        current = current[pathArray[i]];
+        const key = pathArray[i];
+        if (!current[key]) {
+          current[key] = {};
+        }
+        current = current[key];
       }
-      current[pathArray[pathArray.length - 1]] = value;
+
+      // Ensure that 'From' is an array of strings
+      if (pathArray[pathArray.length - 1] === "From") {
+        current[pathArray[pathArray.length - 1]] = [value]; // Make sure the value is an array
+      } else {
+        current[pathArray[pathArray.length - 1]] = value;
+      }
 
       return newData;
     });
@@ -210,6 +235,8 @@ export default function EditGroups() {
   useEffect(() => {
     if (recievedGroupData) {
       setGroupData({
+        id: recievedGroupData?.id || "",
+        groupId: recievedGroupData?.groupId || "",
         groupName: recievedGroupData?.groupName || "",
 
         Dashboard: {
@@ -220,64 +247,79 @@ export default function EditGroups() {
           ...recievedGroupData?.leads,
         },
 
-        leadFetch: {
-          ...recievedGroupData?.leadFetch,
-     
+        LeadFetch: {
+          Active: recievedGroupData?.LeadFetch?.active ?? false,
+          From: recievedGroupData?.LeadFetch?.from || [],
+          Ratio: recievedGroupData?.LeadFetch?.ratio || "string",
+        },
+
+        ClientFetch: {
+          Active: recievedGroupData?.ClientFetch?.active ?? false,
+          From: recievedGroupData?.ClientFetch?.from || [],
+          Ratio: recievedGroupData?.ClientFetch?.ratio || "string",
         },
 
         Contact: {
           ...recievedGroupData?.contact,
-
         },
 
         MutualFund: {
           ...recievedGroupData?.mutualFund,
-
         },
 
         FreeTrial: {
           ...recievedGroupData?.freeTrial,
-
         },
 
         SO: {
           ...recievedGroupData?.so,
+        },
 
+        LeadTemplate: {
+          ...recievedGroupData?.leadTemplate,
+        },
+        ClientTemplate: {
+          ...recievedGroupData?.clientTemplate,
+        },
+        TeamMembers: {
+          ...recievedGroupData?.teamMembers,
+        },
+        SmsModule: {
+          ...recievedGroupData?.smsModule,
+        },
+        CallingModule: {
+          ...recievedGroupData?.callingModule,
+        },
+        Mis: {
+          ...recievedGroupData?.mis,
         },
 
         Compliance: {
           ...recievedGroupData?.compliance,
-
         },
 
         Export: {
           ...recievedGroupData?.export,
-
         },
 
         Logs: {
           ...recievedGroupData?.logs,
-
         },
 
         Extra: {
           ...recievedGroupData?.extra,
-
         },
 
         HRExtra: {
           ...recievedGroupData?.hrExtra,
-
         },
         SupportModule: {
           ...recievedGroupData?.supportModule,
-
         },
         CallingModule: {
           ...recievedGroupData?.callingModule,
-
         },
-        Reports: {
+        Reports: {           
           ...recievedGroupData?.reports,
         },
         MIS: {
@@ -294,237 +336,244 @@ export default function EditGroups() {
         UnreadFetch: recievedGroupData?.unreadFetch ?? null,
       });
     }
-  },[recievedGroupData]);
+  }, [recievedGroupData]);
 
-
-
-const handleSubmit = async (e) => {
+  // console.log("groupData.Compliance.kyc--------------------",groupData.Compliance.Kyc);
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setShowAlert(true); // Show the alert
-  
-  const groupId = recievedGroupData.id; // Ensure the `id` exists in the user object
-  const AddGroups = {
-    id: 0,
-    groupName: groupData.groupName,
-    groupId: "string",
-    dashboard: {
-      salesDashboard: groupData.Dashboard.SalesDashboard,
-      callingDashboard: groupData.Dashboard.CallingDashboard,
-    },
-    leads: {
-      create: groupData.Leads.Create,
-      view: groupData.Leads.View,
-      marketingLeads: groupData.Leads.MarketingLeads,
-      edit: groupData.Leads.Edit,
-      delete: groupData.Leads.Delete,
-      dispose: groupData.Leads.Dispose,
-      disposeClients: groupData.Leads.DisposeClients,
-      upload: groupData.Leads.Upload,
-      internalAssign: groupData.Leads.InternalAssign,
-      outerAssign: groupData.Leads.OuterAssign,
-      globalAssign: groupData.Leads.GlobalAssign,
-      viewFollowUp: groupData.Leads.ViewFollowUp,
-      deleteFollowUp: groupData.Leads.DeleteFollowUp,
-      followAssign: groupData.Leads.FollowAssign,
-      bulkLeadOperation: groupData.Leads.BulkLeadOperation,
-      leadAction: groupData.Leads.LeadAction,
-      leadActionAssign: groupData.Leads.LeadActionAssign,
-      createAgreement: groupData.Leads.CreateAgreement,
-      addRPM: groupData.Leads.AddRPM,
-    },
-    leadFetch: {
-      active: groupData.leadFetch.active,
-      from: groupData.leadFetch.from,
-      ratio: groupData.leadFetch.ratio,
-    },
-    contact: {
-      create: groupData.Contact.Create,
-      view: groupData.Contact.View,
-      contactAssign: groupData.Contact.ContactAssign,
-      contactAction: groupData.Contact.ContactAction,
-      contactActionAssign: groupData.Contact.ContactActionAssign,
-    },
-    mutualFund: {
-      create: groupData.MutualFund.Create,
-      view: groupData.MutualFund.View,
-      mutualFundAssign: groupData.MutualFund.MutualFundAssign,
-      mutualFundAction: groupData.MutualFund.MutualFundAction,
-      mutualFundActionAssign: groupData.MutualFund.MutualFundActionAssign,
-    },
-    freeTrial: {
-      create: groupData.FreeTrial.Create,
-      view: groupData.FreeTrial.View,
-      edit: groupData.FreeTrial.Edit,
-      outerAssign: groupData.FreeTrial.OuterAssign,
-    },
-    so: {
-      create: groupData.SO.Create,
-      view: groupData.SO.View,
-      edit: groupData.SO.Edit,
-      approveSO: groupData.SO.ApproveSO,
-      invoice: groupData.SO.Invoice,
-      paymentPortal: groupData.SO.PaymentPortal,
-      paymentApproval: groupData.SO.PaymentApproval,
-      paymentEdit: groupData.SO.PaymentEdit,
-      delete: groupData.SO.Delete,
-      serviceActivation: groupData.SO.ServiceActivation,
-      paidClientAssign: groupData.SO.PaidClientAssign,
-      paidClientAction: groupData.SO.PaidClientAction,
-      paidClientActionAssign: groupData.SO.PaidClientActionAssign,
-    },
-    compliance: {
-      kyc: groupData.Compliance.KYC,
-      riskProfile: groupData.Compliance.RiskProfile,
-      agreement: groupData.Compliance.Agreement,
-      agreementApproved: groupData.Compliance.AgreementApproved,
-      viewRPM: groupData.Compliance.ViewRPM,
-      editRPM: groupData.Compliance.EditRPM,
-      invoice: groupData.Compliance.Invoice,
-      soReport: groupData.Compliance.SOReport,
-      taxReport: groupData.Compliance.TaxReport,
-    },
-    logs: {
-      client: groupData.Logs.Client,
-      sms: groupData.Logs.Sms,
-      chat: groupData.Logs.Chat,
-      whatsapp: groupData.Logs.Whatsapp,
-      extension: groupData.Logs.Extension,
-    },
-    extra: {
-      callingModule: groupData.Extra.callingModule,
-      userModule: groupData.Extra.userModule,
-      groupModule: groupData.Extra.groupModule,
-      pools: groupData.Extra.pools,
-      leadStatusModule: groupData.Extra.leadStatusModule,
-      segmentModule: groupData.Extra.segmentModule,
-      soModule: groupData.Extra.soModule,
-      fetchingReport: groupData.Extra.fetchingReport,
-      mailDelete: groupData.Extra.mailDelete,
-      forecast: groupData.Extra.forecast,
-      brokerage: groupData.Extra.brokerage,
-      liveUpdates: groupData.Extra.liveUpdates,
-      policy: groupData.Extra.policy,
-      leadApproval: groupData.Extra.leadApproval,
-      groupDesignation: groupData.Extra.groupDesignation,
-      groupDepartment: groupData.Extra.groupDepartment,
-      groupHierarchy: groupData.Extra.groupHierarchy,
-      customSMS: groupData.Extra.customSMS,
-      notification: groupData.Extra.notification,
-      notificationUpdate: groupData.Extra.notificationUpdate,
-      leaderDashboardUpdate: groupData.Extra.leaderDashboardUpdate,
-      groupChat: groupData.Extra.groupChat,
-    },
-    Whatsapp: {
-      showWhatsapp: groupData.Whatsapp.ShowWhatsapp,
-      sendAttachment: groupData.Whatsapp.SendAttachment,
-    },
-    export: {
-      leads: groupData.Export.Leads,
-      contacts: groupData.Export.Contact,
-      freeTrial: groupData.Export.Freetrial,
-      followUp: groupData.Export.FollowUp,
-      clients: groupData.Export.Clients,
-      salesOrder: groupData.Export.SalesOrder,
-      smsLogs: groupData.Export.SmaLogs,
-      chatLogs: groupData.Export.ChatLogs,
-    },
-    mis: {
-      employee: false,
-      lead: false,
-      client: false,
-      sales: false,
-      disposeLeads: false,
-      preSales: false,
-    },
-    hrExtra: {
-      orgChart: false,
-      scrapBook: false,
-      holiday: false,
-    },
-    reports: {
-      generalReport: false,
-      ftReport: false,
-      paidClientReport: false,
-      expiredPaidClientReport: false,
-      userReport: false,
-      callingReport: false,
-      messageReport: false,
-      smsReport: false,
-      dndReport: false,
-      tracksheet: false,
-      researchReport: false,
-    },
-    leadFetch: {
-      active: false,
-      from: [],
-      ratio: "string",
-    },
-    clientFetch: {
-      active: false,
-      from: [],
-      ratio: "string",
-    },
-    smsModule: {
-      sendSMS: false,
-      viewSMS: false,
-    },
-    callingModule: {
-      monitoring: false,
-      reports: false,
-      sendSMSViaGateway: false,
-      viewSMSViaGateway: false,
-      missCall: false,
-      liveCall: false,
-    },
-    leadTemplate: {
-      sendSMSLead: false,
-      sendWhatsappLead: false,
-      sendEmailLead: false,
-    },
-    clientTemplate: {
-      sendSMSClient: false,
-      sendWhatsappClient: false,
-      sendEmailClient: false,
-    },
-    supportModule: {
-      itAdmin: false,
-      hrAdmin: false,
-      complianceAdmin: false,
-      admin: false,
-    },
-    teamMembers: {
-      list: false,
-      data: false,
-    },
-    freeTrialDays: groupData.FreeTrialDays,
-    freeTrialPerContact: groupData.FreeTrialPerContact,
-    totalCRMLeadLimit: groupData.TotalCRMLeadLimit,
-    unreadFetch: groupData.UnreadFetch,
+
+    const groupId = recievedGroupData.groupId; // Ensure the `id` exists in the user object
+    const AddGroups = {
+      id: groupData.id,
+      groupId: groupData.groupId,
+      groupName: groupData.groupName,
+      dashboard: {
+        salesDashboard: groupData.Dashboard.salesDashboard,
+        callingDashboard: groupData.Dashboard.callingDashboard,
+      },
+      leads: {
+        create: groupData.Leads.create,
+        view: groupData.Leads.view,
+        marketingLeads: groupData.Leads.marketingLeads,
+        edit: groupData.Leads.edit,
+        delete: groupData.Leads.delete,
+        dispose: groupData.Leads.dispose,
+        disposeClients: groupData.Leads.disposeClients,
+        upload: groupData.Leads.upload,
+        internalAssign: groupData.Leads.internalAssign,
+        outerAssign: groupData.Leads.outerAssign,
+        globalAssign: groupData.Leads.globalAssign,
+        viewFollowUp: groupData.Leads.viewFollowUp,
+        deleteFollowUp: groupData.Leads.deleteFollowUp,
+        followAssign: groupData.Leads.followAssign,
+        bulkLeadOperation: groupData.Leads.bulkLeadOperation,
+        leadAction: groupData.Leads.leadAction,
+        leadActionAssign: groupData.Leads.leadActionAssign,
+        createAgreement: groupData.Leads.createAgreement,
+        addRPM: groupData.Leads.addRPM,
+      },
+      contact: {
+        create: groupData.Contact.create,
+        view: groupData.Contact.view,
+        contactAssign: groupData.Contact.contactAssign,
+        contactAction: groupData.Contact.contactAction,
+        contactActionAssign: groupData.Contact.contactActionAssign,
+      },
+      mutualFund: {
+        create: groupData.MutualFund.create,
+        view: groupData.MutualFund.view,
+        mutualFundAssign: groupData.MutualFund.mutualFundAssign,
+        mutualFundAction: groupData.MutualFund.mutualFundAction,
+        mutualFundActionAssign: groupData.MutualFund.mutualFundActionAssign,
+      },
+      freeTrial: {
+        create: groupData.FreeTrial.create,
+        view: groupData.FreeTrial.view,
+        edit: groupData.FreeTrial.edit,
+        outerAssign: groupData.FreeTrial.outerAssign,
+      },
+      so: {
+        create: groupData.SO.create,
+        view: groupData.SO.view,
+        edit: groupData.SO.edit,
+        approveSO: groupData.SO.approveSO,
+        invoice: groupData.SO.invoice,
+        paymentPortal: groupData.SO.paymentPortal,
+        paymentApproval: groupData.SO.paymentApproval,
+        paymentEdit: groupData.SO.paymentEdit,
+        delete: groupData.SO.delete,
+        serviceActivation: groupData.SO.serviceActivation,
+        paidClientAssign: groupData.SO.paidClientAssign,
+        paidClientAction: groupData.SO.paidClientAction,
+        paidClientActionAssign: groupData.SO.paidClientActionAssign,
+      },
+      compliance: {
+        kyc: groupData.Compliance.kyc,
+        riskProfile: groupData.Compliance.riskProfile,
+        agreement: groupData.Compliance.agreement,
+        agreementApproved: groupData.Compliance.agreementApproved,
+        viewRPM: groupData.Compliance.viewRPM,
+        editRPM: groupData.Compliance.editRPM,
+        invoice: groupData.Compliance.invoice,
+        soReport: groupData.Compliance.soReport,
+        taxReport: groupData.Compliance.taxReport,
+      },
+      logs: {
+        client: groupData.Logs.client,
+        sms: groupData.Logs.sms,
+        chat: groupData.Logs.chat,
+        whatsapp: groupData.Logs.whatsapp,
+        login: groupData.Logs.login,
+        extension: groupData.Logs.extension,
+      },
+      extra: {
+        callingModule: groupData.Extra.callingModule,
+        userModule: groupData.Extra.userModule,
+        groupModule: groupData.Extra.groupModule,
+        pools: groupData.Extra.pools,
+        leadStatusModule: groupData.Extra.leadStatusModule,
+        segmentModule: groupData.Extra.segmentModule,
+        soModule: groupData.Extra.soModule,
+        fetchingReport: groupData.Extra.fetchingReport,
+        mailDelete: groupData.Extra.mailDelete,
+        forecast: groupData.Extra.forecast,
+        brokerage: groupData.Extra.brokerage,
+        liveUpdates: groupData.Extra.liveUpdates,
+        policy: groupData.Extra.policy,
+        leadApproval: groupData.Extra.leadApproval,
+        groupDesignation: groupData.Extra.groupDesignation,
+        groupDepartment: groupData.Extra.groupDepartment,
+        groupHierarchy: groupData.Extra.groupHierarchy,
+        customSMS: groupData.Extra.customSMS,
+        notification: groupData.Extra.notification,
+        notificationUpdate: groupData.Extra.notificationUpdate,
+        leaderDashboardUpdate: groupData.Extra.leaderDashboardUpdate,
+        groupChat: groupData.Extra.groupChat,
+      },
+      Whatsapp: {
+        showWhatsapp: groupData.Whatsapp.showWhatsapp,
+        sendAttachment: groupData.Whatsapp.sendAttachment,
+      },
+      export: {
+        leads: groupData.Export.leads,
+        contacts: groupData.Export.contacts,
+        freeTrial: groupData.Export.freeTrial,
+        followUp: groupData.Export.followUp,
+        clients: groupData.Export.clients,
+        salesOrder: groupData.Export.salesOrder,
+        smsLogs: groupData.Export.smsLogs,
+        chatLogs: groupData.Export.chatLogs,
+      },
+      mis: {
+        employee: groupData.Mis.employee,
+        lead: groupData.Mis.lead,
+        client: groupData.Mis.client,
+        sales: groupData.Mis.sales,
+        disposeLeads: groupData.Mis.disposeLeads,
+        preSales: groupData.Mis.preSales,
+      },
+      hrExtra: {
+        orgChart: groupData.HRExtra.orgChart,
+        scrapBook: groupData.HRExtra.scrapBook,
+        holiday: groupData.HRExtra.holiday,
+      },
+      reports: {
+        generalReport: groupData.Reports.generalReport,
+        ftReport: groupData.Reports.ftReport,
+        paidClientReport: groupData.Reports.paidClientReport,
+        expiredPaidClientReport: groupData.Reports.expiredPaidClientReport,
+        userReport: groupData.Reports.userReport,
+        callingReport: groupData.Reports.callingReport,
+        messageReport: groupData.Reports.messageReport,
+        smsReport: groupData.Reports.smsReport,
+        dndReport: groupData.Reports.dndReport,
+        tracksheet: groupData.Reports.tracksheet,
+        researchReport: groupData.Reports.researchReport,
+      },
+      leadFetch: {
+        active: groupData.LeadFetch.Active,
+        from: groupData.LeadFetch.From,
+        ratio: groupData.LeadFetch.Ratio,
+      },
+      clientFetch: {
+        active: groupData.ClientFetch.Active,
+        from: groupData.ClientFetch.From,
+        ratio: groupData.ClientFetch.Ratio,
+      },
+      smsModule: {
+        sendSMS: groupData.SmsModule.sendSMS,
+        viewSMS: groupData.SmsModule.viewSMS,
+      },
+      callingModule: {
+        monitoring: groupData.CallingModule.monitoring,
+        reports: groupData.CallingModule.reports,
+        sendSMSViaGateway: groupData.CallingModule.sendSMSViaGateway,
+        viewSMSViaGateway: groupData.CallingModule.viewSMSViaGateway,
+        missCall: groupData.CallingModule.missCall,
+        liveCall: groupData.CallingModule.liveCall,
+      },
+      leadTemplate: {
+        sendSMSLead: groupData.LeadTemplate.sendSMSLead,
+        sendWhatsappLead: groupData.LeadTemplate.sendWhatsappLead,
+        sendEmailLead: groupData.LeadTemplate.sendEmailLead,
+      },
+      clientTemplate: {
+        sendSMSClient: groupData.ClientTemplate.sendSMSClient,
+        sendWhatsappClient: groupData.ClientTemplate.sendWhatsappClient,
+        sendEmailClient: groupData.ClientTemplate.sendEmailClient,
+      },
+      supportModule: {
+        itAdmin: groupData.SupportModule.itAdmin,
+        hrAdmin: groupData.SupportModule.hrAdmin,
+        complianceAdmin: groupData.SupportModule.complianceAdmin,
+        admin: groupData.SupportModule.admin,
+      },
+      teamMembers: {
+        list: groupData.TeamMembers.list,
+        data: groupData.TeamMembers.data,
+      },
+      freeTrialDays: groupData.FreeTrialDays,
+      freeTrialPerContact: groupData.FreeTrialPerContact,
+      totalCRMLeadLimit: groupData.TotalCRMLeadLimit,
+      unreadFetch: groupData.UnreadFetch,
+    };
+
+    // try {
+    //   const token = staticToken;
+    //   const response = await fetch(
+    //     `/api/Groups/UpdateByIdGroups?id=${groupData.id}&groupId=${groupId}`,
+    //     {
+    //       method: "POST",
+    //       headers: {
+    //         "Content-Type": "application/json",
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //       body: JSON.stringify(AddGroups),
+    //     }
+    //   );
+
+    //   if (!response.ok) throw new Error("Failed to update user.");
+    //   const result = await response.json();
+    //   console.log("User updated successfully:", result);
+
+    //   alert("User updated successfully!");
+    //   setShowAlert(false);
+    // } catch (error) {
+    //   console.error("Error updating user:", error);
+    //   alert("Failed to update user.");
+    // }
+
+    dispatch(putGroupsThunk(AddGroups))
+    .then((response) => {
+      console.log("Group added successfully:", response);
+    })
+    .catch((error) => {
+      console.error("Error adding group:", error);
+    });
+    
   };
-
-    try {
-        const token = staticToken;
-        const response = await fetch(`/api/Groups/UpdateByIdGroups?id=${groupId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`,
-            },
-            body: JSON.stringify(AddGroups),
-        });
-
-        if (!response.ok) throw new Error("Failed to update user.");
-        const result = await response.json();
-        console.log("User updated successfully:", result);
-
-        alert("User updated successfully!");
-        setShowAlert(false);
-    } catch (error) {
-        console.error("Error updating user:", error);
-        alert("Failed to update user.");
-    }
-};
-
 
   return (
     <>
@@ -567,6 +616,34 @@ const handleSubmit = async (e) => {
               {renderSection("Mutual Fund", groupData.MutualFund, "MutualFund")}
               {renderSection("Leads", groupData.Leads, "Leads")}
               {renderSection("SO", groupData.SO, "SO")}
+              {renderSection(
+                "Client Fetch",
+                groupData.ClientFetch,
+                "ClientFetch"
+              )}
+              {renderSection("Lead Fetch", groupData.LeadFetch, "LeadFetch")}
+              {renderSection(
+                "Lead Template",
+                groupData.LeadTemplate,
+                "LeadTemplate"
+              )}
+              {renderSection(
+                "Client Template",
+                groupData.ClientTemplate,
+                "ClientTemplate"
+              )}
+              {renderSection(
+                "Team Members",
+                groupData.TeamMembers,
+                "TeamMembers"
+              )}
+              {renderSection("SMS Module", groupData.SmsModule, "SmsModule")}
+              {renderSection(
+                "Calling Module",
+                groupData.CallingModule,
+                "CallingModule"
+              )}
+              {renderSection("Mis", groupData.Mis, "Mis")}
               {renderSection("Compliance", groupData.Compliance, "Compliance")}
               {renderSection("Export", groupData.Export, "Export")}
               {renderSection("Logs", groupData.Logs, "Logs")}
@@ -590,67 +667,143 @@ const handleSubmit = async (e) => {
                     backgroundColor: "white",
                   }}
                 >
-                  {renderNumberInput(
-                    "Free Trial Days",
-                    "FreeTrialDays",
-                    groupData.FreeTrialDays
-                  )}
-                  {renderNumberInput(
-                    "Free Trial Per Contact",
-                    "FreeTrialPerContact",
-                    groupData.FreeTrialPerContact
-                  )}
-                  {renderNumberInput(
-                    "Total CRM Lead Limit",
-                    "TotalCRMLeadLimit",
-                    groupData.TotalCRMLeadLimit
-                  )}
-                  {renderNumberInput(
-                    "Lead Fetch Ratio",
-                    "LeadFetchRatio",
-                    groupData.LeadFetchRatio
-                  )}
-                  {renderNumberInput(
-                    "Client Fetch Ratio",
-                    "ClientFetchRatio",
-                    groupData.ClientFetchRatio
-                  )}
-                  {renderNumberInput(
-                    "Unread Fetch",
-                    "UnreadFetch",
-                    groupData.UnreadFetch
-                  )}
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="FreeTrialDays">
+                      Free Trial Days
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="FreeTrialDays"
+                      value={groupData.FreeTrialDays}
+                      onChange={(e) =>
+                        handleChange(
+                          "FreeTrialDays",
+                          Number(e.target.value) || 0
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="FreeTrialPerContact">
+                      Free Trial Per Contact
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="FreeTrialPerContact"
+                      value={groupData.FreeTrialPerContact}
+                      onChange={(e) =>
+                        handleChange(
+                          "FreeTrialPerContact",
+                          Number(e.target.value) || 0
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="TotalCRMLeadLimit">
+                      Total CRM Lead Limit
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="TotalCRMLeadLimit"
+                      value={groupData.TotalCRMLeadLimit}
+                      onChange={(e) =>
+                        handleChange(
+                          "TotalCRMLeadLimit",
+                          Number(e.target.value) || 0
+                        )
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="LeadFetchRatio">
+                      Lead Fetch Ratio
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="LeadFetchRatio"
+                      value={groupData.LeadFetch.Ratio}
+                      onChange={(e) =>
+                        handleChange("LeadFetch.Ratio", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="ClientFetchRatio">
+                      Client Fetch Ratio
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="ClientFetchRatio"
+                      value={groupData.ClientFetch.Ratio}
+                      onChange={(e) =>
+                        handleChange("ClientFetch.Ratio", e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div className="mb-3">
+                    <label className="form-label" htmlFor="UnreadFetch">
+                      Unread Fetch
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="UnreadFetch"
+                      value={groupData.UnreadFetch}
+                      onChange={(e) =>
+                        handleChange("UnreadFetch", Number(e.target.value) || 0)
+                      }
+                    />
+                  </div>
 
                   <div>
                     <label className="form-label">Lead Fetch From</label>
                     <select
                       className="form-select"
-                      value={groupData.leadFetch.from}
+                      value={groupData.LeadFetch.From} // Make sure groupData.LeadFetch.From is a valid value
                       onChange={(e) =>
-                        handleChange("leadFetch.from", e.target.value)
-                      }
+                        handleChange("LeadFetch.From", e.target.value)
+                      } // Handle change correctly
                     >
                       <option value="" disabled>
                         Select Some Option
                       </option>
-                      <option value="dispose pool">Dispose Pool</option>
-                      <option value="fresh pool">Fresh Pool</option>
-                      <option value="Diamond pool HNI pool">
+                      <option value="DisposePool">Dispose Pool</option>
+                      <option value="FreshPool">Fresh Pool</option>
+                      <option value="DiamondPoolHNIPool">
                         Diamond Pool HNI Pool
                       </option>
                     </select>
                   </div>
 
-                  <div className="mb-3">
-                    <label className="form-label">Lead Fetch Ratio</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      value={groupData.leadFetch.ratio}
+                  <div>
+                    <label className="form-label">Client Fetch From</label>
+                    <select
+                      className="form-select"
+                      value={groupData.ClientFetch.From}
                       onChange={(e) =>
-                        handleChange("leadFetch.ratio", e.target.value)
+                        handleChange("ClientFetch.From", e.target.value)
                       }
-                    />
+                    >
+                      <option value="" disabled>
+                        Select Some Option
+                      </option>
+                      <option value="DisposePool">Dispose Pool</option>
+                      <option value="FreshPool">Fresh Pool</option>
+                      <option value="DiamondPoolHNIPool">
+                        Diamond Pool HNI Pool
+                      </option>
+                    </select>
                   </div>
                 </div>
               </div>

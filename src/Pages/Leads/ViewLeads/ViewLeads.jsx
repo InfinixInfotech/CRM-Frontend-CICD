@@ -16,29 +16,250 @@ import { useDispatch, useSelector } from "react-redux";
 import { HashLoader } from "react-spinners";
 import { fetchAllUploadBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 import { getByIdUploadBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
+import { useNavigate } from "react-router-dom";
+import { emp } from "../../../Redux/Services/apiServer/ApiServer";
+import { UpdateBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
+import ExportData from "../../../Components/Button/DataButton/ExportButton";
 
 const ViewLeads = () => {
   const isPrGenerated = 0;
   const [editAddLead, setEditAddLead] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [leads, setLeads] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(10);
   const [isLoading, setIsLoading] = useState(false);
+  const [addSegment, setaddSegment] = useState("");
+  const [addComment, setaddComment] = useState("");
+  const [addfreeTrialStartDate, setAddFreeTrialStartDate] = useState("");
+  const [addfreeTrialEndDate, setAddFreeTrialEndDate] = useState("");
+  const [addFollowUpDate, setAddFollowUpDate] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
+  const [showCommentPopup, setShowCommentPopup] = useState(false);
+  const [showFreeTrialPopup, setShowFreeTrialPopup] = useState(false);
+  const [showFollowUpPopup, setShowFollowUpPopup] = useState(false);
+  const [selectedLeadId, setSelectedLeadId] = useState(null);
+  //  const [tableButtonData, setTableButtonData] = useState({});
 
+  const handleOpenPopup = (fromWhere) => {
+    if (fromWhere == "segment") {
+      setShowCommentPopup(false);
+      setShowFreeTrialPopup(false);
+      setShowFollowUpPopup(false);
+      setShowPopup(true);
+    }
+    if (fromWhere == "comment") {
+      setShowPopup(false);
+      setShowFreeTrialPopup(false);
+      setShowFollowUpPopup(false);
+      setShowCommentPopup(true);
+    }
+    if (fromWhere == "freeTrial") {
+      setShowPopup(false);
+      setShowCommentPopup(false);
+      setShowFollowUpPopup(false);
+      setShowFreeTrialPopup(true);
+    }
+    if (fromWhere == "followUp") {
+      setShowPopup(false);
+      setShowCommentPopup(false);
+      setShowFreeTrialPopup(false);
+      setShowFollowUpPopup(true);
+    }
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setShowCommentPopup(false);
+    setShowFreeTrialPopup(false);
+    setShowFollowUpPopup(false);
+  };
+
+  const handleChangedropdown = (event) => {
+    setaddSegment(event.target.value);
+  };
+
+  const handleChangeInput = (event) => {
+    setaddComment(event.target.value);
+  };
+
+  const handleChangeDate = (event, field) => {
+    const value = event.target.value;
+    if (field === "start") {
+      setAddFreeTrialStartDate(value);
+    } else if (field === "end") {
+      setAddFreeTrialEndDate(value);
+    } else if (field === "followUp") {
+      setAddFollowUpDate(value);
+    }
+  };
+
+  const handleSaveSegment = async () => {
+    if (!selectedLeadId) {
+      console.error("No lead selected");
+      return;
+    }
+
+    const lead = currentLeads.find(
+      (leadObj) => leadObj.lead.leadId === selectedLeadId
+    )?.lead;
+
+    if (!lead) {
+      console.error("Lead not found");
+      return;
+    }
+
+    if (
+      addSegment !== lead.followupDetail.segment ||
+      addComment !== lead.followupDetail.comment ||
+      addfreeTrialStartDate !== lead.followupDetail.freeTrialStartDate ||
+      addfreeTrialEndDate !== lead.followupDetail.freeTrialEndDate ||
+      addFollowUpDate !== lead.followupDetail.followUpDate    ) {
+      const addNewLead = {
+        leadId: lead.leadId,
+        campaignName: lead.campaignName,
+        clientName: lead.clientName,
+        assignedTo: lead.assignedTo,
+        employeeCode: lead.employeeCode,
+        leadSource: lead.leadSource,
+        mobile: lead.mobile,
+        alternateMobile: lead.alternateMobile,
+        otherMobile1: lead.otherMobile1,
+        otherMobile2: lead.otherMobile2,
+        email: lead.email,
+        city: lead.city,
+        state: lead.state,
+        dob: lead.dob,
+        investmentDetail: {
+          investment: lead.investmentDetail.investment,
+          profile: lead.investmentDetail.profile,
+          trading: lead.investmentDetail.trading,
+          lot: 0,
+          tradingExp: lead.investmentDetail.tradingExp,
+          annualIncome: lead.investmentDetail.annualIncome,
+          investmentGoal: lead.investmentDetail.investmentGoal,
+          marketValue: lead.investmentDetail.marketValue,
+          minInvestment: lead.investmentDetail.minInvestment,
+          sourceOfIncome: lead.investmentDetail.sourceOfIncome,
+          panNo: lead.investmentDetail.panNo,
+          uidAadhaar: lead.investmentDetail.uidAadhaar,
+          amountCapping: lead.investmentDetail.amountCapping,
+        },
+        language: lead.language,
+        followupDetail: {
+          leadStatus: lead.followupDetail.leadStatus,
+          segment: addSegment !== "" ? addSegment : lead.followupDetail.segment,
+          followUpDate:
+            addFollowUpDate !== ""
+              ? addFollowUpDate
+              : lead.followupDetail.followUpDate,
+          comment: addComment !== "" ? addComment : lead.followupDetail.comment,
+          freeTrialStartDate:
+            addfreeTrialStartDate !== ""
+              ? addfreeTrialStartDate
+              : lead.followupDetail.freeTrialStartDate,
+          freeTrialEndDate:
+            addfreeTrialEndDate !== ""
+              ? addfreeTrialEndDate
+              : lead.followupDetail.freeTrialStartDate,
+        },
+      };
+
+      // try {
+      //   const token = staticToken;
+      //   console.log("Payload being sent:", JSON.stringify(addNewLead));
+      //   const response = await fetch(/api/BulkLead/UpdateLeadById, {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //       Authorization: Bearer ${token},
+      //     },
+      //     body: JSON.stringify(addNewLead),
+      //   });
+
+      //   if(response.ok) {
+      //     const result = await response.json();
+      //     console.log("Updated successfully:", result);
+      //     setTimeout(() => {
+      //       window.location.reload();
+      //   }, 400);
+
+      //   } else{
+      //     throw new Error(Failed with status: ${response.status});
+      //   }
+      // } catch (error) {
+      //   console.error("Error updating:", error);
+      // }
+
+      dispatch(UpdateBulkLeadThunk(addNewLead))
+        .then((response) => {
+          if (response.payload === null) {
+            console.error("No data received from the server");
+          }
+          setTimeout(() => {
+            window.location.reload();
+          }, 400);
+        })
+        .catch((error) => {
+          console.error("Error adding:", error);
+        });
+    } else {
+      setSelectedLeadId("");
+      handleClosePopup();
+    }
+
+    setSelectedLeadId("");
+    handleClosePopup();
+  };
+
+  console.log("addSegment--------------", addSegment);
 
   const requestData = {
-    EmployeeCode: "INFHARSH21158",
-    CampaignName: "INF29DEC2024",
-  };   
+    EmployeeCode: emp,
+    CampaignName: "INF01JAN2025",
+  };
+
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.uploadbulklead);
 
+  //!<---------------------------------------------------------------------------------REACH EDIT PAGE BY NAVIGATION ---------------------------------------------------------------------->
+
+  const Navigate = useNavigate();
+  const handleNavigateToSo = (id, leadObj) => {
+    // console.log("handleNavigateToSo-----------" , leadObj);  
+
+    Navigate(`/addsalesorder/${id}`, { state: { leadObj } });
+  };
+  const handleNavigateToPR = (id, leadObj) => {
+    // console.log("leadObj.lead.leadId ----------", leadObj.lead.leadId);
+
+    Navigate(`/paymnetRaise/${id}`, { state: { leadObj } });
+  };
+
+  const handleNavigateToEditLead = (id, leadObj) => {
+    // console.log("handleNavigateToEditLead leadID ----------", leadObj.lead.leadId);
+
+    Navigate(`/editleads/${id}`, {
+      state: {
+        leadObj,
+        LeadId: leads.LeadId,
+      },
+    });
+  };
+  //!<---------------------------------------------------------------------------------SEND QUERY IN GET METHOD---------------------------------------------------------------------->
+
   const handleFetchLeadButton = () => {
     console.log("Fetching leads with requestData:", requestData);
-    dispatch(fetchAllUploadBulkLeadThunk(requestData));
-    // setIsLoading(true);
-    // setTimeout(() => {
-    //   window.location.reload();
-    // }, 2000);
+
+    dispatch(fetchAllUploadBulkLeadThunk(requestData))
+      .then(() => {
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      })
+      .catch((error) => {
+        console.error("Error fetching leads:", error);
+      });
   };
 
   useEffect(() => {
@@ -46,7 +267,6 @@ const ViewLeads = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    console.log("data--------------------------------"+data);
     if (data) {
       const timer = setTimeout(() => {
         setLeads(data);
@@ -54,6 +274,19 @@ const ViewLeads = () => {
       return () => clearTimeout(timer);
     }
   }, [data]);
+
+  //!<---------------------------------------------------------------------------------LOGIC FOR PAGINATION---------------------------------------------------------------------->
+
+  const totalPages = Math.ceil(leads.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentLeads = Array.isArray(leads)
+    ? leads.slice(indexOfFirstItem, indexOfLastItem)
+    : [];
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const nextPage = () =>
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
   return (
     <>
@@ -64,9 +297,9 @@ const ViewLeads = () => {
       <div className="container-fluid border border-2 border-gray mt-1  ">
         <div className="outerBgBox p-2  mb-2">
           <div className="container-fluid mt-3 ms-0 me-0">
-
             <div className="dropDownContainer p-3  mb-2">
-              {/* Filters */}
+              {/* //!<--------------------------------------------------------------------------------- FILTERS ----------------------------------------------------------------------> */}
+
               <div className="row d-flex gap-2 mb-0 justify-content-between">
                 {[
                   "Action",
@@ -95,19 +328,20 @@ const ViewLeads = () => {
                 ))}
               </div>
             </div>
-            
+
             <div className="d-flex align-items-center justify-content-between">
               <div>
-                <PrintButton tableId="leads-table" />
+                {/* <PrintButton tableId="leads-table" />
                 <PdfButton tableId="leads-table" />
                 <CsvButton tableId="leads-table" />
-                <CopyButton tableId="leads-table" />
+                <CopyButton tableId="leads-table" /> */}
+                <ExportData tableId = "leads-table"/>
               </div>
               <div>
                 <button
                   onClick={handleFetchLeadButton}
                   className="btn btn-secondary px-2 py-0 rounded-0 text-white "
-                  disabled={isLoading} // Disable button while loading
+                  disabled={isLoading}
                 >
                   Fetch Lead
                 </button>
@@ -136,25 +370,27 @@ const ViewLeads = () => {
               </thead>
 
               <tbody>
+                {/* //!<--------------------------------------------------------------------------------- LODER CODE ----------------------------------------------------------------------> */}
+
                 {loading ? (
                   <div
                     style={{
-                      position: "fixed", // Fixed to ensure it stays over everything
+                      position: "fixed",
                       top: 0,
                       left: 0,
-                      width: "100vw", // Full width
-                      height: "100vh", // Full height
-                      backgroundColor: "rgba(104, 102, 102, 0.5)", // Semi-transparent background
-                      zIndex: 9998, // Make sure it's above most elements
+                      width: "100vw",
+                      height: "100vh",
+                      backgroundColor: "rgba(104, 102, 102, 0.5)",
+                      zIndex: 9998,
                     }}
                   >
                     <div
                       style={{
                         position: "absolute",
-                        top: "50%", // Center vertically
-                        left: "50%", // Center horizontally
-                        transform: "translate(-50%, -50%)", // Correct alignment
-                        zIndex: 9999, // Ensure the loader is above the overlay
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        zIndex: 9999,
                         backgroundColor: "transparent",
                       }}
                     >
@@ -167,9 +403,9 @@ const ViewLeads = () => {
                       Error: {error}
                     </td>
                   </tr>
-                ) : leads.length > 0 ? (
-                  leads.map((leadObj) => (
-                    <tr key={leadObj}>
+                ) : currentLeads.length > 0 ? (
+                  currentLeads.map((leadObj) => (
+                    <tr key={leadObj.lead.leadId}>
                       <td>
                         <input type="checkbox" />
                       </td>
@@ -246,28 +482,150 @@ const ViewLeads = () => {
                             Save
                           </button>
                         ) : (
-                          <button
-                            className="viewLeadButton btn btn-sm px-2 py-0"
-                            onClick={() => alert("Add Segment Clicked")}
-                          >
-                            Add Segment
-                          </button>
+                          <>
+                            {/* //!------------------------------------------------------------------ADD SEGMENT POPUP & LOGIC---------------------------------------------------------------------------- */}
+                            <button
+                              className="viewLeadButton btn btn-sm px-2 py-0"
+                              onClick={() => {
+                                setSelectedLeadId(leadObj.lead.leadId);
+                                handleOpenPopup("segment");
+                              }}
+                            >
+                              Add Segment
+                            </button>
+                            {showPopup && (
+                              <div className="popup-overlay d-flex justify-content-center align-items-center">
+                                <div className="popup-content bg-light p-4 rounded">
+                                  <h3 className="text-center mb-4">
+                                    Add Segment
+                                  </h3>
+                                  <div className="form-group mb-3">
+                                    <label
+                                      htmlFor="segmentSelect"
+                                      className="form-label fw-bold"
+                                    >
+                                      Select Segment:
+                                    </label>
+                                    <select
+                                      className="form-select"
+                                      name="AddSegment"
+                                      value={addSegment}
+                                      onChange={handleChangedropdown}
+                                    >
+                                      <option value="" disabled>
+                                        -----Select An Option-----
+                                      </option>
+                                      <option value="Gold">Gold</option>
+                                      <option value="StockOption">
+                                        Stock Option
+                                      </option>
+                                    </select>
+                                  </div>
+                                  <div className="d-flex justify-content-between mt-4">
+                                    <button
+                                      className="btn btn-secondary me-2"
+                                      onClick={handleClosePopup}
+                                    >
+                                      Close
+                                    </button>
+                                    <button
+                                      className="btn btn-primary"
+                                      onClick={() => {
+                                        // Add Save logic here
+                                        handleSaveSegment(leadObj);
+                                      }}
+                                    >
+                                      Save
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </>
                         )}
                       </td>
                       <td>
-                        {editAddLead === leadObj.id ? (
-                          <button className="btn btn-success btn-sm">
-                            Save
-                          </button>
-                        ) : (
-                          <button
-                            className="viewLeadButton btn btn-sm px-2 py-0"
-                            onClick={() => alert("Add Free Trial Clicked")}
-                          >
-                            Add FT
-                          </button>
-                        )}
+                        <>
+                          {editAddLead === leadObj.id ? (
+                            <button className="btn btn-success btn-sm">
+                              Save
+                            </button>
+                          ) : (
+                            <>
+                              <button
+                                className="viewLeadButton btn btn-sm px-2 py-0"
+                                onClick={() => {
+                                  setSelectedLeadId(leadObj.lead.leadId);
+                                  handleOpenPopup("freeTrial");
+                                }}
+                              >
+                                Add FT
+                              </button>
+                              {showFreeTrialPopup && (
+                                <div className="popup-overlay d-flex justify-content-center align-items-center">
+                                  <div className="popup-content bg-light p-4 rounded shadow">
+                                    <h3 className="text-center mb-4">
+                                      Add Free Trial
+                                    </h3>
+                                    <div className="form-group mb-3">
+                                      <label
+                                        htmlFor="segmentInput"
+                                        className="form-label fw-bold"
+                                      >
+                                        Enter Start Date
+                                      </label>
+                                      <input
+                                        type="date"
+                                        className="form-control"
+                                        name="addfreeTrialStartDate"
+                                        value={addfreeTrialStartDate}
+                                        onChange={(event) =>
+                                          handleChangeDate(event, "start")
+                                        }
+                                      />
+                                    </div>
+
+                                    <div className="form-group mb-3">
+                                      <label
+                                        htmlFor="segmentInput"
+                                        className="form-label fw-bold"
+                                      >
+                                        Enter End Date
+                                      </label>
+                                      <input
+                                        type="date"
+                                        className="form-control"
+                                        name="addfreeTrialEndDate"
+                                        value={addfreeTrialEndDate}
+                                        onChange={(event) =>
+                                          handleChangeDate(event, "end")
+                                        }
+                                      />
+                                    </div>
+                                    <div className="d-flex justify-content-between mt-4">
+                                      <button
+                                        className="btn btn-secondary me-2"
+                                        onClick={handleClosePopup}
+                                      >
+                                        Close
+                                      </button>
+                                      <button
+                                        className="btn btn-primary"
+                                        onClick={() => {
+                                          handleSaveSegment(leadObj);
+                                        }}
+                                      >
+                                        Save
+                                      </button>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </>
+                          )}
+                        </>
                       </td>
+
                       <td>
                         {editAddLead === leadObj.id ? (
                           <button
@@ -277,29 +635,121 @@ const ViewLeads = () => {
                             Save
                           </button>
                         ) : (
-                          <button
-                            className="viewLeadButton btn btn-sm px-2 py-0"
-                            onClick={() => alert("Add Follow Up Clicked")}
-                          >
-                            Add New
-                          </button>
+                          <>
+                            <button
+                              className="viewLeadButton btn btn-sm px-2 py-0"
+                              onClick={() => {
+                                setSelectedLeadId(leadObj.lead.leadId);
+                                handleOpenPopup("followUp");
+                              }}                            >
+                              Add New
+                            </button>
+                            {showFollowUpPopup && (
+                              <div className="popup-overlay d-flex justify-content-center align-items-center">
+                                <div className="popup-content bg-light p-4 rounded shadow">
+                                  <h3 className="text-center mb-4">
+                                    Add Follow Up
+                                  </h3>
+                                  <div className="form-group mb-3">
+                                    <label
+                                      htmlFor="segmentInput"
+                                      className="form-label fw-bold"
+                                    >
+                                      Enter FollowUp Date
+                                    </label>
+                                    <input
+                                      type="date"
+                                      className="form-control"
+                                      name="addFollowUpDate"
+                                      value={addFollowUpDate}
+                                      onChange={(event) =>
+                                        handleChangeDate(event, "followUp")
+                                      }
+                                    />
+                                  </div>
+
+                                  <div className="d-flex justify-content-between mt-4">
+                                    <button
+                                      className="btn btn-secondary me-2"
+                                      onClick={handleClosePopup}
+                                    >
+                                      Close
+                                    </button>
+                                    <button
+                                      className="btn btn-primary"
+                                      onClick={() => {
+                                        handleSaveSegment(leadObj);
+                                      }}
+                                    >
+                                      Save
+                                    </button>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </>
                         )}
                       </td>
                       <td>
                         <button
                           className="btn btn-sm btn-link"
-                          onClick={() =>
-                            alert(`Description: ${leadObj.lead.mobile}`)
-                          }
+                          onClick={() => {
+                            setSelectedLeadId(leadObj.lead.leadId);
+                            handleOpenPopup("comment");
+                          }}
                         >
                           View
                         </button>
+                        {showCommentPopup && (
+                          <div className="popup-overlay d-flex justify-content-center align-items-center">
+                            <div className="popup-content bg-light p-4 rounded shadow">
+                              <h3 className="text-center mb-4">Add Comment</h3>
+                              <div className="form-group mb-3">
+                                <label
+                                  htmlFor="segmentInput"
+                                  className="form-label fw-bold"
+                                >
+                                  Enter Comment:
+                                </label>
+                                <input
+                                  type="text"
+                                  className="form-control"
+                                  name="AddComment"
+                                  value={addComment}
+                                  onChange={handleChangeInput}
+                                  placeholder="Enter Comment here"
+                                />
+                              </div>
+                              <div className="d-flex justify-content-between mt-4">
+                                <button
+                                  className="btn btn-secondary me-2"
+                                  onClick={handleClosePopup}
+                                >
+                                  Close
+                                </button>
+                                <button
+                                  className="btn btn-primary"
+                                  onClick={() => {
+                                    handleSaveSegment(leadObj);
+                                  }}
+                                >
+                                  Save
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        )}
                       </td>
                       <td>
                         <div className="btn-group d-grid gap-1 d-sm-flex">
                           <StatusButton />
                           <EditButton
-                          // onClick={() => fetchAddLeadById(leadObj.EmployeeCode , leadObj.CampaignName)}
+                            onClick={() => {
+                              handleNavigateToEditLead(
+                                leadObj.lead.id,
+                                leadObj
+                              );
+                            }}
                           />
                           <DeleteButton
                             onClick={() => handleDeleteAddLead(leadObj.id)}
@@ -307,7 +757,27 @@ const ViewLeads = () => {
                           <DisposeButton />
                           <ConditionalPrSoButton
                             isPrGenerated={isPrGenerated}
+                            onClick={() => {
+                              handleNavigateToPR(leadObj.lead.id, leadObj);
+                            }}
                           />
+                          <button
+                            onClick={() => {
+                              handleNavigateToSo(leadObj.id, leadObj);
+                            }}
+                            style={{
+                              padding: 2,
+                              margin: 0,
+                              fontSize: "12px",
+                              color: "white",
+                              border: "1px solid grey",
+                              fontWeight: "600",
+                              borderRadius: "0",
+                              backgroundColor: "#758694",
+                            }}
+                          >
+                            Add SO
+                          </button>
                           <SendButton />
                         </div>
                       </td>
@@ -321,28 +791,26 @@ const ViewLeads = () => {
               </tbody>
             </table>
 
-            {/* Pagination and Summary */}
-            <div className="d-flex justify-content-between align-items-center mt-4">
-              <div>
-                Showing <strong>1 </strong> to <strong>10 </strong> of{" "}
-                <strong>3,445</strong> entries
-              </div>
-              <nav>
-                <ul className="pagination pagination-sm mb-0">
-                  <li className="page-item">
-                    <button className="page-link">Previous</button>
-                  </li>
-                  <li className="page-item active">
-                    <button className="page-link">1</button>
-                  </li>
-                  <li className="page-item">
-                    <button className="page-link">2</button>
-                  </li>
-                  <li className="page-item">
-                    <button className="page-link">Next</button>
-                  </li>
-                </ul>
-              </nav>
+            {/* //!<--------------------------------------------------------------------------- PAGINATION LOGIC -------------------------------------------------------------------------- */}
+
+            <div className="pagination">
+              <button onClick={prevPage} disabled={currentPage === 1}>
+                <i className="bi bi-arrow-left-circle"></i>
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
+                (number) => (
+                  <button
+                    key={number}
+                    onClick={() => paginate(number)}
+                    className={currentPage === number ? "active" : ""}
+                  >
+                    {number}
+                  </button>
+                )
+              )}
+              <button onClick={nextPage} disabled={currentPage === totalPages}>
+                <i className="bi bi-arrow-right-circle"></i>
+              </button>
             </div>
           </div>
         </div>

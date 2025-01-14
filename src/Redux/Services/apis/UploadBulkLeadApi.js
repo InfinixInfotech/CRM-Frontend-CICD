@@ -1,7 +1,5 @@
 import { apiDeleteCallWithAuth, apiGetCallWithRersponseAuth, apiPostCallWithAuth, apiPostCallWithAuthFormData, apiPutCallWithAuth } from "../../../Utils/apiUtils";
-import { fetchAllUploadBulkLeadUrl, GetByIdUploadBulkLeadUrl, postUploadBulkLeadUrl, staticToken } from "../apiServer/ApiServer";
-
-
+import { fetchAllUploadBulkLeadUrl, GetByIdUploadBulkLeadUrl, postUploadBulkLeadUrl, staticToken, UpdateByIdBulkLeadUrl } from "../apiServer/ApiServer";
 export const postUploadBulkLead = async (params) => {  
   try {
     const response = await apiPostCallWithAuthFormData(
@@ -9,7 +7,6 @@ export const postUploadBulkLead = async (params) => {
       params,
       staticToken
     );
-
     return response;
   } catch (error) {
     console.error(error);
@@ -18,11 +15,10 @@ export const postUploadBulkLead = async (params) => {
 };
      
 export const getByIdUploadBulkLead = async (params) => {
-  console.log(params);
+  console.log("params-------------------",params);
   try {
-    const urlWithId = `${GetByIdUploadBulkLeadUrl}?EmployeeCode=INFHARSH21158&CampaignName=INF29DEC2024`;
-    console.log(urlWithId);
-    
+    const { EmployeeCode, CampaignName } = params;
+    const urlWithId = `${GetByIdUploadBulkLeadUrl}?EmployeeCode=${EmployeeCode}&CampaignName=${CampaignName}`;
     const response = await apiGetCallWithRersponseAuth(urlWithId, params, staticToken);
     return response; 
   } catch (error) {
@@ -30,37 +26,26 @@ export const getByIdUploadBulkLead = async (params) => {
     return null;
   }
 };
-
 export const fetchAllUploadBulkLead = async (params) => {
   try {
-    const urlWithId = `${fetchAllUploadBulkLeadUrl}?EmployeeCode=INFHARSH21158&CampaignName=INF29DEC2024`;
+    const { EmployeeCode, CampaignName } = params;
+    const urlWithId = `${fetchAllUploadBulkLeadUrl}?EmployeeCode=${EmployeeCode}&CampaignName=${CampaignName}`;
     const response = await apiGetCallWithRersponseAuth(urlWithId, params, staticToken);
     return response;
   } catch (error) {
     return null;
   }
 };
-
-
-// export const deleteSalesOrder = async (id) => {
-//   try {
-//     const urlWithId = `${deleteSalesOrderUrl}?id=${id}`;
-//     const response = await apiDeleteCallWithAuth(urlWithId, staticToken);
-//     return response; 
-//   } catch (error) {
-//     console.error("Error deleting lead status:", error);
-//     return { success: false, message: error.message || 'An error occurred' };
-//   }
-// };
-
-// export const putSalesOrder = async (params) => {
-//   try {
-//     const urlWithId = `${putSalesOrderUrl}?id=${id}`;
-//     const response = await apiPutCallWithAuth(urlWithId, params, staticToken);
-//     return response; 
-//   } catch (error) {
-//     console.error("Error updating lead status:", error);
-//     return null;
-//   }
-// };
-
+export const UpdateBulkLead = async (params) => {
+  try {
+    // const { leadId } = params; 
+    // const { prId } = params;  
+    // const urlWithId = `${UpdateByIdBulkLeadUrl}?id=${id}&prId=${prId}`;  
+    const urlWithId = `${UpdateByIdBulkLeadUrl}`;  // 
+    const response = await apiPostCallWithAuth(urlWithId, params, staticToken);
+    return response;
+  } catch (error) {
+    console.error("Error updating lead status:", error);
+    return null;
+  }
+};

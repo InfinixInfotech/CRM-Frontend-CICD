@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-// import { deleteSegmentPlanThunk, getAllSegmentPlanThunk, getByIdSegmentPlanThunk, postSegmentPlanThunk, putSegmentPlanThunk } from "../Services/thunks/SegmentPlanThunk";
 import { postUploadBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThunk";
 import { getByIdUploadBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThunk";
 import { fetchAllUploadBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThunk";
+import { UpdateBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThunk";
 
 const uploadBulkLeadReducer = createSlice({
   name: "uploadbulklead",
@@ -53,19 +53,19 @@ const uploadBulkLeadReducer = createSlice({
         state.error = action.payload;
       })
         
-    //   .addCase(putSegmentPlanThunk.pending, (state) => {
-    //     state.loading = true;
-    //     state.putError = null;
-    //   })
-    //   .addCase(putSegmentPlanThunk.fulfilled, (state, action) => {
-    //     state.loading = false;
-    //     state.putSuccess = true;        
-    //     state.data = action.payload;
-    //   })
-    //   .addCase(putSegmentPlanThunk.rejected, (state, action) => {
-    //     state.loading = false;
-    //     state.putError = action.payload;
-    //   })
+      .addCase(UpdateBulkLeadThunk.pending, (state) => {
+        state.loading = true;
+        state.putError = null;
+      })
+      .addCase(UpdateBulkLeadThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.putSuccess = true;        
+        state.data = action.payload;
+      })
+      .addCase(UpdateBulkLeadThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.putError = action.payload;
+      })
 
     //   .addCase(deleteSegmentPlanThunk.pending, (state) => {
     //     state.loading = true;
