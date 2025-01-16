@@ -5,8 +5,10 @@ import { CopyButton } from "../../Components/Button/DataButton/DataCopyButton/Da
 import { CsvButton } from "../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { PrintButton } from "../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
-import  DeleteButton  from "../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../Components/Button/DeleteButton/DeleteButton";
 import BackButton from "../../Components/Button/BackButton/BackButton";
+import { FiMail } from "react-icons/fi";
+import { FaInbox } from "react-icons/fa";
 
 const MailBox = () => {
   const emails = [
@@ -29,41 +31,41 @@ const MailBox = () => {
       date: "09 Dec 2024 03:22 pm",
     },
     {
-        from: "Vikash Kumar",
-        to: "admin",
-        subject: "early going",
-        date: "09 Dec 2024 05:17 pm",
-      },
-      {
-        from: "Hirdesh Singh Rana",
-        to: "admin",
-        subject: "Lead Change",
-        date: "09 Dec 2024 04:44 pm",
-      },
-      {
-        from: "Laxmi Gupta",
-        to: "admin",
-        subject: "split amount",
-        date: "09 Dec 2024 03:22 pm",
-      },
-      {
-        from: "Vikash Kumar",
-        to: "admin",
-        subject: "early going",
-        date: "09 Dec 2024 05:17 pm",
-      },
-      {
-        from: "Hirdesh Singh Rana",
-        to: "admin",
-        subject: "Lead Change",
-        date: "09 Dec 2024 04:44 pm",
-      },
-      {
-        from: "Laxmi Gupta",
-        to: "admin",
-        subject: "split amount",
-        date: "09 Dec 2024 03:22 pm",
-      },
+      from: "Vikash Kumar",
+      to: "admin",
+      subject: "early going",
+      date: "09 Dec 2024 05:17 pm",
+    },
+    {
+      from: "Hirdesh Singh Rana",
+      to: "admin",
+      subject: "Lead Change",
+      date: "09 Dec 2024 04:44 pm",
+    },
+    {
+      from: "Laxmi Gupta",
+      to: "admin",
+      subject: "split amount",
+      date: "09 Dec 2024 03:22 pm",
+    },
+    {
+      from: "Vikash Kumar",
+      to: "admin",
+      subject: "early going",
+      date: "09 Dec 2024 05:17 pm",
+    },
+    {
+      from: "Hirdesh Singh Rana",
+      to: "admin",
+      subject: "Lead Change",
+      date: "09 Dec 2024 04:44 pm",
+    },
+    {
+      from: "Laxmi Gupta",
+      to: "admin",
+      subject: "split amount",
+      date: "09 Dec 2024 03:22 pm",
+    },
   ];
 
   const handleDelete = (index) => {
@@ -72,12 +74,38 @@ const MailBox = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
-        Inbox
-      </h2>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaInbox
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          Inbox
+        </h2>
+      </section>
       <div className="d-flex gap-2 mt-3">
         <Link to="/compose" className="btn btn-secondary mb-2 px-2 py-0 ">
-          Compose 
+          Compose
         </Link>
         <Link to="/drafts" className="btn btn-secondary mb-2 px-2 py-0">
           Drafts

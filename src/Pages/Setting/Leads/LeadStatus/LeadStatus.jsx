@@ -3,25 +3,24 @@ import { EditButton } from "../../../../Components/Button/EditButton/EditButton"
 import DeleteButton from "../../../../Components/Button/DeleteButton/DeleteButton";
 import "./LeadStatus.css";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
-import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
-import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
-import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
-import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getAllLeadStatusThunk,
   postLeadStatusThunk,
   deleteLeadStatusThunk,
-  putLeadStatusThunk,
 } from "../../../../Redux/Services/thunks/LeadStatusThunk";
 import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
 import { staticToken } from "../../../../Redux/Services/apiServer/ApiServer";
 import ExportData from "../../../../Components/Button/DataButton/ExportButton";
+import { FaChartLine, FaEye, FaGraduationCap } from "react-icons/fa";
+import { GrAdd, GrMenu } from "react-icons/gr";
+import CommonPopup from "../../../../Components/Button/PopUpButton/PopupButton";
 
 const LeadStatus = () => {
   const [statuses, setStatuses] = useState([]);
   const [newStatus, setNewStatus] = useState("");
+  const [showPopup, setShowPopup] = useState(false);
   const [editStatus, setEditStatus] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [msg, setMsg] = useState("");
@@ -48,8 +47,9 @@ const LeadStatus = () => {
 
   useEffect(() => {
     if (data?.data) {
+      const sortedData = [...data.data].sort((a, b) => b.id - a.id); // Sort data in descending order of id
       const timer = setTimeout(() => {
-        setStatuses(data.data);
+        setStatuses(sortedData);
       }, 500);
       return () => clearTimeout(timer);
     }
@@ -77,9 +77,24 @@ const LeadStatus = () => {
       dispatch(postLeadStatusThunk(newLeadStatus)).then((response) => {
         setMsg(response?.payload?.message);
         setNewStatus("");
+
         dispatch(getAllLeadStatusThunk());
+        handleClosePopup();
       });
     }
+  };
+
+  // !<--------------------------------------------------------------------------- EMAIL POPUP FUNCTIONALITY--------------------------------------------------------------------------
+
+  const handleOpenPopup = () => {
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+    setEditStatus(null);
+    setNewStatus("");
+    setEditValue("");
   };
 
   //!<---------------------------------------------------------------------------------EDIT Functionality---------------------------------------------------------------------->
@@ -111,6 +126,7 @@ const LeadStatus = () => {
         );
         setEditStatus(null);
         setEditValue("");
+        handleClosePopup();
       } catch (error) {
         setMsg(error.message || "Failed to update status");
       }
@@ -135,24 +151,65 @@ const LeadStatus = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
-        Leads Status
-      </h2>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaChartLine
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          Lead Status
+        </h2>
+      </section>
+
       <BackButton />
       <div
-        className="container-fluid border border-2 border-gray mt-2 py-3"
-        style={{ padding: "18px 16px" }}
+        className="mt-2 py-3"
+        // style={{ padding: "18px 16px" }}
       >
         <div
-          className="lead-status-container mt-0 p-4"
+          className="lead-status-container border border-2 border-gray mt-0 "
           style={{
-            background: "rgb(227,227,227)",
-            border: "2px solid grey",
+            // background: "rgb(227,227,227)",
+            // border: "2px solid grey",
             height: "100%",
           }}
         >
+          <h5
+            className="  text-dark   border border-1"
+            style={{
+              padding: "18px 16px",
+              fontSize: "1.7 rem",
+              backgroundColor: "#E8F1F3",
+            }}
+          >
+            <FaEye
+              className="fs-1"
+              style={{ marginRight: "8px", color: "#009688" }}
+            />
+            View Lead Status
+          </h5>
           <div className="addLeadscontainer add-status p-2 ">
-            <h4 className="p-0 text-dark">Add New Lead Status</h4>
+            {/* <h4 className="p-0 text-dark">Add New Lead Status</h4> */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -164,37 +221,25 @@ const LeadStatus = () => {
                   handleAddStatus(e);
                 }
               }}
-            >
-              <input
-                type="text"
-                value={editStatus !== null ? editValue : newStatus}
-                onChange={(e) =>
-                  editStatus !== null
-                    ? setEditValue(e.target.value)
-                    : setNewStatus(e.target.value)
-                }
-                placeholder="Enter Lead Status"
-              />
-              <button
-                type="submit"
-                className={`btn px-3 py-1 ${
-                  editStatus !== null ? "btn-warning" : "btn-primary"
-                }`}
-              >
-                {editStatus !== null ? "Update" : "Create"}
-              </button>
-            </form>
-            {msg && <p className="mt-3 text-success">{msg}</p>}
-          </div>
-          <div className="bg-white p-4 rounded border border-4 border-gray">
-            <h5>View Lead Status</h5>
-            <div className="mb-4">
-              {/* <PrintButton />
-              <PdfButton />
-              <CsvButton />
-              <CopyButton /> */}
-              <ExportData tableId="table-data" />
+            ></form>
 
+            <div className="mb-4 mt-1">
+              <div className="mt-1">
+                <CommonPopup
+                  title="Lead Status"
+                  showPopup={showPopup}
+                  setShowPopup={setShowPopup}
+                  handleAddStatus={handleAddStatus}
+                  handleEditStatus={handleEditStatus}
+                  editStatus={editStatus}
+                  setEditValue={setEditValue}
+                  newStatus={newStatus}
+                  setNewStatus={setNewStatus}
+                  editValue={editValue}
+                />
+              </div>
+              
+              <ExportData tableId="table-data" />
               {msg && (
                 <Alert variant="info" className="mt-2 text-center">
                   {msg}
@@ -207,8 +252,8 @@ const LeadStatus = () => {
             >
               <thead>
                 <tr>
-                  <th className="text-center">S.NO</th>
-                  <th className="text-center">Lead Status</th>
+                  <th>S.NO</th>
+                  <th>Lead Status</th>
                   <th className="text-center">Action</th>
                 </tr>
               </thead>
@@ -245,6 +290,7 @@ const LeadStatus = () => {
                           <EditButton
                             className="btn btn-primary btn-sm mr-1 py-0 px-2"
                             onClick={() => {
+                              handleOpenPopup();
                               setEditStatus(statusObj.id);
                               setEditValue(statusObj.status);
                             }}

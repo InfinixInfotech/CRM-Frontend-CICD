@@ -5,6 +5,7 @@ import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintB
 import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
+import { FaTools } from "react-icons/fa";
 
 const UserOperation = () => {
   const [users, setUsers] = useState([
@@ -45,15 +46,45 @@ const UserOperation = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5">
-        User Operation
-      </h2>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", 
+          marginBottom: "5px", 
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaTools
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          User Operation
+        </h2>
+      </section>
+
       <BackButton />
       <div
-        className="container-fluid border border-2 border-gray mt-2 py-3"
-        style={{ padding: "18px 16px" }}
+        className="mt-2 "
+        // style={{ padding: "18px 16px" }}
       >
-        <div className="user-operation-container mt-0 "  style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}>
+        <div
+          className="user-operation-container mt-0 border border-2 border-grey"
+          // style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
+        >
           <div className="filters mt-1">
             <label>Status:</label>
             <select>
@@ -77,10 +108,7 @@ const UserOperation = () => {
           </div>
 
           <div className="action-buttons">
-            <CopyButton />
-            <CsvButton />
-            <PdfButton />
-            <PrintButton />
+
             <select>
               <option value="10">10 records per page</option>
               <option value="20">20 records per page</option>

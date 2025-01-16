@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import  DeleteButton  from "../../../Components/Button/DeleteButton/DeleteButton";
+import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";
 import { StatusButton } from "../../../Components/Button/StatusButton/StatusButton";
 import { SendButton } from "../../../Components/Button/SendButton/SendButton";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
@@ -10,6 +10,7 @@ import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButt
 import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
+import { FaEye, FaUserTie } from "react-icons/fa";
 
 const ViewLeads = () => {
   const [leads, setLeads] = useState([
@@ -133,7 +134,6 @@ const ViewLeads = () => {
       description: "Sample description",
       status: "Unread",
     },
-
   ]);
 
   const handleAction = (actionType, index) => {
@@ -147,9 +147,35 @@ const ViewLeads = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
-      View Marketing Lead
-      </h2>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaEye
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          View Marketing Leads
+        </h2>
+      </section>
       <div className="container-fluid mt-3">
         {/* Filters */}
         <div className="row d-flex gap-2 mb-4">
@@ -175,12 +201,15 @@ const ViewLeads = () => {
           ))}
         </div>
 
-          <PrintButton tableId="leads-table" />
-          <PdfButton tableId="leads-table" />
-          <CsvButton tableId="leads-table" />
-          <CopyButton tableId="leads-table" />
-      
-        <table className="table table-bordered table-hover mt-2" id="leads-table">
+        <PrintButton tableId="leads-table" />
+        <PdfButton tableId="leads-table" />
+        <CsvButton tableId="leads-table" />
+        <CopyButton tableId="leads-table" />
+
+        <table
+          className="table table-bordered table-hover mt-2"
+          id="leads-table"
+        >
           <thead className="thead-dark">
             <tr>
               <th>#</th>

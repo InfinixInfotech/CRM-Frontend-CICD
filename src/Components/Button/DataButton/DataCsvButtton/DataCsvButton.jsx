@@ -45,7 +45,7 @@ export const CsvButton = ({
       className={className}
       style={{fontWeight:"600" ,borderRadius: "0" , backgroundColor: "none", fontSize:"18px"}}
     >
-      <FaFileCsv className="me-1 fs-5 colorful-icon text-secondary" />
+      <FaFileCsv className="me-3 fs-5 colorful-icon text-secondary" />
       Csv
     </button>
   );

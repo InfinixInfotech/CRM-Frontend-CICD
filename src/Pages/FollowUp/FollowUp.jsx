@@ -17,6 +17,8 @@ import { fetchAllUploadBulkLeadThunk } from "../../Redux/Services/thunks/UploadB
 import { getByIdUploadBulkLeadThunk } from "../../Redux/Services/thunks/UploadBulkLeadThunk";
 import { useNavigate } from "react-router-dom";
 import { emp } from "../../Redux/Services/apiServer/ApiServer";
+import { FaClipboardList } from "react-icons/fa";
+import ExportData from "../../Components/Button/DataButton/ExportButton";
 const ViewLeads = () => {
   const isPrGenerated = 0;
   const [editAddLead, setEditAddLead] = useState(null);
@@ -38,15 +40,14 @@ const ViewLeads = () => {
   const handleNavigateToSo = (id, leadObj) => {
     console.log("Navigating to /insertso with id:", id);
     console.log("Navigating to /insertso with leadObj:", leadObj);
-  
+
     Navigate(`/addsalesorder/${id}`, { state: { leadObj } });
   };
-  
 
   const handleNavigateToPR = (id, leadObj) => {
     // console.log("Navigating with leadObj:", leadObj);
     Navigate(`/paymnetRaise/${id}`, { state: { leadObj } });
-};
+  };
 
   //!<---------------------------------------------------------------------------------SEND QUERY IN GET METHOD---------------------------------------------------------------------->
   const handleFetchLeadButton = () => {
@@ -84,15 +85,42 @@ const ViewLeads = () => {
   const nextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
-
-
-  console.log("currentLeads.lead.followupDetail.segment--------------------", currentLeads);
+  console.log(
+    "currentLeads.lead.followupDetail.segment--------------------",
+    currentLeads
+  );
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
-       FollowUp Details
-      </h2>
-      
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaClipboardList
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          Follow Up Details
+        </h2>
+      </section>
+
       <div className="container-fluid border border-2 border-gray mt-1  ">
         <div className="outerBgBox p-2  mb-2">
           <div className="container-fluid mt-3 ms-0 me-0">
@@ -128,10 +156,12 @@ const ViewLeads = () => {
             </div>
             <div className="d-flex align-items-center justify-content-between">
               <div>
-                <PrintButton tableId="leads-table" />
+                {/* <PrintButton tableId="leads-table" />
                 <PdfButton tableId="leads-table" />
                 <CsvButton tableId="leads-table" />
-                <CopyButton tableId="leads-table" />
+                <CopyButton tableId="leads-table" /> */}
+
+                <ExportData tableId="leads-table" />
               </div>
               <div>
                 {/* <button
@@ -268,9 +298,8 @@ const ViewLeads = () => {
                       </td>
                       <td>
                         {/* //!--------------------------------------------------------- */}
-                       {/* {leadObj.lead.followupDetail.segment}  */}
-                       {leadObj.followupDetail?.segment || "N/A"}
-                       
+                        {/* {leadObj.lead.followupDetail.segment}  */}
+                        {leadObj.followupDetail?.segment || "N/A"}
                       </td>
                       <td>
                         {editAddLead === leadObj.id ? (
@@ -330,7 +359,9 @@ const ViewLeads = () => {
                             }}
                           />
                           <button
-                            onClick={()=>{handleNavigateToSo(leadObj.lead.id, leadObj)}}
+                            onClick={() => {
+                              handleNavigateToSo(leadObj.lead.id, leadObj);
+                            }}
                             style={{
                               padding: 2,
                               margin: 0,

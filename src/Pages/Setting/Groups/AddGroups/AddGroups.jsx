@@ -3,6 +3,7 @@ import BackButton from "../../../../Components/Button/BackButton/BackButton";
 import { useDispatch } from "react-redux";
 import { postGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
 import { Alert } from "react-bootstrap";
+import { FaUsers } from "react-icons/fa";
 
 export default function AddGroups() {
   const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export default function AddGroups() {
         setShowAlert(false);
       }, 3000);
 
-      return () => clearTimeout(timer); 
+      return () => clearTimeout(timer);
     }
   }, [showAlert]);
 
@@ -243,28 +244,26 @@ export default function AddGroups() {
     setGroupData((prevData) => {
       const newData = { ...prevData };
       const pathArray = path.split(".");
-  
 
       let current = newData;
       for (let i = 0; i < pathArray.length - 1; i++) {
         const key = pathArray[i];
         if (!current[key]) {
-          current[key] = {};  
+          current[key] = {};
         }
         current = current[key];
       }
-  
+
       // Ensure that 'From' is an array of strings
       if (pathArray[pathArray.length - 1] === "From") {
-        current[pathArray[pathArray.length - 1]] = [value];  // Make sure the value is an array
+        current[pathArray[pathArray.length - 1]] = [value]; // Make sure the value is an array
       } else {
         current[pathArray[pathArray.length - 1]] = value;
       }
-  
+
       return newData;
     });
   };
-  
 
   const renderCheckbox = (label, path, checked) => (
     <div className="form-check form-check-inline mb-2" key={path}>
@@ -548,9 +547,35 @@ export default function AddGroups() {
 
   return (
     <>
-      <h2 className="mb-1 text-center bg-dark text-white py-2 mt-5">
-        Add Groups
-      </h2>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaUsers
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          Add Groups
+        </h2>
+      </section>
       <BackButton />
       <div
         className="container-fluid border border-2 border-gray mt-2 py-3"
@@ -587,7 +612,11 @@ export default function AddGroups() {
               {renderSection("Mutual Fund", groupData.MutualFund, "MutualFund")}
               {renderSection("Leads", groupData.Leads, "Leads")}
               {renderSection("SO", groupData.SO, "SO")}
-              {renderSection("Client Fetch", groupData.ClientFetch, "ClientFetch")}
+              {renderSection(
+                "Client Fetch",
+                groupData.ClientFetch,
+                "ClientFetch"
+              )}
               {renderSection("Lead Fetch", groupData.LeadFetch, "LeadFetch")}
               {renderSection(
                 "Lead Template",
@@ -623,7 +652,6 @@ export default function AddGroups() {
               {renderSection("WhatsApp Module", groupData.Whatsapp, "Whatsapp")}
               {renderSection("Reports", groupData.Reports, "Reports")}
               {renderSection("Extra", groupData.Extra, "Extra")}
-              
 
               <div className="col-md-6">
                 <h5 className="fw-semibold">Other Settings</h5>
@@ -741,7 +769,7 @@ export default function AddGroups() {
                       value={groupData.LeadFetch.From} // Make sure groupData.LeadFetch.From is a valid value
                       onChange={(e) =>
                         handleChange("LeadFetch.From", e.target.value)
-                      } 
+                      }
                     >
                       <option value="" disabled>
                         Select Some Option
@@ -758,7 +786,7 @@ export default function AddGroups() {
                     <label className="form-label">Client Fetch From</label>
                     <select
                       className="form-select"
-                      value={groupData.ClientFetch.From} 
+                      value={groupData.ClientFetch.From}
                       onChange={(e) =>
                         handleChange("ClientFetch.From", e.target.value)
                       }

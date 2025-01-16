@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { Modal, Button } from 'react-bootstrap';
+import { BsFillTrashFill } from "react-icons/bs";
+
 const Delete = ({ id, onDelete }) => {
     const [showModal, setShowModal] = useState(false);
     const handleDeleteClick = () => {
@@ -11,7 +13,9 @@ const Delete = ({ id, onDelete }) => {
     };
     return (
         <>
-            <button onClick={handleDeleteClick}    className="btn btn-danger btn-sm mr-1 py-0 px-2"
+            {/* <button onClick={handleDeleteClick}    className="btn btn-danger   py-1 rounded-0 px-1"
+
+            
          style={{
             fontWeight: "600",
             // borderRadius: "0",
@@ -20,8 +24,15 @@ const Delete = ({ id, onDelete }) => {
             // border: "1px solid grey",
             // color : "white"
           }}>
-               Delete
+              <BsFillTrashFill className="fs-6" />
+            </button> */}
+
+            <button  onClick={handleDeleteClick} className="btn btn-danger d-flex align-items-center justify-content-center rounded-1" 
+            style={{ width: "25px", height: "25px" , fontSize:"12px" }}>
+                <i className="fas fa-trash"></i>
             </button>
+
+
             {/* Bootstrap Modal for confirmation */}
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>

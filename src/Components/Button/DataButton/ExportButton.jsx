@@ -4,42 +4,41 @@ import { CsvButton } from '../DataButton/DataCsvButtton/DataCsvButton';
 import { PdfButton } from '../DataButton/DataPdfButton/DataPdfButton';
 import { PrintButton } from '../DataButton/DataPrintButton/DataPrintButton';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { GrMenu } from "react-icons/gr";
 
-const ExportData = ({ tableId }) => { // Accept tableId as a prop
+const ExportData = ({ tableId }) => { 
   const [showDropdown, setShowDropdown] = useState(false);
 
-  // Toggle dropdown visibility
   const handleDropdownToggle = () => {
     setShowDropdown((prev) => !prev);
   };
 
   return (
-    <div className="dropdown">
-      {/* Main button to open dropdown */}
+    <div className="dropdown ">
       <button
-        className="btn btn-primary dropdown-toggle"
+        className="btn text-white mt-1 "
+        style={{backgroundColor:"#009688"}}
         type="button"
         onClick={handleDropdownToggle}
         aria-expanded={showDropdown}
       >
-        Export Data
+        <GrMenu className='me-1'/>Export Data
       </button>
 
-      {/* Dropdown Menu */}
       <div
         className={`dropdown-menu ${showDropdown ? 'show' : ''}`}
-        style={{ minWidth: '200px' }}
+        style={{ minWidth: '150px', marginTop:"4px" }}
       >
-        <div className="dropdown-item">
+        <div className="item text-center">
           <CopyButton tableId={tableId} /> {/* Pass tableId */}
         </div>
-        <div className="dropdown-item">
+        <div className="dropdown text-center">
           <CsvButton tableId={tableId} /> {/* Pass tableId */}
         </div>
-        <div className="dropdown-item">
+        <div className="dropdown text-center">
           <PdfButton tableId={tableId} /> {/* Pass tableId */}
         </div>
-        <div className="dropdown-item">
+        <div className="dropdown text-center">
           <PrintButton tableId={tableId} /> {/* Pass tableId */}
         </div>
       </div>

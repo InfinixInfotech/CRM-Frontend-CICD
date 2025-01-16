@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 import { postAddLeadThunk } from "../../../Redux/Services/thunks/AddLeadThunk";
 import { Alert } from "react-bootstrap";
 import { emp } from "../../../Redux/Services/apiServer/ApiServer";
-
+import { AiOutlineUserAdd } from 'react-icons/ai';
 const AddLeads = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [leads, setLeads] = useState({
@@ -68,7 +68,7 @@ const AddLeads = () => {
 
     const addNewLead = {
       campaignName: leads.CampaignName,
-      leadId: "string",
+      leadId: "",
       clientName: leads.ClientName,
       assignedTo: leads.AssignedTo,
       employeeCode: emp,
@@ -87,15 +87,15 @@ const AddLeads = () => {
         trading: leads.Trading,
 
         lot: leads.Lot,
-        tradingExp: "string",
-        annualIncome: "string",
+        tradingExp: "",
+        annualIncome: "",
         investmentGoal: leads.InvestmentGoal,
         marketValue: leads.MarketValue,
         minInvestment: leads.MinInvestment,
         sourceOfIncome: leads.SourceOfIncome,
         panNo: leads.PanNo,
         uidAadhaar: leads.UidAadhaar,
-        amountCapping: "string",
+        amountCapping: "",
       },
       language: leads.Language,
       followupDetail: {
@@ -125,9 +125,35 @@ const AddLeads = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-0">
-        Add Leads
-      </h2>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <AiOutlineUserAdd
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          Add Leads
+        </h2>
+      </section>
       <div>
         {showAlert && (
           <Alert variant="info" className="mt-2 text-center">

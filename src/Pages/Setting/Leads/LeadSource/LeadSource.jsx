@@ -18,6 +18,7 @@ import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
 import { staticToken } from "../../../../Redux/Services/apiServer/ApiServer";
 import ExportData from "../../../../Components/Button/DataButton/ExportButton";
+import CommonPopup from "../../../../Components/Button/PopUpButton/PopupButton";
 
 const LeadSource = () => {
   const [leadSource, setLeadSource] = useState([]);
@@ -30,7 +31,7 @@ const LeadSource = () => {
   const dispatch = useDispatch();
 
   const { data, loading, error } = useSelector((state) => state.leadsource);
-
+  const [showPopup, setShowPopup] = useState(false);
   //!----------------------------------------------------------------------------------------------<---Pagination Logic------------->------------------------------------------------------
   const totalPages = Math.ceil(leadSource.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -47,7 +48,8 @@ const LeadSource = () => {
 
   useEffect(() => {
     if (data?.data) {
-      setLeadSource(data.data);
+      const sortedData = [...data.data].sort((a, b) => b.id - a.id);
+      setLeadSource(sortedData);
     }
   }, [data]);
 
@@ -55,7 +57,7 @@ const LeadSource = () => {
     if (msg) {
       const alertTimer = setTimeout(() => {
         setMsg("");
-      }, 3000); // Alert will disappear after 3 seconds
+      }, 3000);
       return () => clearTimeout(alertTimer);
     }
   }, [msg]);
@@ -78,7 +80,9 @@ const LeadSource = () => {
         ]);
         setNewLeadSource("");
         setMsg(response.message || "Status added successfully");
+        dispatch(getAllLeadSourceThunk());
       });
+      setShowPopup(false);
     }
   };
 
@@ -112,6 +116,7 @@ const LeadSource = () => {
         );
         setEditLeadSource(null);
         setEditValue("");
+        setShowPopup(false);
       } catch (err) {
         setMsg(err.message);
       }
@@ -134,20 +139,34 @@ const LeadSource = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
-        Lead Source
-      </h2>
-      <BackButton />
-      <div
-        className="container-fluid border border-2 border-gray mt-2 py-3"
-        style={{ padding: "18px 16px" }}
+      <section
+        style={{
+          position: "relative",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px",
+          marginBottom: "5px",
+        }}
+        className="mt-2"
       >
-        <div
-          className="lead-status-container mt-0 p-3"
-          style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+          }}
         >
-          <div className="addLeadscontainer add-status p-2 mb-2">
-            <h4 className="p-0 mb-3 text-dark">Add New Lead Source</h4>
+          Lead Source
+        </h2>
+      </section>
+
+      <BackButton />
+      <div className="mb-0">
+        <div className="lead-status-container mt-0 ">
+          <div className="addLeadscontainer add-status mt-4">
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -159,107 +178,111 @@ const LeadSource = () => {
                   handleAddLeadSource(e);
                 }
               }}
-            >
-              <input
-                type="text"
-                value={editLeadSource ? editValue : newLeadSource}
-                onChange={(e) =>
-                  editLeadSource
-                    ? setEditValue(e.target.value)
-                    : setNewLeadSource(e.target.value)
-                }
-                placeholder="Lead Source Name"
-              />
-              <button
-                className={`btn px-3 py-1 ${
-                  editLeadSource !== null ? "btn-warning" : "btn-primary"
-                }`}
-              >
-                {editLeadSource ? "Update" : "Create"}
-              </button>
-            </form>
+            ></form>
           </div>
 
-          <div className="bg-white p-4 rounded border border-4 border-gray">
-            <h5>View Lead Sources</h5>
-            <div className="mb-4">
-              {/* <PrintButton />
-              <PdfButton />
-              <CsvButton />
-              <CopyButton /> */}
-              <ExportData tableId="table-data" />
-
-              {msg && (
-                <Alert variant="info" className="mt-2 text-center">
-                  {msg}
-                </Alert>
-              )}
-            </div>
-            <table
-              id="table-data"
-              className="table table-bordered table-striped"
+          <div className="bg-white  border border-2 border-gray">
+            <h5
+              className="  text-dark   border border-1"
+              style={{
+                padding: "18px 16px",
+                fontSize: "1.7 rem",
+                backgroundColor: "#E8F1F3",
+              }}
             >
-              <thead>
-                <tr>
-                  <th>S.No</th>
-                  <th>Lead Source Name</th>
-                  <th className="text-center">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {loading ? (
+              View Lead Source
+            </h5>
+            <div className="p-2">
+              <div className="mb-4">
+                <div className="mt-1">
+                  <CommonPopup
+                    title="Lead Source"
+                    showPopup={showPopup}
+                    setShowPopup={setShowPopup}
+                    handleAddStatus={handleAddLeadSource}
+                    handleEditStatus={handleEditSource}
+                    editStatus={editLeadSource}
+                    setEditValue={setEditValue}
+                    newStatus={newLeadSource}
+                    setNewStatus={setNewLeadSource}
+                    editValue={editValue}
+                  />
+                </div>
+                <ExportData tableId="table-data" />
+
+                {msg && (
+                  <Alert variant="info" className="mt-2 text-center">
+                    {msg}
+                  </Alert>
+                )}
+              </div>
+              <table
+                id="table-data"
+                className="table table-bordered table-striped"
+              >
+                <thead>
                   <tr>
-                    <td colSpan="3" className="text-center">
-                      <HashLoader color="#0060f1" size={50} />
-                    </td>
+                    <th>S.No</th>
+                    <th>Lead Source Name</th>
+                    <th className="text-center">Action</th>
                   </tr>
-                ) : error ? (
-                  <tr>
-                    <td colSpan="3" className="text-center text-danger">
-                      Error: {error}
-                    </td>
-                  </tr>
-                ) : currentStatuses.length > 0 ? (
-                  currentStatuses.map((leadSourceObj) => (
-                    <tr key={leadSourceObj.id}>
-                      <td>{leadSourceObj.id}</td>
-                      <td>{leadSourceObj.leadSourceValue}</td>
-                      <td className="text-center">
-                        <div className="d-flex justify-content-center align-items-center gap-2">
-                          <EditButton
-                            className="btn btn-primary btn-sm"
-                            onClick={() => {
-                              setEditLeadSource(leadSourceObj.id);
-                              setEditValue(leadSourceObj.leadSourceValue);
-                            }}
-                          />
-                          <DeleteButton
-                            className="btn btn-danger btn-sm"
-                            onDelete={() =>
-                              handleDeleteLeadSource(leadSourceObj.id)
-                            }
-                          />
-                        </div>
+                </thead>
+                <tbody>
+                  {loading ? (
+                    <tr>
+                      <td colSpan="3" className="text-center">
+                        <HashLoader color="#0060f1" size={50} />
                       </td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="3" className="text-center">
-                      No lead sources available.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-
-            {/* //!<---------------------------------------------------------------------------------Pagination BUTTON----------------------------------------------------------------------> */}
-            <div className="pagination">
-              <button onClick={prevPage} disabled={currentPage === 1}>
-                <i className="bi bi-arrow-left-circle"></i>
-              </button>
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                (number) => (
+                  ) : error ? (
+                    <tr>
+                      <td colSpan="3" className="text-center text-danger">
+                        Error: {error}
+                      </td>
+                    </tr>
+                  ) : currentStatuses.length > 0 ? (
+                    currentStatuses.map((leadSourceObj) => (
+                      <tr key={leadSourceObj.id}>
+                        <td>{leadSourceObj.id}</td>
+                        <td>{leadSourceObj.leadSourceValue}</td>
+                        <td className="text-center">
+                          <div className="d-flex justify-content-center align-items-center gap-2">
+                            <EditButton
+                              className="btn btn-primary btn-sm"
+                              onClick={() => {
+                                setShowPopup(true);
+                                setEditLeadSource(leadSourceObj.id);
+                                setEditValue(leadSourceObj.leadSourceValue);
+                              }}
+                            />
+                            <DeleteButton
+                              className="btn btn-danger btn-sm"
+                              onDelete={() =>
+                                handleDeleteLeadSource(leadSourceObj.id)
+                              }
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="3" className="text-center">
+                        No lead sources available.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+              {/* //!<---------------------------------------------------------------------------------Pagination BUTTON----------------------------------------------------------------------> */}
+              <div className="pagination">
+                <button onClick={prevPage} disabled={currentPage === 1}>
+                  <i className="bi bi-arrow-left-circle"></i>
+                </button>
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((number) => (
                   <button
                     key={number}
                     onClick={() => paginate(number)}
@@ -267,11 +290,14 @@ const LeadSource = () => {
                   >
                     {number}
                   </button>
-                )
-              )}
-              <button onClick={nextPage} disabled={currentPage === totalPages}>
-                <i className="bi bi-arrow-right-circle"></i>
-              </button>
+                ))}
+                <button
+                  onClick={nextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  <i className="bi bi-arrow-right-circle"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>

@@ -6,10 +6,6 @@ import { StatusButton } from "../../../Components/Button/StatusButton/StatusButt
 import { SendButton } from "../../../Components/Button/SendButton/SendButton";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
 import { DisposeButton } from "../../../Components/Button/DisposeButton/DisposeButton";
-import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
-import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
-import { PdfButton } from "../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
-import { CopyButton } from "../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import ConditionalPrSoButton from "../../../Components/Button/ConditionalPrSoButton/ConditionalPrSoButton";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -20,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { emp } from "../../../Redux/Services/apiServer/ApiServer";
 import { UpdateBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 import ExportData from "../../../Components/Button/DataButton/ExportButton";
+import { FaEye } from "react-icons/fa";
 
 const ViewLeads = () => {
   const isPrGenerated = 0;
@@ -114,7 +111,8 @@ const ViewLeads = () => {
       addComment !== lead.followupDetail.comment ||
       addfreeTrialStartDate !== lead.followupDetail.freeTrialStartDate ||
       addfreeTrialEndDate !== lead.followupDetail.freeTrialEndDate ||
-      addFollowUpDate !== lead.followupDetail.followUpDate    ) {
+      addFollowUpDate !== lead.followupDetail.followUpDate
+    ) {
       const addNewLead = {
         leadId: lead.leadId,
         campaignName: lead.campaignName,
@@ -165,32 +163,6 @@ const ViewLeads = () => {
         },
       };
 
-      // try {
-      //   const token = staticToken;
-      //   console.log("Payload being sent:", JSON.stringify(addNewLead));
-      //   const response = await fetch(/api/BulkLead/UpdateLeadById, {
-      //     method: "POST",
-      //     headers: {
-      //       "Content-Type": "application/json",
-      //       Authorization: Bearer ${token},
-      //     },
-      //     body: JSON.stringify(addNewLead),
-      //   });
-
-      //   if(response.ok) {
-      //     const result = await response.json();
-      //     console.log("Updated successfully:", result);
-      //     setTimeout(() => {
-      //       window.location.reload();
-      //   }, 400);
-
-      //   } else{
-      //     throw new Error(Failed with status: ${response.status});
-      //   }
-      // } catch (error) {
-      //   console.error("Error updating:", error);
-      // }
-
       dispatch(UpdateBulkLeadThunk(addNewLead))
         .then((response) => {
           if (response.payload === null) {
@@ -226,7 +198,7 @@ const ViewLeads = () => {
 
   const Navigate = useNavigate();
   const handleNavigateToSo = (id, leadObj) => {
-    // console.log("handleNavigateToSo-----------" , leadObj);  
+    // console.log("handleNavigateToSo-----------" , leadObj);
 
     Navigate(`/addsalesorder/${id}`, { state: { leadObj } });
   };
@@ -290,11 +262,36 @@ const ViewLeads = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
-        View Leads
-      </h2>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", 
+          marginBottom: "5px", 
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+          }}
+        >
+          <FaEye
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          View Leads
+        </h2>
+      </section>
 
-      <div className="container-fluid border border-2 border-gray mt-1  ">
+      <div className=" mt-1 ">
         <div className="outerBgBox p-2  mb-2">
           <div className="container-fluid mt-3 ms-0 me-0">
             <div className="dropDownContainer p-3  mb-2">
@@ -331,11 +328,7 @@ const ViewLeads = () => {
 
             <div className="d-flex align-items-center justify-content-between">
               <div>
-                {/* <PrintButton tableId="leads-table" />
-                <PdfButton tableId="leads-table" />
-                <CsvButton tableId="leads-table" />
-                <CopyButton tableId="leads-table" /> */}
-                <ExportData tableId = "leads-table"/>
+                <ExportData tableId="leads-table" />
               </div>
               <div>
                 <button
@@ -353,8 +346,6 @@ const ViewLeads = () => {
               id="leads-table"
             >
               <thead className="tableHeader thead-dark">
-                {" "}
-                {/* Adjust font weight */}
                 <tr>
                   <th>#</th>
                   <th>Client Name</th>
@@ -485,7 +476,7 @@ const ViewLeads = () => {
                           <>
                             {/* //!------------------------------------------------------------------ADD SEGMENT POPUP & LOGIC---------------------------------------------------------------------------- */}
                             <button
-                              className="viewLeadButton btn btn-sm px-2 py-0"
+                              className="viewLeadButton btn-sm px-2 py-0"
                               onClick={() => {
                                 setSelectedLeadId(leadObj.lead.leadId);
                                 handleOpenPopup("segment");
@@ -553,7 +544,7 @@ const ViewLeads = () => {
                           ) : (
                             <>
                               <button
-                                className="viewLeadButton btn btn-sm px-2 py-0"
+                                className="viewLeadButton btn-sm px-2 py-0 "
                                 onClick={() => {
                                   setSelectedLeadId(leadObj.lead.leadId);
                                   handleOpenPopup("freeTrial");
@@ -637,11 +628,12 @@ const ViewLeads = () => {
                         ) : (
                           <>
                             <button
-                              className="viewLeadButton btn btn-sm px-2 py-0"
+                              className="viewLeadButton btn-sm px-2 py-0"
                               onClick={() => {
                                 setSelectedLeadId(leadObj.lead.leadId);
                                 handleOpenPopup("followUp");
-                              }}                            >
+                              }}
+                            >
                               Add New
                             </button>
                             {showFollowUpPopup && (

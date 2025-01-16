@@ -7,6 +7,7 @@ import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButto
 import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { EditButton } from "../../../../Components/Button/EditButton/EditButton";
 import { useDispatch, useSelector } from "react-redux";
+import CommonPopup from "../../Button/PopUpButton/PopupButton";
 import {
   deleteLeadSourceThunk,
   getAllLeadSourceThunk,
@@ -28,9 +29,6 @@ const LeadSource = () => {
   const dispatch = useDispatch();
 
   const { data, loading, error } = useSelector((state) => state.leadsource);
-
-
-   
 
   useEffect(() => {
     dispatch(getAllLeadSourceThunk());
@@ -76,7 +74,6 @@ const LeadSource = () => {
     }
   };
 
-
   const handleDeleteLeadSource = (id) => {
     dispatch(deleteLeadSourceThunk(id))
       .unwrap()
@@ -90,8 +87,6 @@ const LeadSource = () => {
         setMsg(error || "Failed to delete status");
       });
   };
-
-
 
   return (
     <>
@@ -130,6 +125,8 @@ const LeadSource = () => {
               <CsvButton />
               <CopyButton />
             </div>
+
+           
             <table
               id="table-data"
               className="table table-bordered table-striped"
@@ -233,9 +230,6 @@ const LeadSource = () => {
                 <i className="bi bi-arrow-right-circle"></i>
               </button>
             </div>
-
-
-
           </div>
         </div>
       </div>

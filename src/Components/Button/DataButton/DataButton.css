@@ -30,7 +30,7 @@
   .Csv-btn{
     padding: var(--dataButton-padding);
     margin-left: var(--dataButton-margin-left);
-    background-color: var(--dataButton-background-color);
+    background-color: white;
     color: var( --dataButton-color);
     border: var( --dataButton-border );
     border-radius: var( --dataButton-border-radius);

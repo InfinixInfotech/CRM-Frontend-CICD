@@ -3,10 +3,6 @@ import "./ViewUser.css";
 import BackButton from "../../../../Components/Button/BackButton/BackButton";
 import { EditButton } from "../../../../Components/Button/EditButton/EditButton";
 import DeleteButton from "../../../../Components/Button/DeleteButton/DeleteButton";
-import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
-import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
-import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
-import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import {
   getAllUserThunk,
   getByIdUserThunk,
@@ -17,9 +13,10 @@ import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import ExportData from "../../../../Components/Button/DataButton/ExportButton";
+import { FaEye, FaUser, FaUsers } from "react-icons/fa";
 const ViewUser = () => {
   const [users, setUsers] = useState([]);
-  const [status, setStatus] = useState("Active");
+  const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
   const [editUser, setEditUser] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -110,6 +107,9 @@ const ViewUser = () => {
     // Navigate("/edit-page", { state: { users: user } });
   };
 
+  const handleNavigateToAddUser = () => {
+    Navigate(`/adduser`);
+  };
   // !  <--------------------------------------- Delete Functionality------------------->
 
   const handleDeleteUser = (id) => {
@@ -136,70 +136,91 @@ const ViewUser = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
-        View Users
-      </h2>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px",
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaEye
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          View User
+        </h2>
+      </section>
+
       <BackButton />
       <div
-        className="container-fluid border border-2 border-gray mt-2 py-3"
-        style={{ padding: "18px 16px" }}
+        className="mt-2"
+        // style={{ padding: "18px 16px" }}
       >
-        <div
-          className="view-user-container mt-0 p-3"
-          style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
-        >
+        <div className="view-user-container border border-2 border-grey mt-0 p-2">
           <div className="toolbar">
             <div
               style={{
-                display: "grid",
-                gridTemplateColumns: "auto auto 1fr", // Columns for BackButton, dropdown, and input
-                gap: "30px", // Spacing between elements
-                alignItems: "center", // Align items vertically
-                maxWidth: "800px", // Limit width of the container
-                margin: "0 auto", // Center horizontally
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between ",
+                gap: "65vw",
+                maxWidth: "100vw",
+                margin: "0 auto",
               }}
             >
-              <div className="mb-2">
-                {/* <PrintButton tableId={"table-data"} />
-                <PdfButton tableId={"table-data"} />
-                <CsvButton tableId={"table-data"} />
-                <CopyButton tableId={"table-data"} /> */}
-
+              <div className="d-flex flex-column" s>
+                <button
+                  className="btn text-white mb-1"
+                  style={{ backgroundColor: "#009688" }}
+                  onClick={handleNavigateToAddUser}
+                >
+                  <FaUsers className="fs-5 me-1" />
+                  Add Users
+                </button>
                 <ExportData tableId="table-data" />
-
-                {msg && (
-                  <Alert variant="info" className="mt-2 text-center">
-                    {msg}
-                  </Alert>
-                )}
               </div>
-              {/* Status Filter Dropdown */}
+
               <div
-                className="status-filter"
-                style={{ display: "flex", alignItems: "center", gap: "5px" }}
+                className="status-filter d-flex flex-column gap-1"
               >
-                <label>Status:</label>
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="search-box"
+                  style={{ padding: "10px", width: "200px" }}
+                />
+
                 <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                   style={{ padding: "5px" }}
                 >
+                  <option value="" disabled>-- Select Status --</option>
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                   <option value="All">All</option>
                 </select>
               </div>
-              {/* Search Box */}
-              <input
-                type="text"
-                placeholder="Search..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="search-box"
-                style={{ padding: "10px", width: "100%" }}
-              />
             </div>
           </div>
+
           {msg && (
             <Alert variant="info" className="mt-2 text-center">
               {msg}

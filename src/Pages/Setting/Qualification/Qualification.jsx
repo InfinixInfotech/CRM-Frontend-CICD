@@ -2,22 +2,19 @@ import React, { useEffect, useState } from "react";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
 import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";
 import BackButton from "../../../Components/Button/BackButton/BackButton";
-import { PrintButton } from "../../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
-import { CsvButton } from "../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
-import { PdfButton } from "../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
-import { CopyButton } from "../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteQualificationThunk,
   getAllQualificationThunk,
   postQualificationThunk,
-  putQualificationThunk,
 } from "../../../Redux/Services/thunks/QualificationThunk";
 import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
 import { staticToken } from "../../../Redux/Services/apiServer/ApiServer";
 import ExportData from "../../../Components/Button/DataButton/ExportButton";
 import { FaGraduationCap } from "react-icons/fa";
+import { GrAdd, GrMenu } from "react-icons/gr";
+import { BorderBottom } from "@mui/icons-material";
 
 const Qualification = () => {
   const [qualification, setQualification] = useState([]);
@@ -52,8 +49,9 @@ const Qualification = () => {
 
   useEffect(() => {
     if (data?.data) {
+      const sortedData = [...data.data].sort((a, b) => b.id - a.id);
       const timer = setTimeout(() => {
-        setQualification(data.data);
+        setQualification(sortedData);
       }, 500);
       return () => clearTimeout(timer);
     }
@@ -98,8 +96,8 @@ const Qualification = () => {
           ...prevState,
           { qualificationName: newQualification, id: response.id },
         ]);
-
         setNewQualification("");
+        dispatch(getAllQualificationThunk());
         handleClosePopup();
       });
     }
@@ -158,104 +156,131 @@ const Qualification = () => {
 
   return (
     <>
-      <h2
-        className="mb-0 py-2 text-dark mt-5 mb-2"
-        style={{ padding: "18px 16px", fontSize: "30px" }}
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
       >
-        <FaGraduationCap
-          className="fs-1"
-          style={{ marginRight: "8px", color: "#009688" }}
-        />
-        Qualification
-      </h2>
-      <BackButton />
-      <div
-        className="container-fluid border border-2 border-gray mt-2 py-3"
-        style={{ padding: "18px 16px" }}
-      >
-        <div
-          className="container-fluid mt-0 p-3"
-          style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
         >
-          <div className="lead-status-container mt-2">
-            <div className="addLeadscontainer add-status p-2 mb-2">
-              <h4 className="p-0 mb-3 text-dark ">Add New Qualification</h4>
-              <button onClick={handleOpenPopup} className="btn btn-primary">
-                Add Qualification
-              </button>
-              {showPopup && (
-                <div
-                  className="popup d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100"
-                  style={{
-                    backgroundColor: "rgba(0, 0, 0, 0.6)",
-                    zIndex: 1050,
-                  }}
+          <FaGraduationCap
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          Qualification
+        </h2>
+      </section>
+      <BackButton />
+
+      <div className="border border-2 border-gray mt-2">
+        <h5
+          className="  text-dark   border border-1"
+          style={{
+            padding: "18px 16px",
+            fontSize: "1.7 rem",
+            backgroundColor: "#E8F1F3",
+          }}
+        >
+          View Qualification
+        </h5>
+        <div className="">
+          <div className="lead-status-container ">
+            <div className="bg-white   p-2">
+              <div className="addLeadscon6tainer  add-status  mb-2">
+                {/* <h4 className="p-0 mb-3 text-dark ">Add New Qualification</h4> */}
+
+                <button
+                  onClick={handleOpenPopup}
+                  className="btn text-white "
+                  style={{ backgroundColor: "#009688" }}
                 >
+                  <GrAdd className="text-white fs-6 fw-bold" />
+                  Add Qualification
+                </button>
+                {showPopup && (
                   <div
-                    className="popup-content card shadow-lg p-4 bg-white"
-                    style={{ width: "400px", borderRadius: "10px" }}
+                    className="popup d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100"
+                    style={{
+                      backgroundColor: "rgba(0, 0, 0, 0.6)",
+                      zIndex: 1050,
+                    }}
                   >
-                    <div className="card-body">
-                      <h5 className="card-title text-center mb-4">
-                        {editQualification !== null
-                          ? "Edit Qualification"
-                          : "Add New Qualification"}
-                      </h5>
-                      <button
-                        className="btn-close position-absolute top-0 end-0 m-3"
-                        onClick={handleClosePopup}
-                      ></button>
-                      <form
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          if (editQualification !== null) {
-                            handleEditQualification(editQualification);
-                          } else {
-                            handleAddQualification(e);
-                          }
-                        }}
-                      >
-                        <div className="mb-3">
-                          <label
-                            htmlFor="qualificationInput"
-                            className="form-label"
+                    <div
+                      className="popup-content card shadow-lg p-4 bg-white"
+                      style={{ width: "400px", borderRadius: "10px" }}
+                    >
+                      <div className="card-body">
+                        <h5 className="card-title text-center mb-4">
+                          {editQualification !== null
+                            ? "Edit Qualification"
+                            : "Add New Qualification"}
+                        </h5>
+                        <button
+                          className="btn-close position-absolute top-0 end-0 m-3"
+                          onClick={handleClosePopup}
+                        ></button>
+                        <form
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            if (editQualification !== null) {
+                              handleEditQualification(editQualification);
+                            } else {
+                              handleAddQualification(e);
+                            }
+                          }}
+                        >
+                          <div className="mb-3">
+                            <label
+                              htmlFor="qualificationInput"
+                              className="form-label"
+                            >
+                              Qualification Name
+                            </label>
+                            <input
+                              type="text"
+                              id="qualificationInput"
+                              className="form-control"
+                              value={
+                                editQualification !== null
+                                  ? editValue
+                                  : newQualification
+                              }
+                              onChange={(e) =>
+                                editQualification !== null
+                                  ? setEditValue(e.target.value)
+                                  : setNewQualification(e.target.value)
+                              }
+                              placeholder="Enter qualification name"
+                            />
+                          </div>
+                          <button
+                            type="submit"
+                            className="btn text-white w-100"
+                            style={{ backgroundColor: "#009688" }}
                           >
-                            Qualification Name
-                          </label>
-                          <input
-                            type="text"
-                            id="qualificationInput"
-                            className="form-control"
-                            value={
-                              editQualification !== null
-                                ? editValue
-                                : newQualification
-                            }
-                            onChange={(e) =>
-                              editQualification !== null
-                                ? setEditValue(e.target.value)
-                                : setNewQualification(e.target.value)
-                            }
-                            placeholder="Enter qualification name"
-                          />
-                        </div>
-                        <button type="submit" className="btn btn-success w-100">
-                          {editQualification !== null ? "Update" : "Create"}
-                        </button>
-                      </form>
+                            {editQualification !== null ? "Update" : "Add"}
+                          </button>
+                        </form>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
-
-            <div className="bg-white p-4 rounded border border-4 border-gray">
-              <h5
-                className="mb-0  text-dark py-2 mt-5 mb-2 border border-1"
-                style={{ padding: "18px 16px", backgroundColor: "#E8F1F3" }}
-              >
-                View Qualification
-              </h5>
+                )}
+              </div>
               <div className=" mb-4 ">
                 <ExportData tableId="table-data" />
 
@@ -271,8 +296,15 @@ const Qualification = () => {
               >
                 <thead>
                   <tr>
-                    <th>Qualification Name</th>
-                    <th className="text-center">Action</th>
+                    <th style={{ color: "#2D2D2D" }} className="text-center">
+                      S.No
+                    </th>
+                    <th style={{ color: "#2D2D2D" }} className="text-center">
+                      Qualification Name
+                    </th>
+                    <th style={{ color: "#2D2D2D" }} className="text-center">
+                      Action
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -310,7 +342,8 @@ const Qualification = () => {
                   ) : currentStatuses.length > 0 ? (
                     currentStatuses.map((QualificationObj) => (
                       <tr key={QualificationObj.id}>
-                        <td>
+                        <td className="text-center">{QualificationObj.id}</td>
+                        <td className="text-center">
                           {/* {editQualification === QualificationObj.id ? (
                             <input
                               type="text"
@@ -324,7 +357,7 @@ const Qualification = () => {
                         <td className="text-center">
                           <div className="d-flex justify-content-center align-items-center gap-2">
                             <EditButton
-                              className="btn btn-primary btn-sm mr-1 py-0 px-2"
+                              // className="btn btn-primary btn-sm mr-1 py-0 px-2"
                               onClick={() => {
                                 handleOpenPopup();
                                 setEditQualification(QualificationObj.id);

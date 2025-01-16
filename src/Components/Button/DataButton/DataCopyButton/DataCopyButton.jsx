@@ -50,8 +50,7 @@ export const CopyButton = ({
       className={className}
       style={{ fontWeight: "500", borderRadius: "0", backgroundColor: "none", fontSize:"18px" }}
     >
-      <FaCopy className="me-1 fs-5 colorful-icon text-secondary" />
-
+      <FaCopy className="me-2 fs-5 colorful-icon text-secondary" />
       Copy
     </button>
   );

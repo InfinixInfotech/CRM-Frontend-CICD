@@ -8,6 +8,7 @@ import { getAllDepartmentThunk } from "../../../../Redux/Services/thunks/Departm
 import { getAllGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk";
 import { getAllQualificationThunk } from "../../../../Redux/Services/thunks/QualificationThunk";
 import { emp } from "../../../../Redux/Services/apiServer/ApiServer";
+import { FaUserPlus } from "react-icons/fa";
 
 const AddUser = () => {
   const [showAlert, setShowAlert] = useState(false);
@@ -24,7 +25,7 @@ const AddUser = () => {
 
   const [user, setUser] = useState({
     fullName: "",
-    employeeCode:"",
+    employeeCode: "",
     fatherName: "",
     motherName: "",
     mobileNumber: "",
@@ -157,7 +158,6 @@ const AddUser = () => {
       access: { ...user.access },
     };
 
-   
     //!<-------------------------------------------------------------------------------ADD USER----------------------------------------------------------------------------------------------------------->
 
     dispatch(postUserThunk(AddNewUser))
@@ -168,9 +168,6 @@ const AddUser = () => {
         console.error("Error adding user:", error);
       });
   };
-
-
-
 
   useEffect(() => {
     if (showAlert) {
@@ -259,9 +256,36 @@ const AddUser = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5">
-        Add Users
-      </h2>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaUserPlus
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          Add User
+        </h2>
+      </section>
+
       <BackButton />
       <div className="container-fluid border border-2 border-gray mt-1 pb-3">
         <div className="formWrapper p-2 rounded mt-3 p-4 ">

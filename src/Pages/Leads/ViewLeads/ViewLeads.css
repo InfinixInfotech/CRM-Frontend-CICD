@@ -1,6 +1,6 @@
 :root {
   --marginTop-outerBgBox : 11px;
-  --backgroundColor-outerBgBox : rgb(227,227,227);
+  /* --backgroundColor-outerBgBox : rgb(227,227,227); */
   --marginTop-dropDownContainer : 11px;
   --backgroundColor-dropDownContainer : rgb(245, 245, 245);
   --fontSize-ViewLeadFormLable : 14px;
@@ -47,7 +47,7 @@
    padding: var(--padding-formControl);
    line-height: var(--lineHeight-formControl);
    appearance: var(--appearance-formControl);
-   background-color: var(--backgroundColor-formControl);
+   /* background-color: var(--backgroundColor-formControl); */
    border: var(--border-formControl);
    border-radius: var(--borderRadius);
 }

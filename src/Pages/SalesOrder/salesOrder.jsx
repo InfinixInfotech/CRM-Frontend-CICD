@@ -13,6 +13,7 @@ import {
 } from "../../Redux/Services/thunks/SalesOrderThunk";
 import { useDispatch } from "react-redux";
 import ExportData from "../../Components/Button/DataButton/ExportButton";
+import { FaShoppingCart } from "react-icons/fa";
 
 const SalesOrder = () => {
   const [salesOrder, setsalesOrder] = useState([]);
@@ -91,9 +92,35 @@ const SalesOrder = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-2">
-        Sales Orders
-      </h2>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaShoppingCart
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          Sales Order
+        </h2>
+      </section>
       <div className="container-fluid border border-2 border-gray mt-1 ">
         <div
           className="outerBgBox table-responsive container-fluid py-4"

@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import 'bootstrap-icons/font/bootstrap-icons.css';
-
+import { FiArrowLeftCircle } from "react-icons/fi";
 export default function BackButton({ to }) {
     const navigate = useNavigate();
 
@@ -17,11 +16,11 @@ export default function BackButton({ to }) {
     return (
         <button 
             type="button" 
-            className="Csv-btn mt-3 px-2 py-0 text-white no-print" 
-            style={{ borderRadius: "none" }} 
+            className="Csv-btn mt-3 px-2 py-0  no-print" 
+            style={{ borderRadius: "none", backgroundColor:"none"}} 
             onClick={handleBack}
         >
-            <i className="bi bi-arrow-left-short"></i> Back
+            <FiArrowLeftCircle className='fs-2 text-primary' />
         </button>
     );
 }

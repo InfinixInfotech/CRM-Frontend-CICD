@@ -43,7 +43,7 @@ export const PdfButton = ({
         fontSize: "18px",
       }}
     >
-      <FaFilePdf className="me-1 fs-5 colorful-icon text-secondary" />
+      <FaFilePdf className="me-3 fs-5 colorful-icon text-secondary" />
       Pdf
     </button>
   );

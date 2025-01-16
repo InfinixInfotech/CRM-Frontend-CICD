@@ -15,6 +15,7 @@ import TodaySales from "./Todaysales/TodaySales";
 import TeamMember from "./TeamMember/TeamMember";
 import FollowUp from "./FollowUp/FollowUp";
 import TodayTrial from "./TodayTrial/TodayTrial";
+import { FaChartLine } from "react-icons/fa";
 
 // Register Chart.js components
 ChartJS.register(
@@ -132,11 +133,35 @@ export default function SalesDashboard() {
 
   return (
     <div className="mt-5">
-      <h1>
-        <center className="bg-dark rounded p-2 shadow-sm text-white fs-2">
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaChartLine
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
           Sales Dashboard
-        </center>
-      </h1>
+        </h2>
+      </section>
 
       <div
         id="salesCarousel"
