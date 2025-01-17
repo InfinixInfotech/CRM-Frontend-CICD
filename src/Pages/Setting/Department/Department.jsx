@@ -176,8 +176,6 @@ const Department = () => {
           Department
         </h2>
       </section>
-
-      <BackButton />
       <div
         className="py-3"
         // style={{ padding: "18px 16px" }}
@@ -204,47 +202,41 @@ const Department = () => {
 
           <div className="bg-white border border-2 border-gray">
             <h5
-              className="  text-dark   border border-1"
+              className="text-dark border border-1 pb-2"
               style={{
-                padding: "18px 16px",
+                // padding: "18px 16px",
                 fontSize: "1.7 rem",
                 backgroundColor: "#E8F1F3",
               }}
             >
-              <FaEye
-                className="fs-2"
-                style={{ marginRight: "8px", color: "#009688" }}
-              />
+              <BackButton />
               View Department
             </h5>
             <div className="p-2">
-              <div className=" mb-4 ">
-                <div className="mt-1">
-                  <CommonPopup
-                    title="Department"
-                    showPopup={showPopup}
-                    setShowPopup={setShowPopup}
-                    handleAddStatus={handleAddDepartment}
-                    handleEditStatus={handleEditDepartment}
-                    editStatus={editDepartment}
-                    setEditValue={setEditValue}
-                    newStatus={newDept}
-                    setNewStatus={setNewDept}
-                    editValue={editValue}
-                  />
-                </div>
-
+              <div className="d-flex gap-1">
+                <CommonPopup
+                  title="Department"
+                  showPopup={showPopup}
+                  setShowPopup={setShowPopup}
+                  handleAddStatus={handleAddDepartment}
+                  handleEditStatus={handleEditDepartment}
+                  editStatus={editDepartment}
+                  setEditValue={setEditValue}
+                  newStatus={newDept}
+                  setNewStatus={setNewDept}
+                  editValue={editValue}
+                />
                 <ExportData tableId="table-data" />
-
-                {msg && (
-                  <Alert variant="info" className="mt-2 text-center">
-                    {msg}
-                  </Alert>
-                )}
               </div>
+
+              {msg && (
+                <Alert variant="info" className="mt-2 text-center">
+                  {msg}
+                </Alert>
+              )}
               <table
                 id="table-data"
-                className="table table-bordered table-striped"
+                className="table table-bordered table-striped mt-2"
               >
                 <thead>
                   <tr>

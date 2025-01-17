@@ -16,9 +16,9 @@ const ExportData = ({ tableId }) => {
   return (
     <div className="dropdown ">
       <button
-        className="btn text-white mt-1 "
+        className="text-white btn btn-exp btn-sm"
         style={{backgroundColor:"#009688"}}
-        type="button"
+        // type="button"
         onClick={handleDropdownToggle}
         aria-expanded={showDropdown}
       >
@@ -26,7 +26,7 @@ const ExportData = ({ tableId }) => {
       </button>
 
       <div
-        className={`dropdown-menu ${showDropdown ? 'show' : ''}`}
+        className={` dropdown-menu ${showDropdown ? 'show' : ''}`}
         style={{ minWidth: '150px', marginTop:"4px" }}
       >
         <div className="item text-center">

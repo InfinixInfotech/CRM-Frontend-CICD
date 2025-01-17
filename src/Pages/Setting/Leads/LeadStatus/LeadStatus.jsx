@@ -180,8 +180,6 @@ const LeadStatus = () => {
           Lead Status
         </h2>
       </section>
-
-      <BackButton />
       <div
         className="mt-2 py-3"
         // style={{ padding: "18px 16px" }}
@@ -195,21 +193,21 @@ const LeadStatus = () => {
           }}
         >
           <h5
-            className="  text-dark   border border-1"
+            className="  text-dark  border border-1 pb-2"
             style={{
-              padding: "18px 16px",
+              // padding: "18px 16px",
               fontSize: "1.7 rem",
               backgroundColor: "#E8F1F3",
             }}
           >
-            <FaEye
+            {/* <FaEye
               className="fs-1"
               style={{ marginRight: "8px", color: "#009688" }}
-            />
+            /> */}
+            <BackButton />
             View Lead Status
           </h5>
           <div className="addLeadscontainer add-status p-2 ">
-            {/* <h4 className="p-0 text-dark">Add New Lead Status</h4> */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -223,23 +221,24 @@ const LeadStatus = () => {
               }}
             ></form>
 
-            <div className="mb-4 mt-1">
-              <div className="mt-1">
-                <CommonPopup
-                  title="Lead Status"
-                  showPopup={showPopup}
-                  setShowPopup={setShowPopup}
-                  handleAddStatus={handleAddStatus}
-                  handleEditStatus={handleEditStatus}
-                  editStatus={editStatus}
-                  setEditValue={setEditValue}
-                  newStatus={newStatus}
-                  setNewStatus={setNewStatus}
-                  editValue={editValue}
-                />
+            <div className=" mt-1">
+              <div className="d-flex  gap-1">
+                <div>
+                  <CommonPopup
+                    title="Lead Status"
+                    showPopup={showPopup}
+                    setShowPopup={setShowPopup}
+                    handleAddStatus={handleAddStatus}
+                    handleEditStatus={handleEditStatus}
+                    editStatus={editStatus}
+                    setEditValue={setEditValue}
+                    newStatus={newStatus}
+                    setNewStatus={setNewStatus}
+                    editValue={editValue}
+                  />
+                </div>
+                <ExportData tableId="table-data" />
               </div>
-              
-              <ExportData tableId="table-data" />
               {msg && (
                 <Alert variant="info" className="mt-2 text-center">
                   {msg}
@@ -248,7 +247,7 @@ const LeadStatus = () => {
             </div>
             <table
               id="table-data"
-              className="table table-bordered table-striped"
+              className="table table-bordered table-striped mt-2"
             >
               <thead>
                 <tr>

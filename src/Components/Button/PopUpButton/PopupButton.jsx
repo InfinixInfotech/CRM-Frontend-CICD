@@ -27,7 +27,7 @@ const CommonPopup = ({
     <>
       <button
         onClick={handleOpenPopup}
-        className="btn text-white"
+        className="btn btn-exp btn-sm text-white"
         style={{ backgroundColor: "#009688" }}
       >
         <GrAdd className="text-white fs-6 fw-bold" />

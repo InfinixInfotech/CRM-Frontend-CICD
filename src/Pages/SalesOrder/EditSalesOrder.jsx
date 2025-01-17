@@ -4,6 +4,7 @@ import { staticToken } from "../../Redux/Services/apiServer/ApiServer";
 import { useLocation } from "react-router-dom";
 import { Alert } from "react-bootstrap";
 import BackButton from "../../Components/Button/BackButton/BackButton";
+import { FaGraduationCap, FaShoppingCart } from "react-icons/fa";
 const EditSalesOrder = () => {
   const [data, setData] = useState("");
   const [loading, setLoading] = useState(true);
@@ -73,7 +74,6 @@ const EditSalesOrder = () => {
       },
     ],
   });
-  // console.log("recievedSoData?.employeeCode------------------------" ,recievedSoData?.employeeCode)
   useEffect(() => {
     if (showAlert) {
       const timer = setTimeout(() => {
@@ -229,192 +229,231 @@ const EditSalesOrder = () => {
   if (error) return <div>Error: {JSON.stringify(error)}</div>;
   return (
     <div>
-      <h2 className="text-center bg-dark text-white py-2 mt-5">
-        Edit Sales Order
-      </h2>
-      <BackButton to="/salesorder" />
-      <div
-        className="container-fluid border border-secondary w-75 py-3 rounded"
-        style={{ backgroundColor: "#E3E3E3" }}
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
       >
-        <div>
-          {showAlert && (
-            <Alert variant="info" className="mt-2 text-center">
-              SO Updated Successfully
-            </Alert>
-          )}
-        </div>
-        {/* //!<--------------------------------------------------------------------------------- FORM STARTING POINT ----------------------------------------------------------------------> */}
-        <form onSubmit={handleSubmit}>
-          <div className="row">
-            {/*  */}
-            {/* //!<--------------------------------------------------------------------------------- FORM STARTING POINT ----------------------------------------------------------------------> */}
-            <div className="col-md-6">
-              <h5 className="fw-bold text-dark mb-3 border-bottom">
-                Personal Details
-              </h5>
-              {[
-                { label: "Created Date", name: "createdDate", type: "date" },
-                { label: "Client Name", name: "clientName", type: "text" },
-                { label: "Father's Name", name: "fatherName", type: "text" },
-                { label: "Mother's Name", name: "motherName", type: "text" },
-                { label: "Mobile Number", name: "mobile", type: "number" },
-                { label: "Personal Email", name: "email", type: "email" },
-                { label: "Date of Birth", name: "dob", type: "date" },
-                { label: "Aadhar", name: "aadhar", type: "text" },
-                { label: "Pan No.", name: "panNo", type: "text" },
-                { label: "GSTIN", name: "gstin", type: "text" },
-                { label: "SAC", name: "sac", type: "text" },
-              ].map(({ label, name, type }, index) => (
-                <div key={index} className="form-group mb-3">
-                  <label>{label}</label>
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+            // backgroundColor: "#E3E3E3",
+          }}
+        >
+          <FaShoppingCart
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          Sales Order
+        </h2>
+      </section>
+      <div className=" border border-2 w-100 bg-white" >
+        <h5
+          className="text-dark border border-1 pb-2"
+          style={{
+            // padding: "18px 16px",
+            fontSize: "1.7 rem",
+            backgroundColor: "#E8F1F3",
+          }}
+        >
+          <BackButton />
+          Edit Sales Order
+        </h5>
+        <div className="p-4">
+          <div>
+            {showAlert && (
+              <Alert variant="info" className="mt-2 text-center">
+                SO Updated Successfully
+              </Alert>
+            )}
+          </div>
+          {/* //!<--------------------------------------------------------------------------------- FORM STARTING POINT ----------------------------------------------------------------------> */}
+          <form onSubmit={handleSubmit}>
+            <div className="row">
+              {/*  */}
+              {/* //!<--------------------------------------------------------------------------------- FORM STARTING POINT ----------------------------------------------------------------------> */}
+              <div className="col-md-6 ">
+                <h5 className="fw-bold text-dark mb-3 border-bottom">
+                  Personal Details
+                </h5>
+                {[
+                  { label: "Created Date", name: "createdDate", type: "date" },
+                  { label: "Client Name", name: "clientName", type: "text" },
+                  { label: "Father's Name", name: "fatherName", type: "text" },
+                  { label: "Mother's Name", name: "motherName", type: "text" },
+                  { label: "Mobile Number", name: "mobile", type: "number" },
+                  { label: "Personal Email", name: "email", type: "email" },
+                  { label: "Date of Birth", name: "dob", type: "date" },
+                  { label: "Aadhar", name: "aadhar", type: "text" },
+                  { label: "Pan No.", name: "panNo", type: "text" },
+                  { label: "GSTIN", name: "gstin", type: "text" },
+                  { label: "SAC", name: "sac", type: "text" },
+                ].map(({ label, name, type }, index) => (
+                  <div key={index} className="form-group mb-3">
+                    <label>{label}</label>
+                    <input
+                      type={type}
+                      name={`personalDetails.${name}`}
+                      value={
+                        name.includes(".")
+                          ? formData.personalDetails[name.split(".")[1]]
+                          : formData.personalDetails[name]
+                      }
+                      onChange={handleChange}
+                      className="form-control"
+                    />
+                  </div>
+                ))}
+                <div>
+                  <label>Pin Code</label>
                   <input
-                    type={type}
-                    name={`personalDetails.${name}`}
-                    value={
-                      name.includes(".")
-                        ? formData.personalDetails[name.split(".")[1]]
-                        : formData.personalDetails[name]
-                    }
+                    type="text"
+                    name="personalDetails.address.pinCode"
+                    value={formData.personalDetails.address.pinCode || ""}
                     onChange={handleChange}
                     className="form-control"
                   />
                 </div>
-              ))}
-              <div>
-                <label>Pin Code</label>
-                <input
-                  type="text"
-                  name="personalDetails.address.pinCode"
-                  value={formData.personalDetails.address.pinCode || ""}
-                  onChange={handleChange}
-                  className="form-control"
-                />
-              </div>
-              <div>
-                <label>Address</label>
-                <input
-                  type="text"
-                  name="personalDetails.address.city"
-                  value={formData.personalDetails.address.city || ""}
-                  onChange={handleChange}
-                  className="form-control"
-                />
-              </div>
-              <div className="form-group mb-3">
-                <label>State</label>
-                <select
-                  name="personalDetails.address.state"
-                  value={formData.personalDetails.address.state}
-                  onChange={handleChange}
-                  className="form-control"
-                >
-                  <option value="Madhya Pradesh">Madhya Pradesh</option>
-                  <option value="Haryana">Haryana</option>
-                </select>
-              </div>
-            </div>
-            {/* Payment Details Section */}
-            <div className="col-md-6">
-              <h5 className="fw-bold text-dark mb-3 border-bottom">
-                Payment Details
-              </h5>
-              {[
-                { label: "Payment Date", name: "paymentDate", type: "date" },
-                {
-                  label: "Mode of Payment",
-                  name: "modeOfPayment",
-                  type: "text",
-                },
-                { label: "Bank Name", name: "bankName", type: "text" },
-              ].map(({ label, name, type }, index) => (
-                <div key={index} className="form-group mb-3">
-                  <label>{label}</label>
+                <div>
+                  <label>Address</label>
                   <input
-                    type={type}
-                    name={`paymentDetails.${name}`}
-                    value={formData.paymentDetails[name]}
+                    type="text"
+                    name="personalDetails.address.city"
+                    value={formData.personalDetails.address.city || ""}
                     onChange={handleChange}
                     className="form-control"
                   />
                 </div>
-              ))}
-              {[
-                {
-                  label: "Service Mode",
-                  name: "serviceMode",
-                  options: ["SMS", "Others"],
-                },
-                {
-                  label: "Terms",
-                  name: "terms",
-                  options: ["Daily", "Weekly"],
-                },
-                {
-                  label: "Service Status",
-                  name: "serviceStatus",
-                  options: ["Activate", "Hold"],
-                },
-              ].map(({ label, name, options }, index) => (
-                <div className="form-group mb-3" key={index}>
-                  <label>{label}</label>
+                <div className="form-group mb-3">
+                  <label>State</label>
                   <select
-                    name={`paymentDetails.${name}`}
-                    value={formData.paymentDetails[name]}
+                    name="personalDetails.address.state"
+                    value={formData.personalDetails.address.state}
                     onChange={handleChange}
                     className="form-control"
                   >
-                    {options.map((option, i) => (
-                      <option key={i} value={option}>
-                        {option}
-                      </option>
-                    ))}
+                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                    <option value="Haryana">Haryana</option>
                   </select>
                 </div>
-              ))}
-              <div className="form-group mb-3">
-                <label>Comment</label>
-                <textarea
-                  name="comment"
-                  value={formData.paymentDetails.comments}
-                  onChange={handleChange}
-                  className="form-control"
-                  placeholder="Enter Comments"
-                ></textarea>
               </div>
-              {/* //!----------------------------------------------------------------------------PRODUCT DETAILS SECTION-------------------------------------------------------------------- */}
-              <div className="col-md-12" style={{marginTop:"8vh"}}>
-              <h5 className="fw-bold text-dark  border-bottom">
-                Product Details
-              </h5>
-              {[
-                { label: "Start Date", name: "startDate", type: "date" },
-                { label: "End Date", name: "endDate", type: "date" },
-                { label: "Grand Total", name: "grandTotal", type: "number" },
-                { label: "Discount", name: "discount", type: "number" },
-                { label: "Adjustment", name: "adjustment", type: "number" },
-              ].map(({ label, name, type }, index) => (
-                <div key={index} className="form-group mb-3">
-                  <label>{label}</label>
-                  <input
-                    type={type}
-                    name={`productDetails[0].${name}`}
-                    value={formData.productDetails[0][name] || ""}
+              {/* Payment Details Section */}
+              <div className="col-md-6">
+                <h5 className="fw-bold text-dark mb-3 border-bottom">
+                  Payment Details
+                </h5>
+                {[
+                  { label: "Payment Date", name: "paymentDate", type: "date" },
+                  {
+                    label: "Mode of Payment",
+                    name: "modeOfPayment",
+                    type: "text",
+                  },
+                  { label: "Bank Name", name: "bankName", type: "text" },
+                ].map(({ label, name, type }, index) => (
+                  <div key={index} className="form-group mb-3">
+                    <label>{label}</label>
+                    <input
+                      type={type}
+                      name={`paymentDetails.${name}`}
+                      value={formData.paymentDetails[name]}
+                      onChange={handleChange}
+                      className="form-control"
+                    />
+                  </div>
+                ))}
+                {[
+                  {
+                    label: "Service Mode",
+                    name: "serviceMode",
+                    options: ["SMS", "Others"],
+                  },
+                  {
+                    label: "Terms",
+                    name: "terms",
+                    options: ["Daily", "Weekly"],
+                  },
+                  {
+                    label: "Service Status",
+                    name: "serviceStatus",
+                    options: ["Activate", "Hold"],
+                  },
+                ].map(({ label, name, options }, index) => (
+                  <div className="form-group mb-3" key={index}>
+                    <label>{label}</label>
+                    <select
+                      name={`paymentDetails.${name}`}
+                      value={formData.paymentDetails[name]}
+                      onChange={handleChange}
+                      className="form-control"
+                    >
+                      {options.map((option, i) => (
+                        <option key={i} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                ))}
+                <div className="form-group mb-3">
+                  <label>Comment</label>
+                  <textarea
+                    name="comment"
+                    value={formData.paymentDetails.comments}
                     onChange={handleChange}
                     className="form-control"
-                  />
+                    placeholder="Enter Comments"
+                  ></textarea>
                 </div>
-              ))}
+                {/* //!----------------------------------------------------------------------------PRODUCT DETAILS SECTION-------------------------------------------------------------------- */}
+                <div className="col-md-12" style={{ marginTop: "8vh" }}>
+                  <h5 className="fw-bold text-dark  border-bottom">
+                    Product Details
+                  </h5>
+                  {[
+                    { label: "Start Date", name: "startDate", type: "date" },
+                    { label: "End Date", name: "endDate", type: "date" },
+                    {
+                      label: "Grand Total",
+                      name: "grandTotal",
+                      type: "number",
+                    },
+                    { label: "Discount", name: "discount", type: "number" },
+                    { label: "Adjustment", name: "adjustment", type: "number" },
+                  ].map(({ label, name, type }, index) => (
+                    <div key={index} className="form-group mb-3">
+                      <label>{label}</label>
+                      <input
+                        type={type}
+                        name={`productDetails[0].${name}`}
+                        value={formData.productDetails[0][name] || ""}
+                        onChange={handleChange}
+                        className="form-control"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {/* Update Button */}
+              <div className="col-md-12 text-center ">
+                <button type="submit" className="btn text-white py-1 px-4" style={{backgroundColor:"#009688"}}>
+                  Update
+                </button>
+              </div>
             </div>
-            </div>
-            {/* Submit Button */}
-            <div className="col-md-12 text-center mt-3">
-              <button type="submit" className="btn btn-primary">
-                Submit Sales Order
-              </button>
-            </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
   );

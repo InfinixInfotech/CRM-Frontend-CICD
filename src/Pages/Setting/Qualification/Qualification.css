@@ -1,0 +1,8 @@
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background-color: green; /* Your desired background color */
+  }
+  
+  .table-striped > tbody > tr:nth-of-type(odd):hover {
+    background-color: blue; /* Optional: Change hover color */
+  }
+  

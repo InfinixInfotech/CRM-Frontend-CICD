@@ -71,10 +71,10 @@ const SalesOrder = () => {
     dispatch(deleteSalesOrderThunk(id))
       .unwrap()
       .then((response) => {
-        setMsg(response.message || "deleted successfully");
         setsalesOrder((prevStatuses) =>
           prevStatuses.filter((salesorder) => salesorder.id !== id)
         );
+        setMsg(response.message || "deleted successfully");
       })
       .catch((error) => {
         setMsg(error || "Failed to delete status");
@@ -121,37 +121,33 @@ const SalesOrder = () => {
           Sales Order
         </h2>
       </section>
-      <div className="container-fluid border border-2 border-gray mt-1 ">
+
+      {/* Filters */}
+      <div className="container-fluid border border-2 border-gray mt-1 d-flex py-4 gap-1 bg-white">
+        {[
+          "Status",
+          "Service Status",
+          "Assigned",
+          "By Date",
+          "Lead Source",
+          "Segment",
+        ].map((filter, index) => (
+          <div className="col-md-2" key={index}>
+            <select className="form-control" style={{ width: "92%" }}>
+              <option value="all">{filter}</option>
+              <option value="option1">Option 1</option>
+              <option value="option2">Option 2</option>
+            </select>
+          </div>
+        ))}
+      </div>
+      <div className="container-fluid border border-2 border-gray mt-1 bg-white">
         <div
-          className="outerBgBox table-responsive container-fluid py-4"
+          className="outerBgBox table-responsive container-fluid "
           // style={{ width: "80vw" }}
         >
-          {/* Filters */}
-          <div className="row mb-4">
-            {[
-              "Status",
-              "Service Status",
-              "Assigned",
-              "By Date",
-              "Lead Source",
-              "Segment",
-            ].map((filter, index) => (
-              <div className="col-md-2" key={index}>
-                <select className="form-control">
-                  <option value="all">{filter}</option>
-                  <option value="option1">Option 1</option>
-                  <option value="option2">Option 2</option>
-                </select>
-              </div>
-            ))}
-          </div>
-
           {/* Buttons */}
           <div className="mb-2 ">
-            {/* <PrintButton tableId="table-data" />
-            <PdfButton tableId="table-data" />
-            <CsvButton tableId="table-data" />
-            <CopyButton tableId="table-data" /> */}
             <ExportData tableId="table-data" />
           </div>
           {/* Popup */}
@@ -182,26 +178,26 @@ const SalesOrder = () => {
                   <th>Payment Date</th>
                   <th>Client Name</th>
                   <th>Mobile</th>
-                  <th>Assigned To</th>
+                  {/* <th>Assigned To</th>
                   <th>Manager Name</th>
                   <th>Segment</th>
-                  <th>Type</th>
+                  <th>Type</th> */}
                   <th>Start Date</th>
                   <th>End Date</th>
-                  <th>Net Total</th>
-                  <th>Tax</th>
+                  {/* <th>Net Total</th>
+                  <th>Tax</th> */}
                   <th>Grand Total</th>
                   <th>DOB</th>
                   <th>PAN No</th>
                   <th>Email</th>
                   <th>City</th>
                   <th>State</th>
-                  <th>Options</th>
+                  {/* <th>Options</th>
                   <th>Status</th>
                   <th>Lead Source</th>
                   <th>Approved By</th>
                   <th>Approved Time</th>
-                  <th>Description</th>
+                  <th>Description</th> */}
                   <th className="text-center">Action</th>
                 </tr>
               </thead>
@@ -213,14 +209,14 @@ const SalesOrder = () => {
                     <td>{salesOrderObj.paymentDetails.paymentDate}</td>
                     <td>{salesOrderObj.personalDetails.clientName}</td>
                     <td>{salesOrderObj.personalDetails.mobile}</td>
-                    <td>{salesOrderObj.assignedTo}</td>
+                    {/* <td>{salesOrderObj.assignedTo}</td>
                     <td>{salesOrderObj.managerName}</td>
                     <td>{salesOrderObj.segment}</td>
-                    <td>{salesOrderObj.type}</td>
+                    <td>{salesOrderObj.type}</td> */}
                     <td>{salesOrderObj.productDetails[0]?.startDate}</td>
                     <td>{salesOrderObj.productDetails[0]?.endDate}</td>
-                    <td>{salesOrderObj.netTotal}</td>
-                    <td>{salesOrderObj.tax}</td>
+                    {/* <td>{salesOrderObj.netTotal}</td>
+                    <td>{salesOrderObj.tax}</td> */}
                     <td>{salesOrderObj.productDetails[0]?.grandTotal}</td>
                     <td>{salesOrderObj.personalDetails.dob}</td>
 
@@ -238,12 +234,12 @@ const SalesOrder = () => {
                     </td>
                     <td>{salesOrderObj.personalDetails.address.city}</td>
                     <td>{salesOrderObj.personalDetails.address.state}</td>
-                    <td>{salesOrderObj.options}</td>
+                    {/* <td>{salesOrderObj.options}</td>
                     <td>{salesOrderObj.status}</td>
                     <td>{salesOrderObj.leadSource}</td>
                     <td>{salesOrderObj.approvedBy}</td>
                     <td>{salesOrderObj.approvedTime}</td>
-                    <td>{salesOrderObj.description}</td>
+                    <td>{salesOrderObj.description}</td> */}
                     <td className="text-center">
                       <div className="d-flex justify-content-center align-items-center gap-2">
                         <button className="btn btn-success btn-sm py-0 px-2">
@@ -292,35 +288,46 @@ const SalesOrder = () => {
               <i className="bi bi-arrow-right-circle"></i>
             </button>
           </div>
-
-          {/* Summary */}
-          <div className="mt-4">
-            <table
-              className="table small-table table-bordered"
-              id="table-data1"
-            >
-              <thead className="table-secondary">
-                <tr>
-                  <th>Date Range</th>
-                  <th>Client Count</th>
-                  <th>Net Total</th>
-                  <th>Grand Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>2024-11-01 to 2024-11-27</td>
-                  <td>10</td>
-                  <td>50,000</td>
-                  <td>51,000</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <button className="btn btn-primary">Create</button>
         </div>
+      
       </div>
+        {/* Summary */}
+        <div className="mt-4 border border-2 p-4">
+          <table
+            className="table small-table table-bordered table-striped"
+            id="table-data1"
+          >
+            <thead className="table">
+              <tr>
+                <th>Date Range</th>
+                <th>Client Count</th>
+                <th>Net Total</th>
+                <th>Grand Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2024-11-01 to 2024-3-57</td>
+                <td>10</td>
+                <td>50,000</td>
+                <td>51,000</td>
+              </tr>
+              <tr>
+                <td>2024-11-01 to 2024-11-27</td>
+                <td>7</td>
+                <td>20,000</td>
+                <td>17,000</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <button
+            className="btn text-white py-1 px-4"
+            style={{ backgroundColor: "#009688" }}
+          >
+            Create
+          </button>
+        </div>
     </>
   );
 };

@@ -219,7 +219,6 @@ const SegmentPlans = () => {
           Segment Plans
         </h2>
       </section>
-      <BackButton />
       <div
         className="mt-2 py-3"
         // style={{ padding: "18px 16px" }}
@@ -230,26 +229,22 @@ const SegmentPlans = () => {
         >
           <div className="bg-white  border border-2 border-gray">
             <h5
-              className="  text-dark   border border-1"
+              className="text-dark border border-1 pb-2"
               style={{
-                padding: "18px 16px",
+                // padding: "18px 16px",
                 fontSize: "1.7 rem",
                 backgroundColor: "#E8F1F3",
               }}
             >
-              <FaEye
-                className="fs-2"
-                style={{ marginRight: "8px", color: "#009688" }}
-              />
+              <BackButton />
               View Segment Plans
             </h5>
             <div className="p-2">
-              <div className="mb-0">
-                {/* //!-------------------------------------------POPUP INPUT LOGIC HERE------------------------------------------------------------------ */}
-                <div className="addLeadscontainer add-status mt-1">
+{/* //!--------------------------------------------------------------------------------POPUP INPUT LOGIC HERE-------------------------------------------------------------------------- */}
+                <div className="addLeadscontainer add-status mt-1 d-flex gap-1">
                   <button
                     onClick={handleOpenPopup}
-                    className="btn text-white d-flex align-items-center px-2 py-1 rounded-3 shadow-sm"
+                    className="btn btn-exp btn-sm text-white d-flex align-items-center px-2 py-1"
                     style={{ backgroundColor: "#009688" }}
                   >
                     <GrAdd className="text-white fs-6 fw-bold me-2 " />
@@ -344,21 +339,21 @@ const SegmentPlans = () => {
                       </div>
                     </div>
                   )}
-
+                  {/* //!-------------------------------------------------------------------------------------EXPORT BUTTON------------------------------------------------------------------------------ */}
                   <ExportData tableId="table-data" />
-                  {msg && (
-                    <Alert variant="info" className="mt-0 text-center">
-                      {msg}
-                    </Alert>
-                  )}
                 </div>
-              </div>
+                {msg && (
+                  <Alert variant="info" className="mt-0 text-center">
+                    {msg}
+                  </Alert>
+                )}
+              
               <table
                 id="table-data"
-                className="table table-bordered table-striped"
+                className="table table-bordered table-striped mt-2"
               >
                 <thead>
-                  <p>{msg}</p>
+                  {/* <p>{msg}</p> */}
                   <tr>
                     <th>S.No</th>
                     <th>Segment</th>

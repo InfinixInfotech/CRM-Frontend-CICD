@@ -296,14 +296,13 @@ export default function AddGroups() {
   );
 
   const renderSection = (title, fields, basePath) => (
-    <div className="col-md-6 mb-3">
+    <div className="col-md-6 mb-2">
       <h5 className="fw-semibold">{title}</h5>
       <div
-        className="p-3 rounded"
+        className="p-3 rounded border border-2 border-grey"
         style={{
-          border: "2px solid #DEE2E6",
           backgroundColor: "white",
-          border: "2px solid #A6AEBF",
+          // border: "2px solid #A6AEBF",
         }}
       >
         {Object.entries(fields).map(([key, value]) => {
@@ -555,8 +554,8 @@ export default function AddGroups() {
           borderBottom: "1px solid #E1E6EF",
           boxShadow:
             "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-          marginBottom: "0px", // Uncomment and fix if needed
-          marginBottom: "5px", // Uncomment and fix if needed
+          marginBottom: "0px",
+          marginBottom: "5px",
         }}
         className="mt-2"
       >
@@ -566,251 +565,288 @@ export default function AddGroups() {
             padding: "18px 16px",
             fontSize: "30px",
             color: "#2D2D2D",
-            // backgroundColor: "#E3E3E3",
           }}
         >
           <FaUsers
             className="fs-1"
             style={{ marginRight: "8px", color: "#009688" }}
           />
-          Add Groups
+          Groups
         </h2>
       </section>
-      <BackButton />
       <div
-        className="container-fluid border border-2 border-gray mt-2 py-3"
-        style={{ padding: "18px 16px" }}
+        className="mt-2"
+        // style={{ padding: "18px 16px" }}
       >
-        <div
-          className="container-fluid p-4"
-          style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
-        >
-          <div>
-            {showAlert && (
-              <Alert variant="info" className="mt-2 text-center">
-                Group Added Successfully
-              </Alert>
-            )}
-          </div>
-
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="form-label fs-5 fw-semibold">Group Name</label>
-              <input
-                type="text"
-                className="form-control"
-                style={{ border: "2px solid #A6AEBF" }}
-                value={groupData.groupName || ""}
-                onChange={(e) => handleChange("groupName", e.target.value)}
-              />
+        <div className="border border-2 border-grey">
+          <h5
+            className="text-dark border border-1 pb-2"
+            style={{
+              // padding: "18px 16px",
+              fontSize: "1.7 rem",
+              backgroundColor: "#E8F1F3",
+            }}
+          >
+            <BackButton />
+            Add Groups
+          </h5>
+          <div className="p-2">
+            <div>
+              {showAlert && (
+                <Alert variant="info" className="mt-2 text-center">
+                  Group Added Successfully
+                </Alert>
+              )}
             </div>
 
-            <div className="row">
-              {renderSection("Dashboard", groupData.Dashboard, "Dashboard")}
-              {renderSection("Free Trial", groupData.FreeTrial, "FreeTrial")}
-              {renderSection("Contact", groupData.Contact, "Contact")}
-              {renderSection("Mutual Fund", groupData.MutualFund, "MutualFund")}
-              {renderSection("Leads", groupData.Leads, "Leads")}
-              {renderSection("SO", groupData.SO, "SO")}
-              {renderSection(
-                "Client Fetch",
-                groupData.ClientFetch,
-                "ClientFetch"
-              )}
-              {renderSection("Lead Fetch", groupData.LeadFetch, "LeadFetch")}
-              {renderSection(
-                "Lead Template",
-                groupData.LeadTemplate,
-                "LeadTemplate"
-              )}
-              {renderSection(
-                "Client Template",
-                groupData.ClientTemplate,
-                "ClientTemplate"
-              )}
-              {renderSection(
-                "Team Members",
-                groupData.TeamMembers,
-                "TeamMembers"
-              )}
-              {renderSection("SMS Module", groupData.SmsModule, "SmsModule")}
-              {renderSection(
-                "Calling Module",
-                groupData.CallingModule,
-                "CallingModule"
-              )}
-              {renderSection("Mis", groupData.Mis, "Mis")}
-              {renderSection("Compliance", groupData.Compliance, "Compliance")}
-              {renderSection("Export", groupData.Export, "Export")}
-              {renderSection("Logs", groupData.Logs, "Logs")}
-              {renderSection("HR Extra", groupData.HRExtra, "HRExtra")}
-              {renderSection(
-                "Support Module",
-                groupData.SupportModule,
-                "SupportModule"
-              )}
-              {renderSection("WhatsApp Module", groupData.Whatsapp, "Whatsapp")}
-              {renderSection("Reports", groupData.Reports, "Reports")}
-              {renderSection("Extra", groupData.Extra, "Extra")}
+            <form onSubmit={handleSubmit}>
+              <div className="mb-3">
+                <label className="form-label fs-5 fw-semibold">
+                  Group Name
+                </label>
+                <input
+                  type="text"
+                  className="form-control border border-2 border-grey"
+                  // style={{ border: "2px solidrgb(48, 93, 192)" }}
+                  value={groupData.groupName || ""}
+                  onChange={(e) => handleChange("groupName", e.target.value)}
+                />
+              </div>
 
-              <div className="col-md-6">
+              <div className="row">
+                {renderSection("Dashboard", groupData.Dashboard, "Dashboard")}
+                {renderSection("Free Trial", groupData.FreeTrial, "FreeTrial")}
+                {renderSection("Contact", groupData.Contact, "Contact")}
+                {renderSection(
+                  "Mutual Fund",
+                  groupData.MutualFund,
+                  "MutualFund"
+                )}
+                {renderSection(
+                  "Compliance",
+                  groupData.Compliance,
+                  "Compliance"
+                )}
+                {renderSection("Reports", groupData.Reports, "Reports")}
+
+                {renderSection(
+                  "Client Fetch",
+                  groupData.ClientFetch,
+                  "ClientFetch"
+                )}
+                {renderSection("Lead Fetch", groupData.LeadFetch, "LeadFetch")}
+                {renderSection(
+                  "Lead Template",
+                  groupData.LeadTemplate,
+                  "LeadTemplate"
+                )}
+                {renderSection(
+                  "Client Template",
+                  groupData.ClientTemplate,
+                  "ClientTemplate"
+                )}
+                {renderSection(
+                  "Team Members",
+                  groupData.TeamMembers,
+                  "TeamMembers"
+                )}
+                {renderSection("SMS Module", groupData.SmsModule, "SmsModule")}
+                {renderSection(
+                  "Calling Module",
+                  groupData.CallingModule,
+                  "CallingModule"
+                )}
+                {renderSection("Mis", groupData.Mis, "Mis")}
+
+                {renderSection(
+                  "Support Module",
+                  groupData.SupportModule,
+                  "SupportModule"
+                )}
+                {renderSection("Logs", groupData.Logs, "Logs")}
+                {renderSection("HR Extra", groupData.HRExtra, "HRExtra")}
+
+                {renderSection(
+                  "WhatsApp Module",
+                  groupData.Whatsapp,
+                  "Whatsapp"
+                )}
+                {renderSection("SO", groupData.SO, "SO")}
+                {renderSection("Export", groupData.Export, "Export")}
+                {renderSection("Leads", groupData.Leads, "Leads")}
+                {renderSection("Extra", groupData.Extra, "Extra")}
+              </div>
+              <div className="col-md-6 w-100">
                 <h5 className="fw-semibold">Other Settings</h5>
                 <div
-                  className="rounded p-3"
+                  className="rounded p-3 border border-2 border-grey"
                   style={{
-                    border: "2px solid #DEE2E6",
-                    border: "2px solid #A6AEBF",
+                    // border: "2px solid #DEE2E6",
                     backgroundColor: "white",
                   }}
                 >
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="FreeTrialDays">
-                      Free Trial Days
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="FreeTrialDays"
-                      value={groupData.FreeTrialDays}
-                      onChange={(e) =>
-                        handleChange(
-                          "FreeTrialDays",
-                          Number(e.target.value) || 0
-                        )
-                      }
-                    />
-                  </div>
+                  <div
+                    style={{
+                      display: "grid",
+                      gridTemplateColumns: "repeat(4, 1fr)", // 4 columns of equal width
+                      gap: "20px", // space between items
+                      alignItems: "center", // aligns items vertically
+                    }}
+                  >
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="FreeTrialDays">
+                        Free Trial Days
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="FreeTrialDays"
+                        value={groupData.FreeTrialDays}
+                        onChange={(e) =>
+                          handleChange(
+                            "FreeTrialDays",
+                            Number(e.target.value) || 0
+                          )
+                        }
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="FreeTrialPerContact">
-                      Free Trial Per Contact
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="FreeTrialPerContact"
-                      value={groupData.FreeTrialPerContact}
-                      onChange={(e) =>
-                        handleChange(
-                          "FreeTrialPerContact",
-                          Number(e.target.value) || 0
-                        )
-                      }
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <label
+                        className="form-label"
+                        htmlFor="FreeTrialPerContact"
+                      >
+                        Free Trial Per Contact
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="FreeTrialPerContact"
+                        value={groupData.FreeTrialPerContact}
+                        onChange={(e) =>
+                          handleChange(
+                            "FreeTrialPerContact",
+                            Number(e.target.value) || 0
+                          )
+                        }
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="TotalCRMLeadLimit">
-                      Total CRM Lead Limit
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="TotalCRMLeadLimit"
-                      value={groupData.TotalCRMLeadLimit}
-                      onChange={(e) =>
-                        handleChange(
-                          "TotalCRMLeadLimit",
-                          Number(e.target.value) || 0
-                        )
-                      }
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="TotalCRMLeadLimit">
+                        Total CRM Lead Limit
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="TotalCRMLeadLimit"
+                        value={groupData.TotalCRMLeadLimit}
+                        onChange={(e) =>
+                          handleChange(
+                            "TotalCRMLeadLimit",
+                            Number(e.target.value) || 0
+                          )
+                        }
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="LeadFetchRatio">
-                      Lead Fetch Ratio
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="LeadFetchRatio"
-                      value={groupData.LeadFetch.Ratio}
-                      onChange={(e) =>
-                        handleChange("LeadFetch.Ratio", e.target.value)
-                      }
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="LeadFetchRatio">
+                        Lead Fetch Ratio
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="LeadFetchRatio"
+                        value={groupData.LeadFetch.Ratio}
+                        onChange={(e) =>
+                          handleChange("LeadFetch.Ratio", e.target.value)
+                        }
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="ClientFetchRatio">
-                      Client Fetch Ratio
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="ClientFetchRatio"
-                      value={groupData.ClientFetch.Ratio}
-                      onChange={(e) =>
-                        handleChange("ClientFetch.Ratio", e.target.value)
-                      }
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="ClientFetchRatio">
+                        Client Fetch Ratio
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="ClientFetchRatio"
+                        value={groupData.ClientFetch.Ratio}
+                        onChange={(e) =>
+                          handleChange("ClientFetch.Ratio", e.target.value)
+                        }
+                      />
+                    </div>
 
-                  <div className="mb-3">
-                    <label className="form-label" htmlFor="UnreadFetch">
-                      Unread Fetch
-                    </label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      id="UnreadFetch"
-                      value={groupData.UnreadFetch}
-                      onChange={(e) =>
-                        handleChange("UnreadFetch", Number(e.target.value) || 0)
-                      }
-                    />
-                  </div>
+                    <div className="mb-3">
+                      <label className="form-label" htmlFor="UnreadFetch">
+                        Unread Fetch
+                      </label>
+                      <input
+                        type="number"
+                        className="form-control"
+                        id="UnreadFetch"
+                        value={groupData.UnreadFetch}
+                        onChange={(e) =>
+                          handleChange(
+                            "UnreadFetch",
+                            Number(e.target.value) || 0
+                          )
+                        }
+                      />
+                    </div>
 
-                  <div>
-                    <label className="form-label">Lead Fetch From</label>
-                    <select
-                      className="form-select"
-                      value={groupData.LeadFetch.From} // Make sure groupData.LeadFetch.From is a valid value
-                      onChange={(e) =>
-                        handleChange("LeadFetch.From", e.target.value)
-                      }
-                    >
-                      <option value="" disabled>
-                        Select Some Option
-                      </option>
-                      <option value="DisposePool">Dispose Pool</option>
-                      <option value="FreshPool">Fresh Pool</option>
-                      <option value="DiamondPoolHNIPool">
-                        Diamond Pool HNI Pool
-                      </option>
-                    </select>
-                  </div>
+                    <div className="mb-3">
+                      <label className="form-label">Lead Fetch From</label>
+                      <select
+                        className="form-select"
+                        value={groupData.LeadFetch.From}
+                        onChange={(e) =>
+                          handleChange("LeadFetch.From", e.target.value)
+                        }
+                      >
+                        <option value="" disabled>
+                          Select Some Option
+                        </option>
+                        <option value="DisposePool">Dispose Pool</option>
+                        <option value="FreshPool">Fresh Pool</option>
+                        <option value="DiamondPoolHNIPool">
+                          Diamond Pool HNI Pool
+                        </option>
+                      </select>
+                    </div>
 
-                  <div>
-                    <label className="form-label">Client Fetch From</label>
-                    <select
-                      className="form-select"
-                      value={groupData.ClientFetch.From}
-                      onChange={(e) =>
-                        handleChange("ClientFetch.From", e.target.value)
-                      }
-                    >
-                      <option value="" disabled>
-                        Select Some Option
-                      </option>
-                      <option value="DisposePool">Dispose Pool</option>
-                      <option value="FreshPool">Fresh Pool</option>
-                      <option value="DiamondPoolHNIPool">
-                        Diamond Pool HNI Pool
-                      </option>
-                    </select>
+                    <div className="mb-3">
+                      <label className="form-label">Client Fetch From</label>
+                      <select
+                        className="form-select"
+                        value={groupData.ClientFetch.From}
+                        onChange={(e) =>
+                          handleChange("ClientFetch.From", e.target.value)
+                        }
+                      >
+                        <option value="" disabled>
+                          Select Some Option
+                        </option>
+                        <option value="DisposePool">Dispose Pool</option>
+                        <option value="FreshPool">Fresh Pool</option>
+                        <option value="DiamondPoolHNIPool">
+                          Diamond Pool HNI Pool
+                        </option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-
-            <div className="col-12 text-center">
-              <button type="submit" className="btn btn-primary mb-3 mt-4">
-                Submit
-              </button>
-            </div>
-          </form>
+              <div className="col-12 text-center">
+                <button type="submit" className="btn mb-2 mt-3 text-white px-4 py-1" style={{backgroundColor:"#009688"}}>
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </>

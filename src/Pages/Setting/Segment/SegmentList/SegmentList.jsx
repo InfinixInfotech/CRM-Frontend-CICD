@@ -90,7 +90,6 @@ const SegmentList = () => {
       highRisk: true,
       status: false,
     });
-    // dispatch(getAllSegmentListThunk());
     setShowPopup(false);
     setTimeout(() => {
       window.location.reload();
@@ -193,7 +192,6 @@ const SegmentList = () => {
       <section
         style={{
           position: "relative",
-          // padding: "12px 30px",
           backgroundColor: "#fff",
           borderBottom: "1px solid #E1E6EF",
           boxShadow:
@@ -209,7 +207,6 @@ const SegmentList = () => {
             padding: "18px 16px",
             fontSize: "30px",
             color: "#2D2D2D",
-            // backgroundColor: "#E3E3E3",
           }}
         >
           <FaList
@@ -220,152 +217,150 @@ const SegmentList = () => {
         </h2>
       </section>
 
-      <BackButton />
-      <div
-        className="mt-1"
-        // style={{ padding: "18px 16px" }}
-      >
+      <div className="mt-1">
         <div className="border border-2 border-grey">
           <h5
-            className="  text-dark  border border-1"
+            className="text-dark border border-1 pb-2"
             style={{
-              padding: "18px 16px",
+              // padding: "18px 16px",
               fontSize: "1.7 rem",
               backgroundColor: "#E8F1F3",
             }}
           >
-            <FaEye
-              className="fs-2"
-              style={{ marginRight: "8px", color: "#009688" }}
-            />
+            <BackButton />
             View Segment List
           </h5>
           <div className="p-2">
             <div className="mb-0">
-              <div className="mt-1">
-                <button
-                  onClick={handleOpenPopup}
-                  className="btn text-white d-flex align-items-center"
-                  style={{ backgroundColor: "#009688" }}
-                >
-                  <GrAdd className="text-white fs-6 fw-bold me-2" />
-                  Add Segment
-                </button>
-
-                {showPopup && (
-                  <div
-                    className="popup d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100"
-                    style={{
-                      backgroundColor: "rgba(0, 0, 0, 0.6)",
-                      zIndex: 1050,
-                    }}
+              <div className="d-flex gap-1">
+                <div className="mt-0">
+                  <button
+                    onClick={handleOpenPopup}
+                    className="btn btn-exp btn-sm text-white d-flex align-items-center"
+                    style={{ backgroundColor: "#009688" }}
                   >
+                    <GrAdd className="text-white fs-6 fw-bold me-1" />
+                    Add Segment
+                  </button>
+
+                  {showPopup && (
                     <div
-                      className="popup-content card shadow-lg p-4 bg-white"
-                      style={{ width: "400px", borderRadius: "10px" }}
+                      className="popup d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100"
+                      style={{
+                        backgroundColor: "rgba(0, 0, 0, 0.6)",
+                        zIndex: 1050,
+                      }}
                     >
-                      <div className="card-body">
-                        <h5 className="card-title text-center text-success mb-4">
-                          {editSegment !== null
-                            ? "Edit Segment"
-                            : "Add New Segment"}
-                        </h5>
-                        <button
-                          className="btn-close position-absolute top-0 end-0 m-3"
-                          onClick={handleClosePopup}
-                        ></button>
-                        <form
-                          onSubmit={(e) => {
-                            e.preventDefault();
-                            if (editSegment) {
-                              handleEditSegment(editSegment);
-                            } else {
-                              handleCreate(e);
-                            }
-                          }}
-                        >
-                          <div className="mb-3">
-                            <label className="form-label">Segment Name</label>
-                            <input
-                              style={{ fontSize: "14px", fontWeight: "500" }}
-                              type="text"
-                              name="segmentName"
-                              value={formData.segmentName}
-                              onChange={handleChange}
-                              className="form-control"
-                              placeholder="Trade Segment Name"
-                            />
-                          </div>
-                          <div className="mb-3">
-                            <label className="form-label">Segment Type</label>
-                            <select
-                              style={{ fontSize: "14px", fontWeight: "500" }}
-                              name="segmentType"
-                              value={formData.segmentType}
-                              onChange={handleChange}
-                              className="form-select"
-                            >
-                              <option value="Equity">Equity</option>
-                              <option value="FNO">FNO</option>
-                              <option value="Commodity">Commodity</option>
-                              <option value="Forex">Forex</option>
-                            </select>
-                          </div>
-                          <div className="mb-3">
-                            <label className="form-label">
-                              Segment Category
-                            </label>
-                            <select
-                              style={{ fontSize: "14px", fontWeight: "500" }}
-                              name="segmentCategory"
-                              value={formData.segmentCategory}
-                              onChange={handleChange}
-                              className="form-select"
-                            >
-                              <option value="High Risk">High Risk</option>
-                              <option value="Moderate Risk">
-                                Moderate Risk
-                              </option>
-                              <option value="Low Risk">Low Risk</option>
-                            </select>
-                          </div>
-                          <div className="form-check mb-3">
-                            <input
-                              type="checkbox"
-                              name="status"
-                              checked={formData.status}
-                              onChange={handleChange}
-                              className="form-check-input"
-                              id="statusCheck"
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="statusCheck"
-                            >
-                              Active
-                            </label>
-                          </div>
+                      <div
+                        className="popup-content card shadow-lg p-4 bg-white"
+                        style={{ width: "400px", borderRadius: "10px" }}
+                      >
+                        <div className="card-body">
+                          <h5 className="card-title text-center text-success mb-4">
+                            {editSegment !== null
+                              ? "Edit Segment"
+                              : "Add New Segment"}
+                          </h5>
                           <button
-                                type="submit"
-                                className={`btn w-100 ${
-                                  editSegment !== null ? "btn-warning" : ""
-                                }`}
-                                style={
-                                  editSegment === null
-                                    ? { backgroundColor: "#009688", color:"white" }
-                                    : {}
-                                }
+                            className="btn-close position-absolute top-0 end-0 m-3"
+                            onClick={handleClosePopup}
+                          ></button>
+                          <form
+                            onSubmit={(e) => {
+                              e.preventDefault();
+                              if (editSegment) {
+                                handleEditSegment(editSegment);
+                              } else {
+                                handleCreate(e);
+                              }
+                            }}
+                          >
+                            <div className="mb-3">
+                              <label className="form-label">Segment Name</label>
+                              <input
+                                style={{ fontSize: "14px", fontWeight: "500" }}
+                                type="text"
+                                name="segmentName"
+                                value={formData.segmentName}
+                                onChange={handleChange}
+                                className="form-control"
+                                placeholder="Trade Segment Name"
+                              />
+                            </div>
+                            <div className="mb-3">
+                              <label className="form-label">Segment Type</label>
+                              <select
+                                style={{ fontSize: "14px", fontWeight: "500" }}
+                                name="segmentType"
+                                value={formData.segmentType}
+                                onChange={handleChange}
+                                className="form-select"
                               >
-                                {editSegment ? "Update" : "Add"}
-                              </button>
-                        </form>
+                                <option value="Equity">Equity</option>
+                                <option value="FNO">FNO</option>
+                                <option value="Commodity">Commodity</option>
+                                <option value="Forex">Forex</option>
+                              </select>
+                            </div>
+                            <div className="mb-3">
+                              <label className="form-label">
+                                Segment Category
+                              </label>
+                              <select
+                                style={{ fontSize: "14px", fontWeight: "500" }}
+                                name="segmentCategory"
+                                value={formData.segmentCategory}
+                                onChange={handleChange}
+                                className="form-select"
+                              >
+                                <option value="High Risk">High Risk</option>
+                                <option value="Moderate Risk">
+                                  Moderate Risk
+                                </option>
+                                <option value="Low Risk">Low Risk</option>
+                              </select>
+                            </div>
+                            <div className="form-check mb-3">
+                              <input
+                                type="checkbox"
+                                name="status"
+                                checked={formData.status}
+                                onChange={handleChange}
+                                className="form-check-input"
+                                id="statusCheck"
+                              />
+                              <label
+                                className="form-check-label"
+                                htmlFor="statusCheck"
+                              >
+                                Active
+                              </label>
+                            </div>
+                            <button
+                              type="submit"
+                              className={`btn w-100 ${
+                                editSegment !== null ? "btn-warning" : ""
+                              }`}
+                              style={
+                                editSegment === null
+                                  ? {
+                                      backgroundColor: "#009688",
+                                      color: "white",
+                                    }
+                                  : {}
+                              }
+                            >
+                              {editSegment ? "Update" : "Add"}
+                            </button>
+                          </form>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
+                  )}
+                </div>
 
-              <ExportData tableId="table-data" />
+                <ExportData tableId="table-data" />
+              </div>
 
               {msg && (
                 <Alert variant="info" className="mt-0 text-center">

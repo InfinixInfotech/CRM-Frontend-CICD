@@ -176,132 +176,133 @@ const Designation = () => {
         </h2>
       </section>
 
-      <BackButton />
       <div className="mt-2">
         <div
           className="lead-status-container mt-0"
-          // style={{ background: "rgb(227,227,227)", border: "2px solid grey" }}
         >
-          {/* Add/Edit Designation */}
-
-          {/* View Designations */}
+ 
           <div className="bg-white  border border-2 border-gray">
             <h5
-              className="  text-dark   border border-1"
+              className="text-dark border border-1 pb-2"
               style={{
-                padding: "18px 16px",
                 fontSize: "1.7 rem",
                 backgroundColor: "#E8F1F3",
               }}
             >
-              <FaEye
-                className="fs-2"
-                style={{ marginRight: "8px", color: "#009688" }}
-              />
+              <BackButton />
               View Designation
             </h5>
             <div className="p-2">
-              <div className="mb-4">
-                {/* //!-------------------------------------------------POPUP INPUT FIELD LOGIC HERE----------------------------------------// */}
-                <div className="addLeadscontainer add-status ">
-                  <button
-                    onClick={handleOpenPopup}
-                    className="btn text-white d-flex align-items-center"
-                    style={{ backgroundColor: "#009688" }}
-                  >
-                    <GrAdd className="text-white fs-6 fw-bold me-2" />
-                    Add Designation
-                  </button>
+                <div className="d-flex gap-1">
+                  {/* //!-------------------------------------------------POPUP INPUT FIELD LOGIC HERE----------------------------------------// */}
 
-                  {showPopup && (
-                    <div
-                      className="popup d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100"
-                      style={{
-                        backgroundColor: "rgba(0, 0, 0, 0.6)",
-                        zIndex: 1050,
-                      }}
+                  <div className="addLeadscontainer add-status ">
+                    <button
+                      onClick={handleOpenPopup}
+                      className="btn btn-exp btn-sm text-white d-flex align-items-center"
+                      style={{ backgroundColor: "#009688" }}
                     >
+                      <GrAdd className="text-white fs-6 fw-bold me-2" />
+                      Add Designation
+                    </button>
+
+                    {showPopup && (
                       <div
-                        className="popup-content card shadow-lg p-4 bg-white"
-                        style={{ width: "400px", borderRadius: "10px" }}
+                        className="popup d-flex justify-content-center align-items-center position-fixed top-0 start-0 w-100 h-100"
+                        style={{
+                          backgroundColor: "rgba(0, 0, 0, 0.6)",
+                          zIndex: 1050,
+                        }}
                       >
-                        <div className="card-body">
-                          <h5 className="card-title text-center mb-4">
-                            {editDesignation !== null
-                              ? "Edit Designation"
-                              : "Add New Designation"}
-                          </h5>
-                          <button
-                            className="btn-close position-absolute top-0 end-0 m-3"
-                            onClick={handleClosePopup}
-                          ></button>
-                          <form
-                            onSubmit={(e) => {
-                              e.preventDefault();
-                              if (editDesignation) {
-                                handleEditDesignation(editDesignation);
-                              } else {
-                                handleAddDesignation();
-                              }
-                            }}
-                          >
-                            <div className="d-flex flex-column mt-3">
-                              <input
-                                type="text"
-                                value={
-                                  editDesignation ? editValue : newDesignation
+                        <div
+                          className="popup-content card shadow-lg p-4 bg-white"
+                          style={{ width: "400px", borderRadius: "10px" }}
+                        >
+                          <div className="card-body">
+                            <h5 className="card-title text-center mb-4">
+                              {editDesignation !== null
+                                ? "Edit Designation"
+                                : "Add New Designation"}
+                            </h5>
+                            <button
+                              className="btn-close position-absolute top-0 end-0 m-3"
+                              onClick={handleClosePopup}
+                            ></button>
+                            <form
+                              onSubmit={(e) => {
+                                e.preventDefault();
+                                if (editDesignation) {
+                                  handleEditDesignation(editDesignation);
+                                } else {
+                                  handleAddDesignation();
                                 }
-                                onChange={(e) =>
-                                  editDesignation
-                                    ? setEditValue(e.target.value)
-                                    : setNewDesignation(e.target.value)
-                                }
-                                placeholder="Designation Name"
-                                className="form-control mb-3"
-                              />
-                              <input
-                                type="number"
-                                value={editDesignation ? editTarget : newTarget}
-                                onChange={(e) =>
-                                  editDesignation
-                                    ? setEditTarget(e.target.value)
-                                    : setNewTarget(e.target.value)
-                                }
-                                placeholder="Designation Target"
-                                className="form-control mb-3"
-                              />
-                              <button
-                                type="submit"
-                                className={`btn w-100 ${
-                                  editDesignation !== null ? "btn-warning" : ""
-                                }`}
-                                style={
-                                  editDesignation === null
-                                    ? { backgroundColor: "#009688", color:"white" }
-                                    : {}
-                                }
-                              >
-                                {editDesignation ? "Update" : "Add"}
-                              </button>
-                            </div>
-                          </form>
+                              }}
+                            >
+                              <div className="d-flex flex-column mt-3">
+                                <input
+                                  type="text"
+                                  value={
+                                    editDesignation ? editValue : newDesignation
+                                  }
+                                  onChange={(e) =>
+                                    editDesignation
+                                      ? setEditValue(e.target.value)
+                                      : setNewDesignation(e.target.value)
+                                  }
+                                  placeholder="Designation Name"
+                                  className="form-control mb-3"
+                                />
+                                <input
+                                  type="number"
+                                  value={
+                                    editDesignation ? editTarget : newTarget
+                                  }
+                                  onChange={(e) =>
+                                    editDesignation
+                                      ? setEditTarget(e.target.value)
+                                      : setNewTarget(e.target.value)
+                                  }
+                                  placeholder="Designation Target"
+                                  className="form-control mb-3"
+                                />
+                                <button
+                                  type="submit"
+                                  className={`btn w-100 ${
+                                    editDesignation !== null
+                                      ? "btn-warning"
+                                      : ""
+                                  }`}
+                                  style={
+                                    editDesignation === null
+                                      ? {
+                                          backgroundColor: "#009688",
+                                          color: "white",
+                                        }
+                                      : {}
+                                  }
+                                >
+                                  {editDesignation ? "Update" : "Add"}
+                                </button>
+                              </div>
+                            </form>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    )}
+                  </div>
+                  {/* //!-------------------------------------------------COMMON DATA BUTTONS LOGIC HERE----------------------------------------// */}
+                  <ExportData tableId="table-data" />
                 </div>
-                {/* //!-------------------------------------------------COMMON DATA BUTTONS LOGIC HERE----------------------------------------// */}
-                <ExportData tableId="table-data" />
 
                 {msg && (
-                  <Alert variant="info" className="mt-2 text-center">
+                  <Alert variant="info" className=" text-center">
                     {msg}
                   </Alert>
                 )}
-              </div>
+        
               <table
                 id="table-data"
-                className="table table-bordered table-striped"
+                className="table table-bordered table-striped mt-2"
               >
                 <thead>
                   <tr>

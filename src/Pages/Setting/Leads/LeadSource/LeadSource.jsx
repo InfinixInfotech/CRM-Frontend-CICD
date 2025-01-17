@@ -163,7 +163,6 @@ const LeadSource = () => {
         </h2>
       </section>
 
-      <BackButton />
       <div className="mb-0">
         <div className="lead-status-container mt-0 ">
           <div className="addLeadscontainer add-status mt-4">
@@ -183,18 +182,19 @@ const LeadSource = () => {
 
           <div className="bg-white  border border-2 border-gray">
             <h5
-              className="  text-dark   border border-1"
+              className="text-dark border border-1 pb-2"
               style={{
-                padding: "18px 16px",
+                // padding: "18px 16px",
                 fontSize: "1.7 rem",
                 backgroundColor: "#E8F1F3",
               }}
             >
+              <BackButton />
               View Lead Source
             </h5>
             <div className="p-2">
-              <div className="mb-4">
-                <div className="mt-1">
+              <div className="d-flex gap-1">
+                <div>
                   <CommonPopup
                     title="Lead Source"
                     showPopup={showPopup}
@@ -209,16 +209,16 @@ const LeadSource = () => {
                   />
                 </div>
                 <ExportData tableId="table-data" />
-
-                {msg && (
-                  <Alert variant="info" className="mt-2 text-center">
-                    {msg}
-                  </Alert>
-                )}
               </div>
+
+              {msg && (
+                <Alert variant="info" className="mt-2 text-center">
+                  {msg}
+                </Alert>
+              )}
               <table
                 id="table-data"
-                className="table table-bordered table-striped"
+                className="table table-bordered table-striped mt-2"
               >
                 <thead>
                   <tr>

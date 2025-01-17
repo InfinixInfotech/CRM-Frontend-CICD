@@ -9,7 +9,7 @@
  --display-form : flex;
  --flex-wrap-form : wrap;
  --gap-form : 1rem;
- --flex-formDiv : 1 1 calc(33.333% - 1rem);
+ --flex-formDiv : 1 1 calc(18.333% - 1rem);
  --min-width-formDiv : 200px;
  --display-formLabel : block;
  --margin-bottom-formLabel : 0.5rem;
@@ -28,18 +28,18 @@
  --flex-checkboxGroup-div : 1 1 calc(33.333% - 1rem);
  --min-width-checkboxGroup-div : 200px;
  --display-AdduserCheckboxes : grid;
- --grid-template-columns-AdduserCheckboxes : repeat(3,1fr);
+ --grid-template-columns-AdduserCheckboxes : repeat(7,1fr);
  --gap-AdduserCheckboxes : 0px;
 }
 
 .formWrapper {
-  display: var(--display-formWrappere);
-  flex-direction: var(--flexDirection-formWrappere);
-  gap: var(--gap-formWrappere);
-    margin-top: var(--marginTop-formWrapper);
-  background-color: var(--backGroundColor-formWrapper);
-  padding: var(--padding-formWrapper);
-  border:  var(--border-formWrapper);
+  /* display: var(--display-formWrappere); */
+  /* flex-direction: var(--flexDirection-formWrappere); */
+  /* gap: var(--gap-formWrappere); */
+  /* margin-top: var(--marginTop-formWrapper); */
+  /* background-color: var(--backGroundColor-formWrapper); */
+  /* padding: var(--padding-formWrapper); */
+  /* border:  var(--border-formWrapper); */
 }
 
 .addUser-form {

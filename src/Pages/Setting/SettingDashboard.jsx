@@ -7,13 +7,12 @@ export default function SettingDashboard() {
     <div className=" mt-5 " style={{width:"100%"}} >   
       <section style={{
       position: "relative",
-      // padding: "12px 30px",
       textAlign:"center",
       backgroundColor: "#fff",
       borderBottom: "1px solid #E1E6EF",
       boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-      marginBottom: "0px", // Uncomment and fix if needed
-      marginBottom: "5px", // Uncomment and fix if needed
+      marginBottom: "0px",
+      marginBottom: "5px",
       
             }}
             className="mt-2">
@@ -23,7 +22,6 @@ export default function SettingDashboard() {
                 padding: "18px 16px",
                 fontSize: "30px", 
                 color:"#2D2D2D",
-                // backgroundColor: "#E3E3E3",
               }}
             >
               <FaCog
@@ -47,7 +45,7 @@ export default function SettingDashboard() {
           {/* Card design for each NavigationButton */}
           {[
             // { label: "Add Groups", to: "/addgroups", icon: "fas fa-users "  },
-            { label: "View Groups", to: "/viewgroups", icon: "fas fa-eye" },
+            { label: "Groups", to: "/viewgroups", icon: "fas fa-eye" },
             { label: "Lead Status", to: "/leadstatus", icon: "fas fa-chart-line" },
             { label: "Department", to: "/department", icon: "fas fa-building" },
             { label: "Designation", to: "/designation", icon: "fas fa-id-badge" },
@@ -56,7 +54,7 @@ export default function SettingDashboard() {
             { label: "Segment Plans", to: "/segmentplans", icon: "fas fa-layer-group" },
             { label: "Setting Data", to: "/settingdata", icon: "fas fa-cog" },
             // { label: "Add User", to: "/adduser", icon: "fas fa-user-plus" },
-            { label: "View User", to: "/viewuser", icon: "fas fa-user" },
+            { label: "Users", to: "/viewuser", icon: "fas fa-user" },
             { label: "User Operation", to: "/useroperation", icon: "fas fa-tools" },
             { label: "Sip Trunck", to: "/siptrunck", icon: "fas fa-network-wired" },
             { label: "Segment List", to: "/segmentlist", icon: "fas fa-list" },

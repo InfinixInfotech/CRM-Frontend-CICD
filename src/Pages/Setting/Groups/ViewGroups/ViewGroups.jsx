@@ -151,20 +151,20 @@ const ViewGroups = () => {
           Groups
         </h2>
       </section>
-      <BackButton />
       <div className="mt-2 w-100 border border-2 border-gray ">
         <h5
-          className="  text-dark   border border-1"
+          className="text-dark border border-1 pb-2"
           style={{
-            padding: "18px 16px",
+            // padding: "18px 16px",
             fontSize: "1.7 rem",
             backgroundColor: "#E8F1F3",
           }}
         >
-          <FaEye
+          {/* <FaEye
             className="fs-2"
             style={{ marginRight: "8px", color: "#009688" }}
-          />
+          /> */}
+          <BackButton />
           View Groups
         </h5>
         <div
@@ -174,7 +174,7 @@ const ViewGroups = () => {
           }}
         >
           <div className="px-2 mt-1">
-            <div className=" d-flex gap-1 ">
+            <div className=" d-flex gap-1">
               <button
                 className="btn text-white px-2 py-0"
                 style={{ backgroundColor: "#009688" }}
@@ -220,7 +220,7 @@ const ViewGroups = () => {
 
             <table
               id="table-data"
-              className="table table-bordered table-striped w-100"
+              className="table table-bordered table-striped mt-2 w-100"
             >
               <thead>
                 <tr>

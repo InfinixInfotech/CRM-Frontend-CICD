@@ -16,8 +16,8 @@ export default function BackButton({ to }) {
     return (
         <button 
             type="button" 
-            className="Csv-btn mt-3 px-2 py-0  no-print" 
-            style={{ borderRadius: "none", backgroundColor:"none"}} 
+            className="Csv-btn mt-3 no-print" 
+            style={{ borderRadius: "none", backgroundColor:"#E8F1F3"}} 
             onClick={handleBack}
         >
             <FiArrowLeftCircle className='fs-2 text-primary' />
