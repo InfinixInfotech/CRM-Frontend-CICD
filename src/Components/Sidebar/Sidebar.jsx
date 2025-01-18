@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, Users, PenLine, FileText, IndianRupee, Mail, BookOpen, ChevronDown } from 'lucide-react';
-
+import { Menu, X, LayoutDashboard, Users, PenLine, FileText, IndianRupee, Mail, BookOpen, ChevronDown,UserPlus,Eye ,Upload   } from 'lucide-react';
 const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState({
@@ -16,27 +15,41 @@ const Sidebar = () => {
       [itemName]: !prevState[itemName],
     }));
   };
-
   // const handleItemClick = (itemName, path) => {
   //   setActiveItem(itemName);
   //   console.log(`Navigating to: ${path}`);
   // };
-
   const handleItemClick = (itemName, path) => {
-   
     setActiveItem(itemName);
     console.log(`Navigating to: ${path}`);
     navigate(path); // Perform navigation
   };
-
   const mainMenuItems = [
-    // {
-    //   icon: PenLine,
-    //   text: "salesdashboard",
-    //   id: "salesdashboard",
-    //   path: "/salesdashboard",
-    // },
-    { 
+    {
+      icon: LayoutDashboard,
+      text: "Sales Dashboard",
+      id: "salesdashboard",
+      path: "/salesdashboard",
+    },
+    {
+      icon: UserPlus,
+      text: "Add Leads",
+      id: "addleads",
+      path: "/addleads",
+    },
+    {
+      icon: Eye,
+      text: "View Leads",
+      id: "viewleads",
+      path: "/viewleads",
+    },
+    {
+      icon: Upload ,
+      text: "Upload Leads",
+      id: "uploadleads",
+      path: "/uploadleads",
+    },
+    {
       icon: FileText,
       text: "Sales Order",
       id: "salesorder",
@@ -66,7 +79,6 @@ const Sidebar = () => {
       id: "userhistory",
       path: "/userhistory",
     },
-
     {
       icon: BookOpen,
       text: "FollowUp",
@@ -74,7 +86,6 @@ const Sidebar = () => {
       path: "/followup",
     },
   ];
-
   const sidebarStyle = {
     wrapper: {
       display: 'flex',
@@ -161,58 +172,80 @@ const Sidebar = () => {
       transform: 'rotate(180deg)',
     },
   };
-
   return (
-    <div style={{marginTop:'259px'}}>
-    <div style={sidebarStyle.wrapper}  >
-      <div style={sidebarStyle.sidebar}>
-        {/* Header */}
-        <div style={sidebarStyle.header}>
-          {isExpanded && <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Dashboard</span>}
-          <button
-            style={sidebarStyle.iconButton}
-            onClick={() => setIsExpanded(!isExpanded)}
-          >
-            {isExpanded ? <X size={20} /> : <Menu size={20} />}
-          </button>
-        </div>
-
-        {/* Main Menu */}
-        <nav style={sidebarStyle.nav}>
-          <div>
-            {/* Dashboard Dropdown */}
-            <div style={{ marginBottom: '8px' }}>
-              <button
-               onClick={() => {
-                toggleDropdown("dashboard");
-                handleItemClick("salesDashboard", "/salesdashboard");
+    <div style={{ marginTop: '259px' }}>
+      <div style={sidebarStyle.wrapper}  >
+        <div style={sidebarStyle.sidebar}>
+          {/* Header */}
+          <div style={sidebarStyle.header}>
+            {isExpanded && <span style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>Dashboard</span>}
+            <button
+              style={sidebarStyle.iconButton}
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              {isExpanded ? <X size={20} /> : <Menu size={20} />}
+            </button>
+          </div>
+          {/* Main Menu */}
+          <nav style={sidebarStyle.nav}>
+            <div>
+              {/* Dashboard Dropdown */}
+              <div style={{
+                backgroundColor: "#1c1c1c",
+                color: "#fff",
+                fontFamily: "Arial, sans-serif",
               }}
-                style={{
-                  ...sidebarStyle.menuItem,
-                  ...(activeItem === "dashboard" || isDropdownOpen.dashboard ? sidebarStyle.activeMenuItem : {}),
-                }}
               >
-                <LayoutDashboard size={20} />
-                {isExpanded && (
-                  <>
-                    <span style={sidebarStyle.menuText}>Dashboard</span>
-                    <ChevronDown
-                      size={16}
-                      style={{
-                        ...sidebarStyle.chevron,
-                        ...(isDropdownOpen.dashboard ? sidebarStyle.chevronRotated : {}),
-                      }}
-                    />
-                  </>
-                )}
-              </button>
-              {isExpanded && isDropdownOpen.dashboard && (
-                <div style={sidebarStyle.dropdownContent}>
+                {/* <button
+                  onClick={() => {
+                    toggleDropdown("dashboard");
+                    // handleItemClick("salesDashboard", );
+                  }}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "10px 15px",
+                    backgroundColor: isDropdownOpen.leads ? "#333" : "#1c1c1c",
+                    color: "#fff",
+                    border: "none",
+                    outline: "none",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                >
+                  
+                  <i
+                    class="bi bi-speedometer"
+                    style={{ marginRight: "10px", fontSize: "20px" }}
+                  ></i>
+                  <span style={{ marginLeft: "10px" }}>Dashboard</span>
+                  <i
+                    className={`fas fa-chevron-${isDropdownOpen.dashboard ? "up" : "down"}`}
+                    style={{ marginLeft: "auto", }}
+                  ></i>
+                </button> */}
+                <div style={{
+                  backgroundColor: "#2a2a2a",
+                  maxHeight: isDropdownOpen.dashboard ? "500px" : "0",
+                  overflow: "hidden",
+                  transition: "max-height 0.5s ease",
+                  transitionDelay: isDropdownOpen.dashboard ? "0.1s" : "0s",
+                }}>
                   <button
                     onClick={() => handleItemClick("salesDashboard", "/salesdashboard")}
                     style={{
-                      ...sidebarStyle.dropdownItem,
-                      ...(activeItem === "salesDashboard" ? sidebarStyle.activeMenuItem : {}),
+                      display: "block",
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "10px 15px",
+                      backgroundColor: "#2a2a2a",
+                      color: "#fff",
+                      border: "none",
+                      outline: "none",
+                      cursor: "pointer",
+                      fontSize: "14px",
                     }}
                   >
                     Sales Dashboard
@@ -220,106 +253,159 @@ const Sidebar = () => {
                   <button
                     onClick={() => handleItemClick("callingDashboard", "/callingdashboard")}
                     style={{
-                      ...sidebarStyle.dropdownItem,
-                      ...(activeItem === "callingDashboard" ? sidebarStyle.activeMenuItem : {}),
+                      display: "block",
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "10px 15px",
+                      backgroundColor: "#2a2a2a",
+                      color: "#fff",
+                      border: "none",
+                      outline: "none",
+                      cursor: "pointer",
+                      fontSize: "14px",
                     }}
                   >
                     Calling Dashboard
                   </button>
                 </div>
-              )}
-            </div>
-
-            {/* Leads Dropdown */}
-            <div style={{ marginBottom: '8px' }}>
-              <button
-                onClick={() => toggleDropdown("leads")}
+              </div>
+              <div
                 style={{
-                  ...sidebarStyle.menuItem,
-                  ...(activeItem === "leads" || isDropdownOpen.leads ? sidebarStyle.activeMenuItem : {}),
+                  backgroundColor: "#1c1c1c",
+                  color: "#fff",
+                  fontFamily: "Arial, sans-serif",
                 }}
               >
-                <Users size={20} />
-                {isExpanded && (
-                  <>
-                    <span style={sidebarStyle.menuText}>Leads</span>
-                    <ChevronDown
-                      size={16}
-                      style={{
-                        ...sidebarStyle.chevron,
-                        ...(isDropdownOpen.leads ? sidebarStyle.chevronRotated : {}),
-                      }}
-                    />
-                  </>
-                )}
-              </button>
-              {isExpanded && isDropdownOpen.leads && (
-                <div style={sidebarStyle.dropdownContent}>
+                {/* <button
+                  onClick={() => toggleDropdown("leads")}
+                  style={{
+                    width: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: "10px 15px",
+                    backgroundColor: isDropdownOpen.leads ? "#333" : "#1c1c1c",
+                    color: "#fff",
+                    border: "none",
+                    outline: "none",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                  }}
+                >
+                  <i
+                    className="fas fa-briefcase"
+                    style={{ marginRight: "10px", fontSize: "20px" }}
+                  ></i>
+                  <span style={{ marginLeft: "10px" }}>Leads</span>
+                  <i
+                    className={`fas fa-chevron-${isDropdownOpen.leads ? "up" : "down"}`}
+                    style={{ marginLeft: "auto", }}
+                  ></i>
+                </button> */}
+                <div
+                  style={{
+                    backgroundColor: "#2a2a2a",
+                    maxHeight: isDropdownOpen.leads ? "500px" : "0",
+                    overflow: "hidden",
+                    transition: "max-height 0.5s ease",
+                    transitionDelay: isDropdownOpen.leads ? " max-height 0.8s ease" : "0s",
+                  }}
+                >
                   <button
-                    onClick={() => handleItemClick("leadsPage", "/addleads")}
                     style={{
-                      ...sidebarStyle.dropdownItem,
-                      ...(activeItem === "leadsPage" ? sidebarStyle.activeMenuItem : {}),
+                      display: "block",
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "10px 15px",
+                      backgroundColor: "#2a2a2a",
+                      color: "#fff",
+                      border: "none",
+                      outline: "none",
+                      cursor: "pointer",
+                      fontSize: "14px",
                     }}
+                    onClick={() => handleItemClick("leadsPage", "/addleads")}
                   >
                     Add Leads
                   </button>
                   <button
-                    onClick={() => handleItemClick("leadDetails", "/viewleads")}
                     style={{
-                      ...sidebarStyle.dropdownItem,
-                      ...(activeItem === "leadDetails" ? sidebarStyle.activeMenuItem : {}),
+                      display: "block",
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "10px 15px",
+                      backgroundColor: "#2a2a2a",
+                      color: "#fff",
+                      border: "none",
+                      outline: "none",
+                      cursor: "pointer",
+                      fontSize: "14px",
                     }}
+                    onClick={() => handleItemClick("leadDetails", "/viewleads")}
                   >
                     View Leads
                   </button>
                   <button
-                    onClick={() => handleItemClick("leadsUpload", "/uploadleads")}
                     style={{
-                      ...sidebarStyle.dropdownItem,
-                      ...(activeItem === "leadsUpload" ? sidebarStyle.activeMenuItem : {}),
+                      display: "block",
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "10px 15px",
+                      backgroundColor: "#2a2a2a",
+                      color: "#fff",
+                      border: "none",
+                      outline: "none",
+                      cursor: "pointer",
+                      fontSize: "14px",
                     }}
+                    onClick={() => handleItemClick("leadsUpload", "/uploadleads")}
                   >
                     Upload Leads
                   </button>
-                  <button
-                    onClick={() => handleItemClick("leadsViewMarketing", "/viewmarketingleads")}
+                  {/* <button
                     style={{
-                      ...sidebarStyle.dropdownItem,
-                      ...(activeItem === "leadsViewMarketing" ? sidebarStyle.activeMenuItem : {}),
+                      display: "block",
+                      width: "100%",
+                      textAlign: "left",
+                      padding: "10px 15px",
+                      backgroundColor: "#2a2a2a",
+                      color: "#fff",
+                      border: "none",
+                      outline: "none",
+                      cursor: "pointer",
+                      fontSize: "14px",
                     }}
+                    onClick={() =>
+                      handleItemClick("leadsViewMarketing", "/viewmarketingleads")
+                    }
                   >
                     View Marketing Leads
-                  </button>
+                  </button> */}
                 </div>
-              )}
+              </div>
+              {/* Other Menu Items */}
+              {mainMenuItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleItemClick(item.id, item.path)}
+                  style={{
+                    ...sidebarStyle.menuItem,
+                    ...(activeItem === item.id ? sidebarStyle.activeMenuItem : {}),
+                  }}
+                >
+                  <item.icon size={20} />
+                  {isExpanded && <span style={sidebarStyle.menuText}>{item.text}</span>}
+                </button>
+              ))}
             </div>
-
-            {/* Other Menu Items */}
-            {mainMenuItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleItemClick(item.id, item.path)}
-                style={{
-                  ...sidebarStyle.menuItem,
-                  ...(activeItem === item.id ? sidebarStyle.activeMenuItem : {}),
-                }}
-              >
-                <item.icon size={20} />
-                {isExpanded && <span style={sidebarStyle.menuText}>{item.text}</span>}
-              </button>
-            ))}
-          </div>
-        </nav>
+          </nav>
+        </div>
+        {/* Main Content Spacer */}
+        <div style={sidebarStyle.main}>
+          {/* Your main content goes here */}
+        </div>
       </div>
-
-      {/* Main Content Spacer */}
-      <div style={sidebarStyle.main}>
-        {/* Your main content goes here */}
-      </div>
-    </div>
     </div>
   );
 };
-
 export default Sidebar;

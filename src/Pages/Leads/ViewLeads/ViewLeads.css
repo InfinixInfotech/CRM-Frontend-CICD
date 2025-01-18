@@ -1,73 +1,66 @@
 :root {
-  --marginTop-outerBgBox : 11px;
-  /* --backgroundColor-outerBgBox : rgb(227,227,227); */
-  --marginTop-dropDownContainer : 11px;
-  --backgroundColor-dropDownContainer : rgb(245, 245, 245);
-  --fontSize-ViewLeadFormLable : 14px;
-  --height-formControl : 28px;
+  --marginTop-viewLead-outerBgBox : 11px;
+  --backgroundColor-outerBgBox : rgb(227,227,227);
+  /* --fontSize-ViewLeadFormLable : 14px; */
+  /* --height-formControl : 28px;
   --fontSize-formControl : 14px;
   --padding-formControl : 0px 32px 0px 8px;
   --lineHeight-formControl : 28px;
   --appearance-formControl : none;
   --backgroundColor-formControl : white ; 
-  --border-formControl : 1px solid #ced4da;
+  --border-formControl : 1px solid #ced4da; */
   --borderRadius : 4px;
-  --fontSize-ViewLeadsTableFont : 14px; 
-  --textAlign-ViewLeadsTableFont : center;
-  --fontWeight-tableHeader : 100 ;
-  --fontWeight-viewLeadButton : 600;
-  --borderRadius-viewLeadButton : 0;
-  --backgroundColor-viewLeadButton : #758694;
-  --color-viewLeadButton : white;
-  --fontSize-viewLeadButton : 12px;
-  --border-viewLeadButton : 1px solid grey;
+  --fontSize-viewLead-ViewLeadsTableFont : 14px; 
+  --textAlign-viewLead-ViewLeadsTableFont : center;
+  --fontWeight-viewLead-tableHeader : 100 ;
+  --fontWeight-viewLead-viewLeadButton : 600;
+  --borderRadius-viewLead-viewLeadButton : 0;
+  --backgroundColor-viewLead-viewLeadButton : #758694;
+  --color-viewLead-viewLeadButton : white;
+  --fontSize-viewLead-viewLeadButton : 12px;
+  --border-viewLead-viewLeadButton : 1px solid grey;
 
 }
 
 .Box-View-Leads{
   background-color: red;
 }
-.outerBgBox{
-  margin-top: var(--marginTop-outerBgBox);
-  background-color: var(--backgroundColor-outerBgBox);
-}
-
-.dropDownContainer{
-  margin-top: var(--marginTop-dropDownContainer);
-  background-color: var(--backgroundColor-dropDownContainer);
+.viewLead-outerBgBox{
+  margin-top: var(--marginTop-viewLead-outerBgBox);
+  /* background-color: var(--backgroundColor-viewLead-outerBgBox); */
 }
 
 .ViewLeadFormLable{
-  font-size: var(--fontSize-ViewLeadFormLable);
+  /* font-size: var(--fontSize-ViewLeadFormLable); */
 }
 
 .formControl{
-   height: var(--height-formControl);
+   /* height: var(--height-formControl);
    font-size: var(--fontSize-formControl);
    padding: var(--padding-formControl);
    line-height: var(--lineHeight-formControl);
    appearance: var(--appearance-formControl);
-   /* background-color: var(--backgroundColor-formControl); */
+   background-color: var(--backgroundColor-formControl);
    border: var(--border-formControl);
-   border-radius: var(--borderRadius);
+   border-radius: var(--borderRadius); */
 }
 
-.ViewLeadsTableFont{
-   font-size: var(--fontSize-ViewLeadsTableFont);
-   text-align: var(--textAlign-ViewLeadsTableFont);
+.viewLead-ViewLeadsTableFont{
+   font-size: var(--fontSize-viewLead-ViewLeadsTableFont);
+   text-align: var(--textAlign-viewLead-ViewLeadsTableFont);
 }
 
-.tableHeader{
-   font-weight: var(--fontWeight-tableHeader);
+.viewLead-tableHeader{
+   font-weight: var(--fontWeight-viewLead-tableHeader);
 }
 
-.viewLeadButton{
-   font-weight: var(--fontWeight-viewLeadButton);
-   border-radius: var(--borderRadius-viewLeadButton);
-   background-color: var(--backgroundColor-viewLeadButton);
-   color: var(--color-viewLeadButton);
-   font-size: var(--fontSize-viewLeadButton);
-   border: var(--border-viewLeadButton);
+.viewLead-viewLeadButton{
+   font-weight: var(--fontWeight-viewLead-viewLeadButton);
+   border-radius: var(--borderRadius-viewLead-viewLeadButton);
+   background-color: var(--backgroundColor-viewLead-viewLeadButton);
+   color: var(--color-viewLead-viewLeadButton);
+   font-size: var(--fontSize-viewLead-viewLeadButton);
+   border: var(--border-viewLead-viewLeadButton);
 }
 .popup-overlay {
   position: fixed;

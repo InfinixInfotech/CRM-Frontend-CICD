@@ -14,6 +14,7 @@ import {
 import { useDispatch } from "react-redux";
 import ExportData from "../../Components/Button/DataButton/ExportButton";
 import { FaShoppingCart } from "react-icons/fa";
+import FilterImport from "../../Components/FilterImport/FilterImport";
 
 const SalesOrder = () => {
   const [salesOrder, setsalesOrder] = useState([]);
@@ -122,8 +123,10 @@ const SalesOrder = () => {
         </h2>
       </section>
 
+      <FilterImport />
+
       {/* Filters */}
-      <div className="container-fluid border border-2 border-gray mt-1 d-flex py-4 gap-1 bg-white">
+      {/* <div className="container-fluid border border-2 border-gray mt-1 d-flex py-4 gap-1 bg-white">
         {[
           "Status",
           "Service Status",
@@ -140,10 +143,10 @@ const SalesOrder = () => {
             </select>
           </div>
         ))}
-      </div>
+      </div> */}
       <div className="container-fluid border border-2 border-gray mt-1 bg-white">
         <div
-          className="outerBgBox table-responsive container-fluid "
+          className="salesOrder-outerBgBox table-responsive container-fluid "
           // style={{ width: "80vw" }}
         >
           {/* Buttons */}
@@ -153,9 +156,9 @@ const SalesOrder = () => {
           {/* Popup */}
           {showPopup && (
             <>
-              <div className="popup-overlay" onClick={handleClosePopup}></div>
-              <div className="popup-content">
-                <button className="popup-close" onClick={handleClosePopup}>
+              <div className="salesOrder-popup-overlay" onClick={handleClosePopup}></div>
+              <div className="salesOrder-popup-content">
+                <button className="salesOrder-popup-close" onClick={handleClosePopup}>
                   ✖
                 </button>
                 <h4 className="mb-3 text-center fs-6">Client Email</h4>
@@ -292,7 +295,7 @@ const SalesOrder = () => {
       
       </div>
         {/* Summary */}
-        <div className="mt-4 border border-2 p-4">
+        <div className="mt-1 border border-2 p-4">
           <table
             className="table small-table table-bordered table-striped"
             id="table-data1"

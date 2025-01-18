@@ -89,7 +89,7 @@ const ViewUser = () => {
       console.error("Payment object is undefined or null");
       return;
     }
-    console.log("User ----------------------", user);
+    // console.log("User ----------------------", user);
     Navigate(`/edituser/${id}`, {
       state: {
         user,

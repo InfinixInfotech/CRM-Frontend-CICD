@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ExportData from "../../Components/Button/DataButton/ExportButton";
 import { FaCreditCard } from "react-icons/fa";
+import FilterImport from "../../Components/FilterImport/FilterImport";
 
 const Payment = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -124,16 +125,23 @@ const Payment = () => {
           Payment Board
         </h2>
       </section>
+      <FilterImport />
 
-      <div className="container-fluid border border-2 border-gray mt-1 ">
-        <div className="outerBgBox mb-2">
+      <div className="mt-1">
+        <div className="payment-outerBgBox mb-2">
           {/* // !<------------------------------------------------------------------------------------ POPUP ----------------------------------------------------------------------------  */}
 
           {showPopup && (
             <>
-              <div className="popup-overlay" onClick={handleClosePopup}></div>
-              <div className="popup-content">
-                <button className="popup-close" onClick={handleClosePopup}>
+              <div
+                className="payment-popup-overlay"
+                onClick={handleClosePopup}
+              ></div>
+              <div className="payment-popup-content">
+                <button
+                  className="payment-popup-close"
+                  onClick={handleClosePopup}
+                >
                   ✖
                 </button>
                 <h4 className="mb-3 text-center fs-6">Client Email</h4>
@@ -144,10 +152,9 @@ const Payment = () => {
             </>
           )}
 
-          <div className="dropDownContainer p-3 m-3 ">
+          <div className="dropDownContainer  m-3 ">
             {/* // !<------------------------------------------------------------------------------------ FILTERS ----------------------------------------------------------------------------  */}
-
-            <div className="row d-flex gap-2 mb-0 ">
+            {/* <div className="row d-flex gap-2 mb-0 ">
               {[
                 "Status",
                 "By Date",
@@ -173,16 +180,16 @@ const Payment = () => {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
           </div>
 
-          <div className="paymentTable container-fluid mt-2">
+          <div className="payment-paymentTable border border-2 p-2 bg-white mt-2">
             {/* // !<----------------------------------------------------------------------------------- MAIN TABLE STARTING ----------------------------------------------------------------------------  */}
             <ExportData tableId="table-dataOne" />
 
             <table
               id="table-dataOne"
-              className="table table-bordered table-striped text-center"
+              className="table table-bordered table-striped text-center mt-2"
             >
               <thead className="thead-dark">
                 <tr>
@@ -273,38 +280,41 @@ const Payment = () => {
               </button>
             </div>
             {/* // !<------------------------------------------------------------------------------------ TABLE TWO CONTAINER ----------------------------------------------------------------------------  */}
-
-            <div className=" mb-0 ">
-              <PrintButton tableId="payment-table1" />
-              <PdfButton tableId="payment-table1" />
-              <CsvButton tableId="payment-table1" />
-              <CopyButton tableId="payment-table1" />
-            </div>
-            <div className="mt-2">
-              <table className="table table-bordered" id="payment-table1">
-                <thead className="tableHeader table-dark">
-                  <tr>
-                    <th>Date Range</th>
-                    <th>Branch</th>
-                    <th>Grand Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>All</td>
-                    <td></td>
-                    <td>3190806</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            {/* Pagination and Summary */}
-            <div className="pagination">
-              <button onClick={prevPage} disabled={currentPage === 1}>
-                <i className="bi bi-arrow-left-circle"></i>
-              </button>
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                (number) => (
+            
+            {/* 
+            <div>
+              <div className=" mb-0 ">
+                <PrintButton tableId="payment-table1" />
+                <PdfButton tableId="payment-table1" />
+                <CsvButton tableId="payment-table1" />
+                <CopyButton tableId="payment-table1" />
+              </div>
+              <div className="mt-2">
+                <table className="table table-bordered" id="payment-table1">
+                  <thead className="payment-tableHeader table-dark">
+                    <tr>
+                      <th>Date Range</th>
+                      <th>Branch</th>
+                      <th>Grand Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>All</td>
+                      <td></td>
+                      <td>3190806</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="pagination">
+                <button onClick={prevPage} disabled={currentPage === 1}>
+                  <i className="bi bi-arrow-left-circle"></i>
+                </button>
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((number) => (
                   <button
                     key={number}
                     onClick={() => paginate(number)}
@@ -312,16 +322,20 @@ const Payment = () => {
                   >
                     {number}
                   </button>
-                )
-              )}
-              <button onClick={nextPage} disabled={currentPage === totalPages}>
-                <i className="bi bi-arrow-right-circle"></i>
-              </button>
-            </div>
+                ))}
+                <button
+                  onClick={nextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  <i className="bi bi-arrow-right-circle"></i>
+                </button>
+              </div>
+            </div> */}
 
             {/* // !<------------------------------------------------------------------------------------ TABLE THIRD CONTAINER ----------------------------------------------------------------------------  */}
 
-            <div className=" mb-0">
+            {/* <div>
+          <div className=" mb-0">
               <PrintButton tableId="payment-table2" />
               <PdfButton tableId="payment-table2" />
               <CsvButton tableId="payment-table2" />
@@ -329,7 +343,7 @@ const Payment = () => {
             </div>
             <div className="mt-2">
               <table className="table table-bordered" id="payment-table2">
-                <thead className="tableHeader table-dark">
+                <thead className="payment-tableHeader table-dark">
                   <tr>
                     <th>Date Range</th>
                     <th>Total Number Of Payment</th>
@@ -345,7 +359,7 @@ const Payment = () => {
                 </tbody>
               </table>
             </div>
-            {/* Pagination and Summary */}
+
             <div className="pagination">
               <button onClick={prevPage} disabled={currentPage === 1}>
                 <i className="bi bi-arrow-left-circle"></i>
@@ -365,47 +379,48 @@ const Payment = () => {
                 <i className="bi bi-arrow-right-circle"></i>
               </button>
             </div>
+          </div> */}
 
             {/* // !<------------------------------------------------------------------------------------ TABLE FOURTH CONTAINER ----------------------------------------------------------------------------  */}
-
-            {/* Summary */}
-            <div className=" mb-0">
-              <PrintButton tableId="payment-table3" />
-              <PdfButton tableId="payment-table3" />
-              <CsvButton tableId="payment-table3" />
-              <CopyButton tableId="payment-table3" />
-            </div>
-            <div className="mt-2">
-              <table className="table table-bordered" id="payment-table3">
-                <thead className="tableHeader table-dark">
-                  <tr>
-                    <th>Branch Name</th>
-                    <th>Target</th>
-                    <th>Gross Amount</th>
-                    <th>Net Amount</th>
-                    <th>Remaining</th>
-                    <th>Percentage</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td></td>
-                    <td>1</td>
-                    <td>4287223</td>
-                    <td>3572685.83</td>
-                    <td>-4287222</td>
-                    <td>428722300%</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            {/* Pagination and Summary */}
-            <div className="pagination">
-              <button onClick={prevPage} disabled={currentPage === 1}>
-                <i className="bi bi-arrow-left-circle"></i>
-              </button>
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                (number) => (
+            {/* <div>
+              <div className=" mb-0">
+                <PrintButton tableId="payment-table3" />
+                <PdfButton tableId="payment-table3" />
+                <CsvButton tableId="payment-table3" />
+                <CopyButton tableId="payment-table3" />
+              </div>
+              <div className="mt-2">
+                <table className="table table-bordered" id="payment-table3">
+                  <thead className="payment-tableHeader table-dark">
+                    <tr>
+                      <th>Branch Name</th>
+                      <th>Target</th>
+                      <th>Gross Amount</th>
+                      <th>Net Amount</th>
+                      <th>Remaining</th>
+                      <th>Percentage</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td></td>
+                      <td>1</td>
+                      <td>4287223</td>
+                      <td>3572685.83</td>
+                      <td>-4287222</td>
+                      <td>428722300%</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="pagination">
+                <button onClick={prevPage} disabled={currentPage === 1}>
+                  <i className="bi bi-arrow-left-circle"></i>
+                </button>
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((number) => (
                   <button
                     key={number}
                     onClick={() => paginate(number)}
@@ -413,12 +428,15 @@ const Payment = () => {
                   >
                     {number}
                   </button>
-                )
-              )}
-              <button onClick={nextPage} disabled={currentPage === totalPages}>
-                <i className="bi bi-arrow-right-circle"></i>
-              </button>
-            </div>
+                ))}
+                <button
+                  onClick={nextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  <i className="bi bi-arrow-right-circle"></i>
+                </button>
+              </div>
+            </div> */}
           </div>
         </div>
       </div>

@@ -17,6 +17,13 @@ import { emp } from "../../../Redux/Services/apiServer/ApiServer";
 import { UpdateBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 import ExportData from "../../../Components/Button/DataButton/ExportButton";
 import { FaEye } from "react-icons/fa";
+import LeadSourceFilter from "../../../Components/Filter/LeadSourceFilter/LeadSourceFilter";
+import ManagerFilter from "../../../Components/Filter/ManagerFilter/ManagerFilter";
+import SegmentFilter from "../../../Components/Filter/SegmentFilter/SegmentFilter";
+import AssignedFilter from "../../../Components/Filter/AssignedFilter/AssignedFilter";
+import ActionFilter from "../../../Components/Filter/ActionFilter/ActionFilter";
+import StatusFilter from "../../../Components/Filter/StatusFilter/StatusFilter";
+import FilterImport from "../../../Components/FilterImport/FilterImport";
 
 const ViewLeads = () => {
   const isPrGenerated = 0;
@@ -270,8 +277,8 @@ const ViewLeads = () => {
           borderBottom: "1px solid #E1E6EF",
           boxShadow:
             "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-          marginBottom: "0px", 
-          marginBottom: "5px", 
+          marginBottom: "0px",
+          marginBottom: "5px",
         }}
         className="mt-2"
       >
@@ -290,13 +297,14 @@ const ViewLeads = () => {
           View Leads
         </h2>
       </section>
+      {/* //!-------------------------------------------------------------------------------------Filter Import------------------------------------------------------------------------------------------ */}
+      <FilterImport />
 
       <div className=" mt-1 ">
-        <div className="outerBgBox p-2  mb-2">
-          <div className="container-fluid mt-3 ms-0 me-0">
-            <div className="dropDownContainer p-3  mb-2">
-              {/* //!<--------------------------------------------------------------------------------- FILTERS ----------------------------------------------------------------------> */}
-
+        <div className="viewLead-outerBgBox  mb-2">
+          <div className="mt-3 ms-0 me-0">
+            <div className="">
+              {/* 
               <div className="row d-flex gap-2 mb-0 justify-content-between">
                 {[
                   "Action",
@@ -323,276 +331,345 @@ const ViewLeads = () => {
                     </div>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </div>
 
-            <div className="d-flex align-items-center justify-content-between">
-              <div>
-                <ExportData tableId="leads-table" />
-              </div>
-              <div>
-                <button
-                  onClick={handleFetchLeadButton}
-                  className="btn btn-secondary px-2 py-0 rounded-0 text-white "
-                  disabled={isLoading}
-                >
-                  Fetch Lead
-                </button>
-              </div>
-            </div>
-
-            <table
-              className="ViewLeadsTableFont table table-bordered table-hover mt-2"
-              id="leads-table"
-            >
-              <thead className="tableHeader thead-dark">
-                <tr>
-                  <th>#</th>
-                  <th>Client Name</th>
-                  <th>Mobile</th>
-                  <th>Assigned To</th>
-                  <th>Lead Source</th>
-                  <th>Segment</th>
-                  <th>Free Trial</th>
-                  <th>Follow Up</th>
-                  <th>Description</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {/* //!<--------------------------------------------------------------------------------- LODER CODE ----------------------------------------------------------------------> */}
-
-                {loading ? (
-                  <div
-                    style={{
-                      position: "fixed",
-                      top: 0,
-                      left: 0,
-                      width: "100vw",
-                      height: "100vh",
-                      backgroundColor: "rgba(104, 102, 102, 0.5)",
-                      zIndex: 9998,
-                    }}
+            <div className="border border-2 p-2 bg-white">
+              <div className="d-flex gap-1">
+                <div>
+                  <ExportData tableId="leads-table" />
+                </div>
+                <div>
+                  <button
+                    onClick={handleFetchLeadButton}
+                    className="btn btn-sm text-white "
+                    style={{ backgroundColor: "#009688" }}
+                    disabled={isLoading}
                   >
+                    <i class="bi bi-box-arrow-down"></i> Fetch Lead
+                  </button>
+                </div>
+              </div>
+
+              <table
+                className="viewLead-ViewLeadsTableFont table table-bordered table-hover mt-2"
+                id="leads-table"
+              >
+                <thead className="viewLead-tableHeader thead-dark">
+                  <tr>
+                    <th>#</th>
+                    <th>Client Name</th>
+                    <th>Mobile</th>
+                    <th>Assigned To</th>
+                    <th>Lead Source</th>
+                    <th>Segment</th>
+                    <th>Free Trial</th>
+                    <th>Follow Up</th>
+                    <th>Description</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {/* //!<--------------------------------------------------------------------------------- LODER CODE ----------------------------------------------------------------------> */}
+
+                  {loading ? (
                     <div
                       style={{
-                        position: "absolute",
-                        top: "50%",
-                        left: "50%",
-                        transform: "translate(-50%, -50%)",
-                        zIndex: 9999,
-                        backgroundColor: "transparent",
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100vw",
+                        height: "100vh",
+                        backgroundColor: "rgba(104, 102, 102, 0.5)",
+                        zIndex: 9998,
                       }}
                     >
-                      <HashLoader color="#0060f1" size={50} />
+                      <div
+                        style={{
+                          position: "absolute",
+                          top: "50%",
+                          left: "50%",
+                          transform: "translate(-50%, -50%)",
+                          zIndex: 9999,
+                          backgroundColor: "transparent",
+                        }}
+                      >
+                        <HashLoader color="#0060f1" size={50} />
+                      </div>
                     </div>
-                  </div>
-                ) : error ? (
-                  <tr>
-                    <td colSpan="10" className="text-center text-danger">
-                      Error: {error}
-                    </td>
-                  </tr>
-                ) : currentLeads.length > 0 ? (
-                  currentLeads.map((leadObj) => (
-                    <tr key={leadObj.lead.leadId}>
-                      <td>
-                        <input type="checkbox" />
+                  ) : error ? (
+                    <tr>
+                      <td colSpan="10" className="text-center text-danger">
+                        Error: {error}
                       </td>
-                      <td>
-                        {editAddLead === leadObj.id ? (
-                          <input
-                            type="text"
-                            value={editValue.clientName || ""}
-                            onChange={(e) =>
-                              setEditValue({
-                                ...editValue,
-                                clientName: e.target.value,
-                              })
-                            }
-                          />
-                        ) : (
-                          leadObj.lead.clientName || "N/A"
-                        )}
-                      </td>
-                      <td>
-                        {editAddLead === leadObj.id ? (
-                          <input
-                            type="text"
-                            value={editValue.mobile || ""}
-                            onChange={(e) =>
-                              setEditValue({
-                                ...editValue,
-                                mobile: e.target.value,
-                              })
-                            }
-                          />
-                        ) : (
-                          leadObj.lead.mobile || "N/A"
-                        )}
-                      </td>
-                      <td>
-                        {editAddLead === leadObj.id ? (
-                          <input
-                            type="text"
-                            value={editValue.assignedTo || ""}
-                            onChange={(e) =>
-                              setEditValue({
-                                ...editValue,
-                                assignedTo: e.target.value,
-                              })
-                            }
-                          />
-                        ) : (
-                          leadObj.lead.assignedTo || "N/A"
-                        )}
-                      </td>
-                      <td>
-                        {editAddLead === leadObj.id ? (
-                          <input
-                            type="text"
-                            value={editValue.leadSource || ""}
-                            onChange={(e) =>
-                              setEditValue({
-                                ...editValue,
-                                leadSource: e.target.value,
-                              })
-                            }
-                          />
-                        ) : (
-                          leadObj.lead.leadSource || "N/A"
-                        )}
-                      </td>
-                      <td>
-                        {editAddLead === leadObj.id ? (
-                          <button
-                            className="btn btn-success btn-sm"
-                            onClick={() => handleSaveLead(leadObj.id)}
-                          >
-                            Save
-                          </button>
-                        ) : (
-                          <>
-                            {/* //!------------------------------------------------------------------ADD SEGMENT POPUP & LOGIC---------------------------------------------------------------------------- */}
+                    </tr>
+                  ) : currentLeads.length > 0 ? (
+                    currentLeads.map((leadObj) => (
+                      <tr key={leadObj.lead.leadId}>
+                        <td>
+                          <input type="checkbox" />
+                        </td>
+                        <td>
+                          {editAddLead === leadObj.id ? (
+                            <input
+                              type="text"
+                              value={editValue.clientName || ""}
+                              onChange={(e) =>
+                                setEditValue({
+                                  ...editValue,
+                                  clientName: e.target.value,
+                                })
+                              }
+                            />
+                          ) : (
+                            leadObj.lead.clientName || "N/A"
+                          )}
+                        </td>
+                        <td>
+                          {editAddLead === leadObj.id ? (
+                            <input
+                              type="text"
+                              value={editValue.mobile || ""}
+                              onChange={(e) =>
+                                setEditValue({
+                                  ...editValue,
+                                  mobile: e.target.value,
+                                })
+                              }
+                            />
+                          ) : (
+                            leadObj.lead.mobile || "N/A"
+                          )}
+                        </td>
+                        <td>
+                          {editAddLead === leadObj.id ? (
+                            <input
+                              type="text"
+                              value={editValue.assignedTo || ""}
+                              onChange={(e) =>
+                                setEditValue({
+                                  ...editValue,
+                                  assignedTo: e.target.value,
+                                })
+                              }
+                            />
+                          ) : (
+                            leadObj.lead.assignedTo || "N/A"
+                          )}
+                        </td>
+                        <td>
+                          {editAddLead === leadObj.id ? (
+                            <input
+                              type="text"
+                              value={editValue.leadSource || ""}
+                              onChange={(e) =>
+                                setEditValue({
+                                  ...editValue,
+                                  leadSource: e.target.value,
+                                })
+                              }
+                            />
+                          ) : (
+                            leadObj.lead.leadSource || "N/A"
+                          )}
+                        </td>
+                        <td>
+                          {editAddLead === leadObj.id ? (
                             <button
-                              className="viewLeadButton btn-sm px-2 py-0"
-                              onClick={() => {
-                                setSelectedLeadId(leadObj.lead.leadId);
-                                handleOpenPopup("segment");
-                              }}
+                              className="btn btn-success btn-sm"
+                              onClick={() => handleSaveLead(leadObj.id)}
                             >
-                              Add Segment
+                              Save
                             </button>
-                            {showPopup && (
-                              <div className="popup-overlay d-flex justify-content-center align-items-center">
-                                <div className="popup-content bg-light p-4 rounded">
-                                  <h3 className="text-center mb-4">
-                                    Add Segment
-                                  </h3>
-                                  <div className="form-group mb-3">
-                                    <label
-                                      htmlFor="segmentSelect"
-                                      className="form-label fw-bold"
-                                    >
-                                      Select Segment:
-                                    </label>
-                                    <select
-                                      className="form-select"
-                                      name="AddSegment"
-                                      value={addSegment}
-                                      onChange={handleChangedropdown}
-                                    >
-                                      <option value="" disabled>
-                                        -----Select An Option-----
-                                      </option>
-                                      <option value="Gold">Gold</option>
-                                      <option value="StockOption">
-                                        Stock Option
-                                      </option>
-                                    </select>
-                                  </div>
-                                  <div className="d-flex justify-content-between mt-4">
-                                    <button
-                                      className="btn btn-secondary me-2"
-                                      onClick={handleClosePopup}
-                                    >
-                                      Close
-                                    </button>
-                                    <button
-                                      className="btn btn-primary"
-                                      onClick={() => {
-                                        // Add Save logic here
-                                        handleSaveSegment(leadObj);
-                                      }}
-                                    >
-                                      Save
-                                    </button>
+                          ) : (
+                            <>
+                              {/* //!------------------------------------------------------------------ADD SEGMENT POPUP & LOGIC---------------------------------------------------------------------------- */}
+                              <button
+                                className="viewLead-viewLeadButton btn-sm px-2 py-0"
+                                onClick={() => {
+                                  setSelectedLeadId(leadObj.lead.leadId);
+                                  handleOpenPopup("segment");
+                                }}
+                              >
+                                Add Segment
+                              </button>
+                              {showPopup && (
+                                <div className="popup-overlay d-flex justify-content-center align-items-center">
+                                  <div className="popup-content bg-light p-4 rounded">
+                                    <h3 className="text-center mb-4">
+                                      Add Segment
+                                    </h3>
+                                    <div className="form-group mb-3">
+                                      <label
+                                        htmlFor="segmentSelect"
+                                        className="form-label fw-bold"
+                                      >
+                                        Select Segment:
+                                      </label>
+                                      <select
+                                        className="form-select"
+                                        name="AddSegment"
+                                        value={addSegment}
+                                        onChange={handleChangedropdown}
+                                      >
+                                        <option value="" disabled>
+                                          -----Select An Option-----
+                                        </option>
+                                        <option value="Gold">Gold</option>
+                                        <option value="StockOption">
+                                          Stock Option
+                                        </option>
+                                      </select>
+                                    </div>
+                                    <div className="d-flex justify-content-between mt-4">
+                                      <button
+                                        className="btn btn-secondary me-2"
+                                        onClick={handleClosePopup}
+                                      >
+                                        Close
+                                      </button>
+                                      <button
+                                        className="btn btn-primary"
+                                        onClick={() => {
+                                          // Add Save logic here
+                                          handleSaveSegment(leadObj);
+                                        }}
+                                      >
+                                        Save
+                                      </button>
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
+                              )}
+                            </>
+                          )}
+                        </td>
+                        <td>
+                          <>
+                            {editAddLead === leadObj.id ? (
+                              <button className="btn btn-success btn-sm">
+                                Save
+                              </button>
+                            ) : (
+                              <>
+                                <button
+                                  className="viewLead-viewLeadButton btn-sm px-2 py-0 "
+                                  onClick={() => {
+                                    setSelectedLeadId(leadObj.lead.leadId);
+                                    handleOpenPopup("freeTrial");
+                                  }}
+                                >
+                                  Add FT
+                                </button>
+                                {showFreeTrialPopup && (
+                                  <div className="popup-overlay d-flex justify-content-center align-items-center">
+                                    <div className="popup-content bg-light p-4 rounded shadow">
+                                      <h3 className="text-center mb-4">
+                                        Add Free Trial
+                                      </h3>
+                                      <div className="form-group mb-3">
+                                        <label
+                                          htmlFor="segmentInput"
+                                          className="form-label fw-bold"
+                                        >
+                                          Enter Start Date
+                                        </label>
+                                        <input
+                                          type="date"
+                                          className="form-control"
+                                          name="addfreeTrialStartDate"
+                                          value={addfreeTrialStartDate}
+                                          onChange={(event) =>
+                                            handleChangeDate(event, "start")
+                                          }
+                                        />
+                                      </div>
+
+                                      <div className="form-group mb-3">
+                                        <label
+                                          htmlFor="segmentInput"
+                                          className="form-label fw-bold"
+                                        >
+                                          Enter End Date
+                                        </label>
+                                        <input
+                                          type="date"
+                                          className="form-control"
+                                          name="addfreeTrialEndDate"
+                                          value={addfreeTrialEndDate}
+                                          onChange={(event) =>
+                                            handleChangeDate(event, "end")
+                                          }
+                                        />
+                                      </div>
+                                      <div className="d-flex justify-content-between mt-4">
+                                        <button
+                                          className="btn btn-secondary me-2"
+                                          onClick={handleClosePopup}
+                                        >
+                                          Close
+                                        </button>
+                                        <button
+                                          className="btn btn-primary"
+                                          onClick={() => {
+                                            handleSaveSegment(leadObj);
+                                          }}
+                                        >
+                                          Save
+                                        </button>
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </>
                             )}
                           </>
-                        )}
-                      </td>
-                      <td>
-                        <>
+                        </td>
+
+                        <td>
                           {editAddLead === leadObj.id ? (
-                            <button className="btn btn-success btn-sm">
+                            <button
+                              className="btn btn-success btn-sm"
+                              onClick={() => handleSaveLead(lead.id)}
+                            >
                               Save
                             </button>
                           ) : (
                             <>
                               <button
-                                className="viewLeadButton btn-sm px-2 py-0 "
+                                className="viewLead-viewLeadButton btn-sm px-2 py-0"
                                 onClick={() => {
                                   setSelectedLeadId(leadObj.lead.leadId);
-                                  handleOpenPopup("freeTrial");
+                                  handleOpenPopup("followUp");
                                 }}
                               >
-                                Add FT
+                                Add New
                               </button>
-                              {showFreeTrialPopup && (
+                              {showFollowUpPopup && (
                                 <div className="popup-overlay d-flex justify-content-center align-items-center">
                                   <div className="popup-content bg-light p-4 rounded shadow">
                                     <h3 className="text-center mb-4">
-                                      Add Free Trial
+                                      Add Follow Up
                                     </h3>
                                     <div className="form-group mb-3">
                                       <label
                                         htmlFor="segmentInput"
                                         className="form-label fw-bold"
                                       >
-                                        Enter Start Date
+                                        Enter FollowUp Date
                                       </label>
                                       <input
                                         type="date"
                                         className="form-control"
-                                        name="addfreeTrialStartDate"
-                                        value={addfreeTrialStartDate}
+                                        name="addFollowUpDate"
+                                        value={addFollowUpDate}
                                         onChange={(event) =>
-                                          handleChangeDate(event, "start")
+                                          handleChangeDate(event, "followUp")
                                         }
                                       />
                                     </div>
 
-                                    <div className="form-group mb-3">
-                                      <label
-                                        htmlFor="segmentInput"
-                                        className="form-label fw-bold"
-                                      >
-                                        Enter End Date
-                                      </label>
-                                      <input
-                                        type="date"
-                                        className="form-control"
-                                        name="addfreeTrialEndDate"
-                                        value={addfreeTrialEndDate}
-                                        onChange={(event) =>
-                                          handleChangeDate(event, "end")
-                                        }
-                                      />
-                                    </div>
                                     <div className="d-flex justify-content-between mt-4">
                                       <button
                                         className="btn btn-secondary me-2"
@@ -614,183 +691,120 @@ const ViewLeads = () => {
                               )}
                             </>
                           )}
-                        </>
-                      </td>
-
-                      <td>
-                        {editAddLead === leadObj.id ? (
+                        </td>
+                        <td>
                           <button
-                            className="btn btn-success btn-sm"
-                            onClick={() => handleSaveLead(lead.id)}
+                            className="btn btn-sm btn-link"
+                            onClick={() => {
+                              setSelectedLeadId(leadObj.lead.leadId);
+                              handleOpenPopup("comment");
+                            }}
                           >
-                            Save
+                            View
                           </button>
-                        ) : (
-                          <>
-                            <button
-                              className="viewLeadButton btn-sm px-2 py-0"
-                              onClick={() => {
-                                setSelectedLeadId(leadObj.lead.leadId);
-                                handleOpenPopup("followUp");
-                              }}
-                            >
-                              Add New
-                            </button>
-                            {showFollowUpPopup && (
-                              <div className="popup-overlay d-flex justify-content-center align-items-center">
-                                <div className="popup-content bg-light p-4 rounded shadow">
-                                  <h3 className="text-center mb-4">
-                                    Add Follow Up
-                                  </h3>
-                                  <div className="form-group mb-3">
-                                    <label
-                                      htmlFor="segmentInput"
-                                      className="form-label fw-bold"
-                                    >
-                                      Enter FollowUp Date
-                                    </label>
-                                    <input
-                                      type="date"
-                                      className="form-control"
-                                      name="addFollowUpDate"
-                                      value={addFollowUpDate}
-                                      onChange={(event) =>
-                                        handleChangeDate(event, "followUp")
-                                      }
-                                    />
-                                  </div>
-
-                                  <div className="d-flex justify-content-between mt-4">
-                                    <button
-                                      className="btn btn-secondary me-2"
-                                      onClick={handleClosePopup}
-                                    >
-                                      Close
-                                    </button>
-                                    <button
-                                      className="btn btn-primary"
-                                      onClick={() => {
-                                        handleSaveSegment(leadObj);
-                                      }}
-                                    >
-                                      Save
-                                    </button>
-                                  </div>
+                          {showCommentPopup && (
+                            <div className="popup-overlay d-flex justify-content-center align-items-center">
+                              <div className="popup-content bg-light p-4 rounded shadow">
+                                <h3 className="text-center mb-4">
+                                  Add Comment
+                                </h3>
+                                <div className="form-group mb-3">
+                                  <label
+                                    htmlFor="segmentInput"
+                                    className="form-label fw-bold"
+                                  >
+                                    Enter Comment:
+                                  </label>
+                                  <input
+                                    type="text"
+                                    className="form-control"
+                                    name="AddComment"
+                                    value={addComment}
+                                    onChange={handleChangeInput}
+                                    placeholder="Enter Comment here"
+                                  />
+                                </div>
+                                <div className="d-flex justify-content-between mt-4">
+                                  <button
+                                    className="btn btn-secondary me-2"
+                                    onClick={handleClosePopup}
+                                  >
+                                    Close
+                                  </button>
+                                  <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                      handleSaveSegment(leadObj);
+                                    }}
+                                  >
+                                    Save
+                                  </button>
                                 </div>
                               </div>
-                            )}
-                          </>
-                        )}
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-sm btn-link"
-                          onClick={() => {
-                            setSelectedLeadId(leadObj.lead.leadId);
-                            handleOpenPopup("comment");
-                          }}
-                        >
-                          View
-                        </button>
-                        {showCommentPopup && (
-                          <div className="popup-overlay d-flex justify-content-center align-items-center">
-                            <div className="popup-content bg-light p-4 rounded shadow">
-                              <h3 className="text-center mb-4">Add Comment</h3>
-                              <div className="form-group mb-3">
-                                <label
-                                  htmlFor="segmentInput"
-                                  className="form-label fw-bold"
-                                >
-                                  Enter Comment:
-                                </label>
-                                <input
-                                  type="text"
-                                  className="form-control"
-                                  name="AddComment"
-                                  value={addComment}
-                                  onChange={handleChangeInput}
-                                  placeholder="Enter Comment here"
-                                />
-                              </div>
-                              <div className="d-flex justify-content-between mt-4">
-                                <button
-                                  className="btn btn-secondary me-2"
-                                  onClick={handleClosePopup}
-                                >
-                                  Close
-                                </button>
-                                <button
-                                  className="btn btn-primary"
-                                  onClick={() => {
-                                    handleSaveSegment(leadObj);
-                                  }}
-                                >
-                                  Save
-                                </button>
-                              </div>
                             </div>
+                          )}
+                        </td>
+                        <td>
+                          <div className="btn-group d-grid gap-1 d-sm-flex">
+                            <StatusButton />
+                            <EditButton
+                              onClick={() => {
+                                handleNavigateToEditLead(
+                                  leadObj.lead.id,
+                                  leadObj
+                                );
+                              }}
+                            />
+                            <DeleteButton
+                              onClick={() => handleDeleteAddLead(leadObj.id)}
+                            />
+                            <DisposeButton />
+                            <ConditionalPrSoButton
+                              isPrGenerated={isPrGenerated}
+                              onClick={() => {
+                                handleNavigateToPR(leadObj.lead.id, leadObj);
+                              }}
+                            />
+                            <button
+                              onClick={() => {
+                                handleNavigateToSo(leadObj.id, leadObj);
+                              }}
+                              style={{
+                                padding: 2,
+                                margin: 0,
+                                fontSize: "12px",
+                                color: "white",
+                                border: "1px solid grey",
+                                fontWeight: "600",
+                                borderRadius: "0",
+                                backgroundColor: "#758694",
+                              }}
+                            >
+                              Add SO
+                            </button>
+                            <SendButton />
                           </div>
-                        )}
-                      </td>
-                      <td>
-                        <div className="btn-group d-grid gap-1 d-sm-flex">
-                          <StatusButton />
-                          <EditButton
-                            onClick={() => {
-                              handleNavigateToEditLead(
-                                leadObj.lead.id,
-                                leadObj
-                              );
-                            }}
-                          />
-                          <DeleteButton
-                            onClick={() => handleDeleteAddLead(leadObj.id)}
-                          />
-                          <DisposeButton />
-                          <ConditionalPrSoButton
-                            isPrGenerated={isPrGenerated}
-                            onClick={() => {
-                              handleNavigateToPR(leadObj.lead.id, leadObj);
-                            }}
-                          />
-                          <button
-                            onClick={() => {
-                              handleNavigateToSo(leadObj.id, leadObj);
-                            }}
-                            style={{
-                              padding: 2,
-                              margin: 0,
-                              fontSize: "12px",
-                              color: "white",
-                              border: "1px solid grey",
-                              fontWeight: "600",
-                              borderRadius: "0",
-                              backgroundColor: "#758694",
-                            }}
-                          >
-                            Add SO
-                          </button>
-                          <SendButton />
-                        </div>
-                      </td>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="10">No data available in table</td>
                     </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="10">No data available in table</td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
+                  )}
+                </tbody>
+              </table>
 
-            {/* //!<--------------------------------------------------------------------------- PAGINATION LOGIC -------------------------------------------------------------------------- */}
+              {/* //!<--------------------------------------------------------------------------- PAGINATION LOGIC -------------------------------------------------------------------------- */}
 
-            <div className="pagination">
-              <button onClick={prevPage} disabled={currentPage === 1}>
-                <i className="bi bi-arrow-left-circle"></i>
-              </button>
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                (number) => (
+              <div className="pagination">
+                <button onClick={prevPage} disabled={currentPage === 1}>
+                  <i className="bi bi-arrow-left-circle"></i>
+                </button>
+                {Array.from(
+                  { length: totalPages },
+                  (_, index) => index + 1
+                ).map((number) => (
                   <button
                     key={number}
                     onClick={() => paginate(number)}
@@ -798,11 +812,14 @@ const ViewLeads = () => {
                   >
                     {number}
                   </button>
-                )
-              )}
-              <button onClick={nextPage} disabled={currentPage === totalPages}>
-                <i className="bi bi-arrow-right-circle"></i>
-              </button>
+                ))}
+                <button
+                  onClick={nextPage}
+                  disabled={currentPage === totalPages}
+                >
+                  <i className="bi bi-arrow-right-circle"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
