@@ -164,8 +164,9 @@ const AddLeads = () => {
       <form onSubmit={handleSubmit}>
         <div className="container-fluid border border-2 border-gray mt-1 ">
           {/* Personal Details Section */}
-          <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded   mb-4">
-            <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-1 text-white tw-bold fs-5">
+          <div className="addleadSectionss field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded   mb-4">
+            <div className="card-header  px-2 py-2 rounded text-black mb-1 text-white tw-bold fs-5"
+            style={{backgroundColor:"#009688"}}>
               Personal Details
             </div>
             <div>
@@ -312,8 +313,9 @@ const AddLeads = () => {
           </div>
 
           {/* Investment Details Section */}
-          <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded   mb-4">
-            <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5">
+          <div className="addleadSectionss field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded   mb-4">
+            <div className="card-header  px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5"
+              style={{backgroundColor:"#009688"}}>
               Investment Detail
             </div>
             <div className="card-body">
@@ -486,8 +488,10 @@ const AddLeads = () => {
           </div>
 
           {/* Followup Details Section */}
-          <div className=" addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded">
-            <div className="card-header bg-secondary px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5">
+          <div className=" addleadSectionss field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded">
+            <div className="card-header  px-2 py-2 rounded text-black mb-2 text-white tw-bold fs-5"
+            
+            style={{backgroundColor:"#009688"}}>
               Followup Detail
             </div>
             <div className="card-body">
@@ -561,7 +565,8 @@ const AddLeads = () => {
             </div>
           </div>
           <div className="d-flex justify-content-center mb-3 mt-3">
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn text-white"
+              style={{backgroundColor:"#009688"}}>
               Submit
             </button>
           </div>

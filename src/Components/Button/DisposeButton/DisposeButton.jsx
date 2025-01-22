@@ -6,7 +6,7 @@ const handleDispose = ()=>{
 
 export const DisposeButton = ({
     onClick= handleDispose,
-    className = "Dispose-btn btn px-0 py-0"
+    className = "Dispose-btn btn-sm px-2 py-0"
 })=>{
   return(
     <button onClick={onClick} className={className} style={{

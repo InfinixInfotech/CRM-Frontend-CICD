@@ -12,11 +12,11 @@ import leadPaymentRaiseReducer from "../Reducers/LeadPaymentRaiseReducer"
 import addLeadReducer from "../Reducers/AddLeadReducer"
 import uploadBulkLeadReducer from "../Reducers/UploadBulkLeadReducer"
 import designationReducer from "../Reducers/DesignationReducer"
+import GetLeadByMobileOrLeadIdUrlReducer from "../Reducers/GetLeadByMobileOrLeadIdReducer"
 
 
 const store = configureStore({
   reducer: {
-    // sliceName : ReducerFileName
     leadstatus: leadStatusReducer,
     department: departmentReducer,
     leadsource: leadSourceReducer,
@@ -30,6 +30,7 @@ const store = configureStore({
     addlead: addLeadReducer,
     uploadbulklead: uploadBulkLeadReducer,
     designation: designationReducer,
+    GetLeadByMobileOrLeadId: GetLeadByMobileOrLeadIdUrlReducer,
   },
 });
 

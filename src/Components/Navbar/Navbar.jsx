@@ -3,6 +3,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useNavigate } from "react-router-dom";
 import { FaUser, FaCog } from "react-icons/fa";
 import LogoutPage from "../Logout/Logout";
+import { BiSearch } from "react-icons/bi";
+import SearchByMobileNumberFilter from "../Filter/SearchByMobileNumberFilter/SearchByMobileNumberFilter";
+
 const Navbar = () => {
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
@@ -20,10 +23,12 @@ const Navbar = () => {
           <strong className="fs-6">INFINIX INFOTECH PVT. LTD.</strong>
         </a>
 
-        <ul className="navbar-nav">
-          <li className="nav-item dropdown mx-2">
+        <ul className="navbar-nav d-flex gap-2">
+        <SearchByMobileNumberFilter/>
+
+          <li className="nav-item dropdown">
             <button
-              className="btn btn-outline-light btn-sm dropdown-toggle"
+              className="btn text-white btn-sm fs-5"
               id="profileDropdown"
               data-bs-toggle="dropdown"
               aria-expanded="false"
@@ -31,6 +36,7 @@ const Navbar = () => {
             >
               <FaUser />
             </button>
+
             <ul
               className="dropdown-menu dropdown-menu-end"
               aria-labelledby="profileDropdown"
@@ -49,10 +55,11 @@ const Navbar = () => {
               </li>
             </ul>
           </li>
+
           {username && ["admin", "Admin", "ADMIN"].includes(username) && (
-          <li className="nav-item mx-2">
+          <li className="nav-item">
             <button
-              className="btn btn-outline-light btn-sm"
+              className="btn text-white btn-sm fs-5"
               onClick={() => handleNavigation("/settingdashboard")}
               title="Settings"
             >

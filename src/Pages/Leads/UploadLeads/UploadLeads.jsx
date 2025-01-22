@@ -19,10 +19,10 @@ const UploadLeads = () => {
   useEffect(() => {
     if (showAlert) {
       const timer = setTimeout(() => {
-        setShowAlert(false); // Hide the alert after 3000ms
+        setShowAlert(false);
       }, 3000);
 
-      return () => clearTimeout(timer); // Cleanup the timer
+      return () => clearTimeout(timer);
     }
   }, [showAlert]);
 
@@ -86,8 +86,8 @@ const UploadLeads = () => {
           borderBottom: "1px solid #E1E6EF",
           boxShadow:
             "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-          marginBottom: "0px", // Uncomment and fix if needed
-          marginBottom: "5px", // Uncomment and fix if needed
+          marginBottom: "0px",
+          marginBottom: "5px",
         }}
         className="mt-2"
       >
@@ -97,7 +97,6 @@ const UploadLeads = () => {
             padding: "18px 16px",
             fontSize: "30px",
             color: "#2D2D2D",
-            // backgroundColor: "#E3E3E3",
           }}
         >
           <FaUpload
@@ -160,9 +159,9 @@ const UploadLeads = () => {
                   <option value="" disabled>
                     --Select Segment--
                   </option>
-                  <option value="Fresh Pool">Gold</option>
-                  <option value="Fresh Pool 2">Silver</option>
-                  <option value="Fresh Pool 3">Diamond</option>
+                  <option value="Gold">Gold</option>
+                  <option value="Silver">Silver</option>
+                  <option value="Diamond">Diamond</option>
                 </select>
               </div>
 

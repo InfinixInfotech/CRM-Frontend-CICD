@@ -6,7 +6,7 @@ const handleStatus = () => {
 
 export const StatusButton = ({
   onClick = handleStatus,
-  className = "Status-btn btn px-0 py-0",
+  className = "Status-btn btn-sm px-2 py-1 rounded",
 }) => {
   return (
     <button

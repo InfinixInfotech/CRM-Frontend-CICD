@@ -79,6 +79,11 @@ export const postUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/UploadBulkLead`;
 export const fetchAllUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/CustomeFetchLeads`;
 export const GetByIdUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/GetLeadByEmployeeCode`;
 export const UpdateByIdBulkLeadUrl = `${apiUrl}/api/BulkLead/UpdateLeadById`;
+// ---------------------------------------------Search Api's----------------------------------------------------------------------------
+export const GetLeadByMobileOrLeadIdUrl = `${apiUrl}/api/BulkLead/SearchLead`;
+
+
+
 
 export const staticToken =localStorage.getItem("authToken")
 export const emp= localStorage.getItem("employcode")

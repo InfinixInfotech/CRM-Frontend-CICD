@@ -4,7 +4,7 @@ import { getAllLeadSourceThunk } from "../../../Redux/Services/thunks/LeadSource
 import { useDispatch } from "react-redux";
 
 const LeadSourceFilter = () => {
-  const [selectedLeadSource, setSelectedLeadSource] = useState(""); // To store selected value
+  const [selectedLeadSource, setSelectedLeadSource] = useState("");
   const [leadSource, setLeadSource] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
@@ -23,10 +23,10 @@ const LeadSourceFilter = () => {
         console.log("API Response: ", response);
 
         if (response.success && Array.isArray(response.data)) {
-          setLeadSource(response.data); // Set fetched data as options
+          setLeadSource(response.data);
         } else {
           console.error("Invalid response format: ", response);
-          setLeadSource([]); // Reset options if invalid
+          setLeadSource([]);
         }
       } catch (error) {
         console.error("Error fetching LeadSource: ", error);

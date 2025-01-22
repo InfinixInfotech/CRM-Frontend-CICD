@@ -45,6 +45,12 @@ import UserHistory from "./Pages/UserHistory/UserHistory";
 import EditSalesOrder from "./Pages/SalesOrder/EditSalesOrder";
 import FollowUp from "./Pages/FollowUp/FollowUp"
 import EditLeads from "./Pages/Leads/EditLeads/EditLeads";
+import Policies  from "./Pages/Policies/Policies";
+import HrPolicies from "./Pages/Policies/HrPolicies/HrPolicies";
+import IncentivePlans from "./Pages/Policies/IncentivePlans/IncentivePlans";
+import LeavePolicy from "./Pages/Policies/LeavePolicy/LeavePolicy";
+import Probation from "./Pages/Policies/Probation/Probation";
+import TableSearch from "./Components/Filter/SearchByMobileNumberFilter/TableSearch/TableSearch";
 
 export default function App() {
   const username = localStorage.getItem("username");
@@ -106,6 +112,13 @@ export default function App() {
                     <Route path="/editgroups/:id" element={<EditGroups/>} />
                     <Route path="/editleads/:id" element={<EditLeads/>} />
                     <Route path="/userhistory" element={<UserHistory/>} />
+{/* //!-----------------------------------Policies Routs------------------------------------------ */}
+                    <Route path="/policies" element={<Policies/>} />
+                    <Route path="/hrpolicy" element={<HrPolicies/>} />
+                    <Route path="/incentiveplans" element={<IncentivePlans/>} />
+                    <Route path="/leavepolicy" element={<LeavePolicy/>} />
+                    <Route path="/probation" element={<Probation/>} />
+                    <Route path="/tablesearch" element={<TableSearch/>} />
                   </Routes>
                   </div>
                 </div>

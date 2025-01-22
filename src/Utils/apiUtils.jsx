@@ -173,7 +173,7 @@ export async function apiGetCallWithAuth(endpoint,token) {
       });
       if (response.ok) {
           const data = await response.json();
-          console.log('Response:', data);
+          console.log('Response-------555---------:', data);
           return data;
       }else {
           console.error('Error:', response.status, response.statusText);
@@ -188,12 +188,6 @@ export async function apiGetCallWithAuth(endpoint,token) {
 export async function apiGetCallWithRersponseAuth(endpoint, params, token) {
   console.log(endpoint);
   try {
-      // Construct the URL with query parameters
-      // const queryString = new URLSearchParams(params).toString();
-      // const url = `${endpoint}?${queryString}`;
-
-      // console.log("Constructed URL:", url);
-
       const response = await fetch(endpoint, {
           method: 'GET',
           headers: {

@@ -1,4 +1,4 @@
-import { apiDeleteCallWithAuth, apiGetCallWithRersponseAuth, apiPostCallWithAuth, apiPostCallWithAuthFormData, apiPutCallWithAuth } from "../../../Utils/apiUtils";
+import { apiDeleteCallWithAuth, apiGetCallWithRersponseAuth, apiPostCallWithAuth, apiPostCallWithAuthFormData } from "../../../Utils/apiUtils";
 import { fetchAllUploadBulkLeadUrl, GetByIdUploadBulkLeadUrl, postUploadBulkLeadUrl, staticToken, UpdateByIdBulkLeadUrl } from "../apiServer/ApiServer";
 export const postUploadBulkLead = async (params) => {  
   try {
@@ -15,7 +15,7 @@ export const postUploadBulkLead = async (params) => {
 };
      
 export const getByIdUploadBulkLead = async (params) => {
-  console.log("params-------------------",params);
+  // console.log("params-------------------",params);
   try {
     const { EmployeeCode, CampaignName } = params;
     const urlWithId = `${GetByIdUploadBulkLeadUrl}?EmployeeCode=${EmployeeCode}&CampaignName=${CampaignName}`;

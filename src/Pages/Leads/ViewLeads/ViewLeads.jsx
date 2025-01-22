@@ -17,13 +17,8 @@ import { emp } from "../../../Redux/Services/apiServer/ApiServer";
 import { UpdateBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 import ExportData from "../../../Components/Button/DataButton/ExportButton";
 import { FaEye } from "react-icons/fa";
-import LeadSourceFilter from "../../../Components/Filter/LeadSourceFilter/LeadSourceFilter";
-import ManagerFilter from "../../../Components/Filter/ManagerFilter/ManagerFilter";
-import SegmentFilter from "../../../Components/Filter/SegmentFilter/SegmentFilter";
-import AssignedFilter from "../../../Components/Filter/AssignedFilter/AssignedFilter";
-import ActionFilter from "../../../Components/Filter/ActionFilter/ActionFilter";
-import StatusFilter from "../../../Components/Filter/StatusFilter/StatusFilter";
 import FilterImport from "../../../Components/FilterImport/FilterImport";
+import LeadSourceFilter from "../../../Components/Filter/LeadSourceFilter/LeadSourceFilter";
 
 const ViewLeads = () => {
   const isPrGenerated = 0;
@@ -35,6 +30,8 @@ const ViewLeads = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [addSegment, setaddSegment] = useState("");
   const [addComment, setaddComment] = useState("");
+  const [addstatus, setaddStatus] = useState("");
+
   const [addfreeTrialStartDate, setAddFreeTrialStartDate] = useState("");
   const [addfreeTrialEndDate, setAddFreeTrialEndDate] = useState("");
   const [addFollowUpDate, setAddFollowUpDate] = useState("");
@@ -43,6 +40,18 @@ const ViewLeads = () => {
   const [showFreeTrialPopup, setShowFreeTrialPopup] = useState(false);
   const [showFollowUpPopup, setShowFollowUpPopup] = useState(false);
   const [selectedLeadId, setSelectedLeadId] = useState(null);
+  const [showStatusPopup, setShowStatusPopup] = useState(false);
+  const [updateStatus, setUpdateStatus] = useState({
+    1: "BUSY",
+    2: "FUTURE FOLLOWUP",
+    3: "INSTERESTED",
+    4: "NOT INSTERESTED",
+    5: "NOT REACHABLE",
+    6: "NPC",
+    7: "PAID CLIENT",
+    8: "SWITCH OFF",
+  });
+
   //  const [tableButtonData, setTableButtonData] = useState({});
 
   const handleOpenPopup = (fromWhere) => {
@@ -50,25 +59,36 @@ const ViewLeads = () => {
       setShowCommentPopup(false);
       setShowFreeTrialPopup(false);
       setShowFollowUpPopup(false);
+      setShowStatusPopup(false);
       setShowPopup(true);
     }
     if (fromWhere == "comment") {
       setShowPopup(false);
       setShowFreeTrialPopup(false);
       setShowFollowUpPopup(false);
+      setShowStatusPopup(false);
       setShowCommentPopup(true);
     }
     if (fromWhere == "freeTrial") {
       setShowPopup(false);
       setShowCommentPopup(false);
       setShowFollowUpPopup(false);
+      setShowStatusPopup(false);
       setShowFreeTrialPopup(true);
     }
     if (fromWhere == "followUp") {
       setShowPopup(false);
       setShowCommentPopup(false);
       setShowFreeTrialPopup(false);
+      setShowStatusPopup(false);
       setShowFollowUpPopup(true);
+    }
+    if (fromWhere == "status") {
+      setShowPopup(false);
+      setShowCommentPopup(false);
+      setShowFreeTrialPopup(false);
+      setShowFollowUpPopup(false);
+      setShowStatusPopup(true);
     }
   };
 
@@ -77,10 +97,22 @@ const ViewLeads = () => {
     setShowCommentPopup(false);
     setShowFreeTrialPopup(false);
     setShowFollowUpPopup(false);
+    setShowStatusPopup(false);
   };
 
-  const handleChangedropdown = (event) => {
-    setaddSegment(event.target.value);
+  const handleChangedropdown = (event, field) => {
+    const value = event.target.value;
+
+    if (field === "status") {
+      // Find the key (number) associated with the selected status
+      const statusKey = Object.keys(updateStatus).find(
+        (key) => updateStatus[key] === value
+      );
+
+      setaddStatus(statusKey || value); // Set the status key (number) or fallback to value
+    } else if (field === "segment") {
+      setaddSegment(value);
+    }
   };
 
   const handleChangeInput = (event) => {
@@ -100,7 +132,7 @@ const ViewLeads = () => {
 
   const handleSaveSegment = async () => {
     if (!selectedLeadId) {
-      console.error("No lead selected");
+      console.error("Please select a lead first.");
       return;
     }
 
@@ -108,95 +140,101 @@ const ViewLeads = () => {
       (leadObj) => leadObj.lead.leadId === selectedLeadId
     )?.lead;
 
+    console.log("Selected Lead:", lead);
+
     if (!lead) {
       console.error("Lead not found");
       return;
     }
 
-    if (
-      addSegment !== lead.followupDetail.segment ||
-      addComment !== lead.followupDetail.comment ||
-      addfreeTrialStartDate !== lead.followupDetail.freeTrialStartDate ||
-      addfreeTrialEndDate !== lead.followupDetail.freeTrialEndDate ||
-      addFollowUpDate !== lead.followupDetail.followUpDate
-    ) {
-      const addNewLead = {
-        leadId: lead.leadId,
-        campaignName: lead.campaignName,
-        clientName: lead.clientName,
-        assignedTo: lead.assignedTo,
-        employeeCode: lead.employeeCode,
-        leadSource: lead.leadSource,
-        mobile: lead.mobile,
-        alternateMobile: lead.alternateMobile,
-        otherMobile1: lead.otherMobile1,
-        otherMobile2: lead.otherMobile2,
-        email: lead.email,
-        city: lead.city,
-        state: lead.state,
-        dob: lead.dob,
-        investmentDetail: {
-          investment: lead.investmentDetail.investment,
-          profile: lead.investmentDetail.profile,
-          trading: lead.investmentDetail.trading,
-          lot: 0,
-          tradingExp: lead.investmentDetail.tradingExp,
-          annualIncome: lead.investmentDetail.annualIncome,
-          investmentGoal: lead.investmentDetail.investmentGoal,
-          marketValue: lead.investmentDetail.marketValue,
-          minInvestment: lead.investmentDetail.minInvestment,
-          sourceOfIncome: lead.investmentDetail.sourceOfIncome,
-          panNo: lead.investmentDetail.panNo,
-          uidAadhaar: lead.investmentDetail.uidAadhaar,
-          amountCapping: lead.investmentDetail.amountCapping,
-        },
-        language: lead.language,
-        followupDetail: {
-          leadStatus: lead.followupDetail.leadStatus,
-          segment: addSegment !== "" ? addSegment : lead.followupDetail.segment,
-          followUpDate:
-            addFollowUpDate !== ""
-              ? addFollowUpDate
-              : lead.followupDetail.followUpDate,
-          comment: addComment !== "" ? addComment : lead.followupDetail.comment,
-          freeTrialStartDate:
-            addfreeTrialStartDate !== ""
-              ? addfreeTrialStartDate
-              : lead.followupDetail.freeTrialStartDate,
-          freeTrialEndDate:
-            addfreeTrialEndDate !== ""
-              ? addfreeTrialEndDate
-              : lead.followupDetail.freeTrialStartDate,
-        },
-      };
+    // if (
+    //   addSegment !== lead.followupDetail.segment ||
+    //   addComment !== lead.followupDetail.comment ||
+    //   addfreeTrialStartDate !== lead.followupDetail.freeTrialStartDate ||
+    //   addfreeTrialEndDate !== lead.followupDetail.freeTrialEndDate ||
+    //   addFollowUpDate !== lead.followupDetail.followUpDate ||
+    //   addstatus !== lead.followupDetail.leadStatus
+    // ) {
+    const addNewLead = {
+      leadId: lead.leadId,
+      campaignName: lead.campaignName,
+      clientName: lead.clientName,
+      assignedTo: lead.assignedTo,
+      employeeCode: lead.employeeCode,
+      leadSource: lead.leadSource,
+      mobile: lead.mobile,
+      alternateMobile: lead.alternateMobile,
+      otherMobile1: lead.otherMobile1,
+      otherMobile2: lead.otherMobile2,
+      email: lead.email,
+      city: lead.city,
+      state: lead.state,
+      dob: lead.dob,
+      investmentDetail: {
+        investment: lead.investmentDetail?.investment,
+        profile: lead.investmentDetail?.profile,
+        trading: lead.investmentDetail?.trading,
+        lot: 0,
+        tradingExp: lead.investmentDetail?.tradingExp,
+        annualIncome: lead.investmentDetail?.annualIncome,
+        investmentGoal: lead.investmentDetail?.investmentGoal,
+        marketValue: lead.investmentDetail?.marketValue,
+        minInvestment: lead.investmentDetail?.minInvestment,
+        sourceOfIncome: lead.investmentDetail?.sourceOfIncome,
+        panNo: lead.investmentDetail?.panNo,
+        uidAadhaar: lead.investmentDetail?.uidAadhaar,
+        amountCapping: lead.investmentDetail?.amountCapping,
+      },
+      language: lead.language,
+      followupDetail: {
+        leadStatus:
+          addstatus !== "" ? addstatus : lead.followupDetail?.leadStatus || "",
+        segment:
+          addSegment !== "" ? addSegment : lead.followupDetail?.segment || "",
+        followUpDate:
+          addFollowUpDate !== ""
+            ? addFollowUpDate
+            : lead.followupDetail?.followUpDate || "",
+        comment:
+          addComment !== "" ? addComment : lead.followupDetail?.comment || "",
+        freeTrialStartDate:
+          addfreeTrialStartDate !== ""
+            ? addfreeTrialStartDate
+            : lead.followupDetail?.freeTrialStartDate || "",
+        freeTrialEndDate:
+          addfreeTrialEndDate !== ""
+            ? addfreeTrialEndDate
+            : lead.followupDetail?.freeTrialEndDate || "",
+      },
+    };
 
-      dispatch(UpdateBulkLeadThunk(addNewLead))
-        .then((response) => {
-          if (response.payload === null) {
-            console.error("No data received from the server");
-          }
-          setTimeout(() => {
-            window.location.reload();
-          }, 400);
-        })
-        .catch((error) => {
-          console.error("Error adding:", error);
-        });
-    } else {
-      setSelectedLeadId("");
-      handleClosePopup();
-    }
+    dispatch(UpdateBulkLeadThunk(addNewLead))
+      .then((response) => {
+        if (response.payload === null) {
+          console.error("No data received from the server");
+        }
+        setTimeout(() => {
+          window.location.reload();
+        }, 400);
+      })
+      .catch((error) => {
+        console.error("Error adding:", error);
+      });
+    // } else {
+    //   setSelectedLeadId("");
+    //   handleClosePopup();
+    // }
 
     setSelectedLeadId("");
     handleClosePopup();
   };
 
-  console.log("addSegment--------------", addSegment);
+  // console.log("addSegment--------------", addSegment);
 
   const requestData = {
     EmployeeCode: emp,
-    CampaignName: "INF01JAN2025",
-  };
+    CampaignName: "INF21JAN2025",
+  };  
 
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.uploadbulklead);
@@ -496,7 +534,10 @@ const ViewLeads = () => {
                               </button>
                               {showPopup && (
                                 <div className="popup-overlay d-flex justify-content-center align-items-center">
-                                  <div className="popup-content bg-light p-4 rounded">
+                                  <div
+                                    className="popup-content bg-light p-4 rounded"
+                                    style={{ width: "20vw" }}
+                                  >
                                     <h3 className="text-center mb-4">
                                       Add Segment
                                     </h3>
@@ -511,7 +552,12 @@ const ViewLeads = () => {
                                         className="form-select"
                                         name="AddSegment"
                                         value={addSegment}
-                                        onChange={handleChangedropdown}
+                                        onChange={(event) => {
+                                          handleChangedropdown(
+                                            event,
+                                            "segment"
+                                          );
+                                        }}
                                       >
                                         <option value="" disabled>
                                           -----Select An Option-----
@@ -564,7 +610,10 @@ const ViewLeads = () => {
                                 </button>
                                 {showFreeTrialPopup && (
                                   <div className="popup-overlay d-flex justify-content-center align-items-center">
-                                    <div className="popup-content bg-light p-4 rounded shadow">
+                                    <div
+                                      className="popup-content bg-light p-4 rounded shadow"
+                                      style={{ width: "20vw" }}
+                                    >
                                       <h3 className="text-center mb-4">
                                         Add Free Trial
                                       </h3>
@@ -648,7 +697,10 @@ const ViewLeads = () => {
                               </button>
                               {showFollowUpPopup && (
                                 <div className="popup-overlay d-flex justify-content-center align-items-center">
-                                  <div className="popup-content bg-light p-4 rounded shadow">
+                                  <div
+                                    className="popup-content bg-light p-4 rounded shadow"
+                                    style={{ width: "20vw" }}
+                                  >
                                     <h3 className="text-center mb-4">
                                       Add Follow Up
                                     </h3>
@@ -704,7 +756,10 @@ const ViewLeads = () => {
                           </button>
                           {showCommentPopup && (
                             <div className="popup-overlay d-flex justify-content-center align-items-center">
-                              <div className="popup-content bg-light p-4 rounded shadow">
+                              <div
+                                className="popup-content bg-light p-4 rounded shadow"
+                                style={{ width: "20vw" }}
+                              >
                                 <h3 className="text-center mb-4">
                                   Add Comment
                                 </h3>
@@ -746,7 +801,74 @@ const ViewLeads = () => {
                         </td>
                         <td>
                           <div className="btn-group d-grid gap-1 d-sm-flex">
-                            <StatusButton />
+                            <div>
+                              <StatusButton
+                                onClick={() => {
+                                  handleOpenPopup("status");
+                                  setSelectedLeadId(leadObj.lead.leadId);
+                                }}
+                              />
+                              {showStatusPopup && (
+                                <>
+                                  <div
+                                    className="popup-overlay d-flex justify-content-center align-items-center"
+                                    onClick={handleClosePopup}
+                                  ></div>
+                                  <div className="salesOrder-popup-content">
+                                    <h3 className="text-center mb-4">
+                                      Lead Status
+                                    </h3>
+                                    <div className="mb-3">
+                                      <label
+                                        htmlFor="segmentInput"
+                                        className="form-label fw-bold"
+                                      >
+                                        Select Lead Status
+                                      </label>
+                                      <select
+                                        style={{
+                                          fontSize: "14px",
+                                          fontWeight: "500",
+                                        }}
+                                        name="segmentCategory"
+                                        value={updateStatus[addstatus] || ""}
+                                        onChange={(event) => {
+                                          handleChangedropdown(event, "status");
+                                        }}
+                                        className="form-select"
+                                      >
+                                        <option value="">Select Status</option>
+                                        {Object.entries(updateStatus).map(
+                                          ([key, value]) => (
+                                            <option key={key} value={value}>
+                                              {value}
+                                            </option>
+                                          )
+                                        )}
+                                      </select>
+                                    </div>
+                                    <div className="d-flex justify-content-between mt-4">
+                                      <button
+                                        className="btn btn-secondary me-2"
+                                        onClick={handleClosePopup}
+                                      >
+                                        Close
+                                      </button>
+                                      <button
+                                        className="btn btn-primary"
+                                        onClick={() => {
+                                          handleSaveSegment(leadObj);
+                                          console.log(leadObj);
+                                        }}
+                                      >
+                                        Save
+                                      </button>
+                                    </div>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+
                             <EditButton
                               onClick={() => {
                                 handleNavigateToEditLead(
