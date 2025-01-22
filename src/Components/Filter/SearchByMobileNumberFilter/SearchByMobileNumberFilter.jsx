@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Modal, Button, Table } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { GetLeadByMobileOrLeadIdThunk } from "../../../Redux/Services/thunks/GetLeadByMobileOrLeadIdThunk";
@@ -10,10 +10,11 @@ const SearchByMobileNumberFilter = () => {
   const [TableshowModal, setTableShowModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [SearchData, setSearchData] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const Navigate = useNavigate();
- 
+
   const dispatch = useDispatch();
-  // console.log("Search data ->" +SearchData)
   const handleSearchClick = () => {
     setShowModal(true);
   };
@@ -22,9 +23,13 @@ const SearchByMobileNumberFilter = () => {
 
   const handleSearch = () => {
     if (!inputValue.trim()) {
-      alert("Please enter a mobile number or Lead ID.");
+      setErrorMessage("Please enter a mobile number or Lead ID.");
       return;
     }
+    // Proceed with your search logic
+    setErrorMessage(""); // Clear the error message if input is valid
+    console.log("Searching for:", inputValue);
+
     const payload = {
       employeeCode: emp,
       data: inputValue,
@@ -32,23 +37,37 @@ const SearchByMobileNumberFilter = () => {
     dispatch(GetLeadByMobileOrLeadIdThunk(payload))
       .then((response) => {
         console.log("Full API Response:", response);
-        console.log("Full API Response:",JSON.stringify(response.payload.lead));
+        console.log(
+          "Full API Response:",
+          JSON.stringify(response.payload.lead)
+        );
         if (response && response.payload && response.payload.lead) {
           setSearchData(response.payload.lead);
-          console.log("SearchDataSender----------------",SearchData);
+          console.log("SearchDataSender----------------", SearchData);
           console.log("Lead Data:", response.payload.lead);
         } else {
-          alert("No lead data found in the response.");
-          setSearchData({});
+          setErrorMessage("No lead data found in the response.");
+          setSearchData([]);
         }
-        Navigate(`/tablesearch`, { state: { SearchData } });
       })
       .catch((error) => {
         console.error("Error fetching data: ", error);
         alert("An error occurred while fetching data. Please try again later.");
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setShowModal(false);
+          setErrorMessage("");
+          setSearchData([]);
+        }, 2000);
       });
   };
-  
+
+  useEffect(() => {
+    if (SearchData && Object.keys(SearchData).length > 0) {
+      Navigate(`/tablesearch`, { state: { SearchData } });
+    }
+  }, [SearchData]);
 
   return (
     <>
@@ -66,6 +85,9 @@ const SearchByMobileNumberFilter = () => {
           <Modal.Title>Search Data</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          {errorMessage && (
+            <div className="text-danger mb-2">{errorMessage}</div>
+          )}
           <input
             type="text"
             className="form-control"
@@ -83,52 +105,8 @@ const SearchByMobileNumberFilter = () => {
           </Button>
         </Modal.Footer>
       </Modal>
-
-      {/* <Button variant="primary" onClick={handleShow}>
-        Show Table
-      </Button>
-
-      <Modal show={TableshowModal} onHide={handleClose} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Table in Pop-Up</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Table striped bordered hover>
-            <thead>
-              <tr>
-                <th>Id</th>
-                <th>Client Name</th>
-                <th>Mobile</th>
-                <th>Assigned To</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {SearchData && Object.keys(SearchData).length > 0 ? (
-                <tr>
-                  <td>{SearchData.id}</td>
-                  <td>{SearchData.clientName}</td>
-                  <td>{SearchData.mobile}</td>
-                  <td>{SearchData.assignedTo}</td>
-                  <td>{SearchData.leadSource || "N/A"}</td>
-                </tr>
-              ) : (
-                <tr>
-                  <td colSpan="5" style={{ textAlign: "center" }}>
-                    No data available
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Table>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-        </Modal.Footer>
-      </Modal> */}
     </>
+    
   );
 };
 

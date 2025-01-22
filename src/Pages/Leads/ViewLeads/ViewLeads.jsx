@@ -8,6 +8,7 @@ import { EditButton } from "../../../Components/Button/EditButton/EditButton";
 import { DisposeButton } from "../../../Components/Button/DisposeButton/DisposeButton";
 import ConditionalPrSoButton from "../../../Components/Button/ConditionalPrSoButton/ConditionalPrSoButton";
 import { useDispatch, useSelector } from "react-redux";
+import { getAllLeadPaymentRaiseThunk } from "../../../Redux/Services/thunks/LeadPaymentRaiseThunk";
 
 import { HashLoader } from "react-spinners";
 import { fetchAllUploadBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
@@ -18,10 +19,14 @@ import { UpdateBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLe
 import ExportData from "../../../Components/Button/DataButton/ExportButton";
 import { FaEye } from "react-icons/fa";
 import FilterImport from "../../../Components/FilterImport/FilterImport";
-import LeadSourceFilter from "../../../Components/Filter/LeadSourceFilter/LeadSourceFilter";
 
 const ViewLeads = () => {
-  const isPrGenerated = 0;
+  const handlePrSoFunctionality = ( leadId ,paymentStatus)=>{
+console.log("leadId here is --------------",leadId);
+console.log("paymentStatus here is --------------",paymentStatus);
+
+  }
+  const [isPrGenerated, setIsPrGenerated] = useState(0)
   const [editAddLead, setEditAddLead] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [leads, setLeads] = useState([]);
@@ -41,6 +46,9 @@ const ViewLeads = () => {
   const [showFollowUpPopup, setShowFollowUpPopup] = useState(false);
   const [selectedLeadId, setSelectedLeadId] = useState(null);
   const [showStatusPopup, setShowStatusPopup] = useState(false);
+  const [paymentData, setPaymentData] = useState([]);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const [updateStatus, setUpdateStatus] = useState({
     1: "BUSY",
     2: "FUTURE FOLLOWUP",
@@ -51,8 +59,6 @@ const ViewLeads = () => {
     7: "PAID CLIENT",
     8: "SWITCH OFF",
   });
-
-  //  const [tableButtonData, setTableButtonData] = useState({});
 
   const handleOpenPopup = (fromWhere) => {
     if (fromWhere == "segment") {
@@ -109,7 +115,7 @@ const ViewLeads = () => {
         (key) => updateStatus[key] === value
       );
 
-      setaddStatus(statusKey || value); // Set the status key (number) or fallback to value
+      setaddStatus(statusKey || value);
     } else if (field === "segment") {
       setaddSegment(value);
     }
@@ -147,14 +153,6 @@ const ViewLeads = () => {
       return;
     }
 
-    // if (
-    //   addSegment !== lead.followupDetail.segment ||
-    //   addComment !== lead.followupDetail.comment ||
-    //   addfreeTrialStartDate !== lead.followupDetail.freeTrialStartDate ||
-    //   addfreeTrialEndDate !== lead.followupDetail.freeTrialEndDate ||
-    //   addFollowUpDate !== lead.followupDetail.followUpDate ||
-    //   addstatus !== lead.followupDetail.leadStatus
-    // ) {
     const addNewLead = {
       leadId: lead.leadId,
       campaignName: lead.campaignName,
@@ -234,7 +232,7 @@ const ViewLeads = () => {
   const requestData = {
     EmployeeCode: emp,
     CampaignName: "INF21JAN2025",
-  };  
+  };
 
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.uploadbulklead);
@@ -305,8 +303,25 @@ const ViewLeads = () => {
   const nextPage = () =>
     setCurrentPage((prev) => Math.min(prev + 1, totalPages));
 
+
+  // useEffect(() => {
+  //   dispatch(getAllLeadPaymentRaiseThunk())
+  //     .then((response) => {
+  //       if (response) {
+  //         setPaymentData(response.payload.data || []);
+  //       } else {
+  //         setErrorMessage("No payment data found in the response.");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching data: ", error);
+  //       alert("An error occurred while fetching data. Please try again later.");
+  //     });
+  // }, [dispatch]);
+
   return (
     <>
+    
       <section
         style={{
           position: "relative",
@@ -335,6 +350,18 @@ const ViewLeads = () => {
           View Leads
         </h2>
       </section>
+      {/* <div>
+      <h1>Filtered Payments</h1>
+      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
+      {paymentData
+        .filter((payment) => payment.paymentStatus === 1)
+        .map((filteredPayment) => (
+          <div key={filteredPayment.leadId}>
+            Lead ID: {filteredPayment.leadId}, Payment Status: {filteredPayment.paymentStatus}
+            {handlePrSoFunctionality(filteredPayment.leadId , filteredPayment.paymentStatus )}
+          </div>
+        ))}
+    </div> */}
       {/* //!-------------------------------------------------------------------------------------Filter Import------------------------------------------------------------------------------------------ */}
       <FilterImport />
 
@@ -882,6 +909,7 @@ const ViewLeads = () => {
                             />
                             <DisposeButton />
                             <ConditionalPrSoButton
+                              leadId={leadObj.lead.leadId} 
                               isPrGenerated={isPrGenerated}
                               onClick={() => {
                                 handleNavigateToPR(leadObj.lead.id, leadObj);

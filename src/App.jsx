@@ -95,7 +95,6 @@ export default function App() {
                     <Route path="/useroperation" element={<UserOperation />} />
                     <Route path="/salesorder" element={<SalesOrder />} />
                     <Route path="/payment" element={<Payment />} />
-                    <Route path="/viewleads" element={<ViewLeads />} />
                     <Route path="/addleads" element={<AddLeads />} />
                     <Route path="/uploadleads" element={<UploadLeads />} />
                     <Route path="/viewmarketingleads" element={<ViewMarketingLeads />} />
@@ -104,6 +103,7 @@ export default function App() {
                     <Route path="/drafts" element={<Drafts />} />
                     <Route path="/sentmail" element={<SentMail />} />
                     <Route path="/starred" element={<Starred />} />
+                    <Route path="/viewleads" element={<ViewLeads />} />
                     <Route path="/paymnetRaise/:id" element={<PaymentRaise />} />
                     <Route path="/addsalesorder/:id" element={<InsertSalesorder />} />
                     <Route path="/editso/:id" element={<EditSalesOrder/>} />

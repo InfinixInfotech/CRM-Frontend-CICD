@@ -99,7 +99,7 @@ const PaymentRaise = () => {
         city: AddPaymentRaise.city,
       },
       transactionReceipt: "string",
-      paymentStatus: 0,
+      paymentStatus: 1,
     };
     console.log("Payload being sent:", addnewPR);
     dispatch(postLeadPaymentRaiseThunk(addnewPR))

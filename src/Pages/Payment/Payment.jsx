@@ -49,6 +49,30 @@ const Payment = () => {
     });
   };
 
+
+  // const handleNavigateToViewLead = (id, prId, paymentObj) => {
+  //   if (paymentObj.paymentStatus === 1) {
+  //     Navigate(`/addsalesorder/${id}`, { state: { prId, leadObj } });
+  //   } else {
+  //     alert("Payment status is not approved (1). Cannot generate Sales Order.");
+  //   }
+  // };
+  // <button
+  //   onClick={() => handleNavigateToSo(leadObj.id, leadObj.prId, leadObj)}
+  //   style={{
+  //     padding: 2,
+  //     margin: 0,
+  //     fontSize: "12px",
+  //     color: "white",
+  //     border: "1px solid grey",
+  //     fontWeight: "600",
+  //     borderRadius: "0",
+  //     backgroundColor: "#758694",
+  //   }}
+  // >
+  //   Generate Sales Order
+  // </button>
+
   useEffect(() => {
     dispatch(getAllLeadPaymentRaiseThunk());
   }, [dispatch]);
@@ -152,37 +176,6 @@ const Payment = () => {
             </>
           )}
 
-          <div className="dropDownContainer  m-3 ">
-            {/* // !<------------------------------------------------------------------------------------ FILTERS ----------------------------------------------------------------------------  */}
-            {/* <div className="row d-flex gap-2 mb-0 ">
-              {[
-                "Status",
-                "By Date",
-                "SO",
-                "Assigned",
-                "Bank Name",
-                "Branch",
-                "Lead Source",
-              ].map((filter, index) => (
-                <div className="col-md-2" key={index}>
-                  <div>
-                    <label className="ViewLeadFormLable form-label ">
-                      {filter}
-                    </label>
-                    <select
-                      className="formControl form-control px-2"
-                      style={{ width: "8vw" }}
-                    >
-                      <option value="all">{filter}</option>
-                      <option value="option1">Option 1</option>
-                      <option value="option2">Option 2</option>
-                    </select>
-                  </div>
-                </div>
-              ))}
-            </div> */}
-          </div>
-
           <div className="payment-paymentTable border border-2 p-2 bg-white mt-2">
             {/* // !<----------------------------------------------------------------------------------- MAIN TABLE STARTING ----------------------------------------------------------------------------  */}
             <ExportData tableId="table-dataOne" />
@@ -280,7 +273,7 @@ const Payment = () => {
               </button>
             </div>
             {/* // !<------------------------------------------------------------------------------------ TABLE TWO CONTAINER ----------------------------------------------------------------------------  */}
-            
+
             {/* 
             <div>
               <div className=" mb-0 ">

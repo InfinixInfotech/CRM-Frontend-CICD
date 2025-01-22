@@ -5,12 +5,14 @@ import { emp, staticToken } from "../../../Redux/Services/apiServer/ApiServer";
 import { postAddLeadThunk } from "../../../Redux/Services/thunks/AddLeadThunk";
 import { useLocation } from "react-router-dom";
 import { UpdateBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
-
+import { FaEdit } from "react-icons/fa";
 const EditLeads = () => {
   const [showAlert, setShowAlert] = useState(false);
   const dispatch = useDispatch();
   const { state } = useLocation();
-  const recievedLeadData = state?.leadObj.lead;
+  const recievedLeadData = state?.leadObj?.lead || {};
+  const recievedLeadTableData = state?.SearchData || {};
+console.log("recievedLeadTableData---------------",recievedLeadTableData);
 
   console.log(
     "recievedLeadData-----------------------",
@@ -18,39 +20,40 @@ const EditLeads = () => {
   );
 
   const [leads, setLeads] = useState({
-    leadId: recievedLeadData.leadId,
-    CampaignName: recievedLeadData?.campaignName || "",
-    ClientName: recievedLeadData?.clientName || "",
-    AssignedTo: recievedLeadData?.assignedTo || "",
-    LeadSource: recievedLeadData?.leadSource || "",
-    Mobile: recievedLeadData?.mobile || "",
-    AlternateMobile: recievedLeadData?.alternateMobile || "",
-    OtherMobile1: recievedLeadData?.otherMobile1 || "",
-    OtherMobile2: recievedLeadData?.otherMobile2 || "",
-    Email: recievedLeadData?.email || "",
-    City: recievedLeadData?.city || "",
-    State: recievedLeadData?.state || "",
-    Dob: recievedLeadData?.dob || "",
-    Investment: recievedLeadData?.investment || "",
-    Profile: recievedLeadData?.profile || "",
-    Trading: recievedLeadData?.trading || "",
-    TradingExp: recievedLeadData?.tradingExp || "",
-    Lot: recievedLeadData?.lot || 0,
-    AnnualIncome: recievedLeadData?.annualIncome || "",
-    InvestmentGoal: recievedLeadData?.investmentGoal || "",
-    MarketValue: recievedLeadData?.marketValue || "",
-    MinInvestment: recievedLeadData?.minInvestment || "",
-    SourceOfIncome: recievedLeadData?.sourceOfIncome || "",
-    PanNo: recievedLeadData?.panNo || "",
-    UidAadhaar: recievedLeadData?.uidAadhaar || "",
-    Language: recievedLeadData?.language || "",
-    LeadStatus: recievedLeadData?.leadStatus || "",
-    Segment: recievedLeadData?.segment || "",
-    FreeTrialStartDate: recievedLeadData?.freeTrialStartDate || "",
-    FreeTrialEndDate: recievedLeadData?.freeTrialEndDate || "",
-    FollowUp: recievedLeadData?.followUp || "",
-    Comment: recievedLeadData?.comment || "",
+    leadId: recievedLeadData?.leadId || recievedLeadTableData?.leadId || "",
+    CampaignName: recievedLeadData?.campaignName || recievedLeadTableData?.campaignName || "",
+    ClientName: recievedLeadData?.clientName || recievedLeadTableData?.clientName || "",
+    AssignedTo: recievedLeadData?.assignedTo || recievedLeadTableData?.assignedTo || "",
+    LeadSource: recievedLeadData?.leadSource || recievedLeadTableData?.leadSource || "",
+    Mobile: recievedLeadData?.mobile || recievedLeadTableData?.mobile || "",
+    AlternateMobile: recievedLeadData?.alternateMobile || recievedLeadTableData?.alternateMobile || "",
+    OtherMobile1: recievedLeadData?.otherMobile1 || recievedLeadTableData?.otherMobile1 || "",
+    OtherMobile2: recievedLeadData?.otherMobile2 || recievedLeadTableData?.otherMobile2 || "",
+    Email: recievedLeadData?.email || recievedLeadTableData?.email || "",
+    City: recievedLeadData?.city || recievedLeadTableData?.city || "",
+    State: recievedLeadData?.state || recievedLeadTableData?.state || "",
+    Dob: recievedLeadData?.dob || recievedLeadTableData?.dob || "",
+    Investment: recievedLeadData?.investment || recievedLeadTableData?.investment || "",
+    Profile: recievedLeadData?.profile || recievedLeadTableData?.profile || "",
+    Trading: recievedLeadData?.trading || recievedLeadTableData?.trading || "",
+    TradingExp: recievedLeadData?.tradingExp || recievedLeadTableData?.tradingExp || "",
+    Lot: recievedLeadData?.lot || recievedLeadTableData?.lot || 0,
+    AnnualIncome: recievedLeadData?.annualIncome || recievedLeadTableData?.annualIncome || "",
+    InvestmentGoal: recievedLeadData?.investmentGoal || recievedLeadTableData?.investmentGoal || "",
+    MarketValue: recievedLeadData?.marketValue || recievedLeadTableData?.marketValue || "",
+    MinInvestment: recievedLeadData?.minInvestment || recievedLeadTableData?.minInvestment || "",
+    SourceOfIncome: recievedLeadData?.sourceOfIncome || recievedLeadTableData?.sourceOfIncome || "",
+    PanNo: recievedLeadData?.panNo || recievedLeadTableData?.panNo || "",
+    UidAadhaar: recievedLeadData?.uidAadhaar || recievedLeadTableData?.uidAadhaar || "",
+    Language: recievedLeadData?.language || recievedLeadTableData?.language || "",
+    LeadStatus: recievedLeadData?.leadStatus || recievedLeadTableData?.leadStatus || "",
+    Segment: recievedLeadData?.segment || recievedLeadTableData?.segment || "",
+    FreeTrialStartDate: recievedLeadData?.freeTrialStartDate || recievedLeadTableData?.freeTrialStartDate || "",
+    FreeTrialEndDate: recievedLeadData?.freeTrialEndDate || recievedLeadTableData?.freeTrialEndDate || "",
+    FollowUp: recievedLeadData?.followUp || recievedLeadTableData?.followUp || "",
+    Comment: recievedLeadData?.comment || recievedLeadTableData?.comment || "",
   });
+  
 
   useEffect(() => {
     if (showAlert) {
@@ -64,40 +67,40 @@ const EditLeads = () => {
 
   useEffect(() => {
     setLeads({
-      leadId: recievedLeadData.leadId,
-      CampaignName: recievedLeadData?.campaignName || "",
-      ClientName: recievedLeadData?.clientName || "",
-      AssignedTo: recievedLeadData?.assignedTo || "",
-      LeadSource: recievedLeadData?.leadSource || "",
-      Mobile: recievedLeadData?.mobile || "",
-      AlternateMobile: recievedLeadData?.alternateMobile || "",
-      OtherMobile1: recievedLeadData?.otherMobile1 || "",
-      OtherMobile2: recievedLeadData?.otherMobile2 || "",
-      Email: recievedLeadData?.email || "",
-      City: recievedLeadData?.city || "",
-      State: recievedLeadData?.state || "",
-      Dob: recievedLeadData?.dob || "",
-      Investment: recievedLeadData?.investment || "",
-      Profile: recievedLeadData?.profile || "",
-      Trading: recievedLeadData?.trading || "",
-      TradingExp: recievedLeadData?.tradingExp || "",
-      Lot: recievedLeadData?.lot || 0,
-      AnnualIncome: recievedLeadData?.annualIncome || "",
-      InvestmentGoal: recievedLeadData?.investmentGoal || "",
-      MarketValue: recievedLeadData?.marketValue || "",
-      MinInvestment: recievedLeadData?.minInvestment || "",
-      SourceOfIncome: recievedLeadData?.sourceOfIncome || "",
-      PanNo: recievedLeadData?.panNo || "",
-      UidAadhaar: recievedLeadData?.uidAadhaar || "",
-      Language: recievedLeadData?.language || "",
-      LeadStatus: recievedLeadData?.leadStatus || "",
-      Segment: recievedLeadData?.segment || "",
-      FreeTrialStartDate: recievedLeadData?.freeTrialStartDate || "",
-      FreeTrialEndDate: recievedLeadData?.freeTrialEndDate || "",
-      FollowUp: recievedLeadData?.followUp || "",
-      Comment: recievedLeadData?.comment || "",
+      leadId: recievedLeadData?.leadId || recievedLeadTableData?.leadId || "",
+      CampaignName: recievedLeadData?.campaignName || recievedLeadTableData?.campaignName || "",
+      ClientName: recievedLeadData?.clientName || recievedLeadTableData?.clientName || "",
+      AssignedTo: recievedLeadData?.assignedTo || recievedLeadTableData?.assignedTo || "",
+      LeadSource: recievedLeadData?.leadSource || recievedLeadTableData?.leadSource || "",
+      Mobile: recievedLeadData?.mobile || recievedLeadTableData?.mobile || "",
+      AlternateMobile: recievedLeadData?.alternateMobile || recievedLeadTableData?.alternateMobile || "",
+      OtherMobile1: recievedLeadData?.otherMobile1 || recievedLeadTableData?.otherMobile1 || "",
+      OtherMobile2: recievedLeadData?.otherMobile2 || recievedLeadTableData?.otherMobile2 || "",
+      Email: recievedLeadData?.email || recievedLeadTableData?.email || "",
+      City: recievedLeadData?.city || recievedLeadTableData?.city || "",
+      State: recievedLeadData?.state || recievedLeadTableData?.state || "",
+      Dob: recievedLeadData?.dob || recievedLeadTableData?.dob || "",
+      Investment: recievedLeadData?.investment || recievedLeadTableData?.investment || "",
+      Profile: recievedLeadData?.profile || recievedLeadTableData?.profile || "",
+      Trading: recievedLeadData?.trading || recievedLeadTableData?.trading || "",
+      TradingExp: recievedLeadData?.tradingExp || recievedLeadTableData?.tradingExp || "",
+      Lot: recievedLeadData?.lot || recievedLeadTableData?.lot || 0,
+      AnnualIncome: recievedLeadData?.annualIncome || recievedLeadTableData?.annualIncome || "",
+      InvestmentGoal: recievedLeadData?.investmentGoal || recievedLeadTableData?.investmentGoal || "",
+      MarketValue: recievedLeadData?.marketValue || recievedLeadTableData?.marketValue || "",
+      MinInvestment: recievedLeadData?.minInvestment || recievedLeadTableData?.minInvestment || "",
+      SourceOfIncome: recievedLeadData?.sourceOfIncome || recievedLeadTableData?.sourceOfIncome || "",
+      PanNo: recievedLeadData?.panNo || recievedLeadTableData?.panNo || "",
+      UidAadhaar: recievedLeadData?.uidAadhaar || recievedLeadTableData?.uidAadhaar || "",
+      Language: recievedLeadData?.language || recievedLeadTableData?.language || "",
+      LeadStatus: recievedLeadData?.leadStatus || recievedLeadTableData?.leadStatus || "",
+      Segment: recievedLeadData?.segment || recievedLeadTableData?.segment || "",
+      FreeTrialStartDate: recievedLeadData?.freeTrialStartDate || recievedLeadTableData?.freeTrialStartDate || "",
+      FreeTrialEndDate: recievedLeadData?.freeTrialEndDate || recievedLeadTableData?.freeTrialEndDate || "",
+      FollowUp: recievedLeadData?.followUp || recievedLeadTableData?.followUp || "",
+      Comment: recievedLeadData?.comment || recievedLeadTableData?.comment || "",
     });
-  }, [recievedLeadData]);
+  }, []);
 
   //!<---------------------------------------------------------------------------------HANDLE CHANGE Functionality---------------------------------------------------------------------->
 
@@ -194,9 +197,34 @@ const EditLeads = () => {
 
   return (
     <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-0">
-        Edit Leads
-      </h2>
+          <section
+            style={{
+              position: "relative",
+              // padding: "12px 30px",
+              backgroundColor: "#fff",
+              borderBottom: "1px solid #E1E6EF",
+              boxShadow:
+                "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+              marginBottom: "0px", // Uncomment and fix if needed
+              marginBottom: "5px", // Uncomment and fix if needed
+            }}
+            className="mt-2"
+          >
+            <h2
+              className="mb-0 mt-5 mb-2"
+              style={{
+                padding: "18px 16px",
+                fontSize: "30px",
+                color: "#2D2D2D",
+              }}
+            >
+              <FaEdit
+                className="fs-1"
+                style={{ marginRight: "8px", color: "#009688" }}
+              />
+              Edit Leads
+            </h2>
+          </section>
       <div>
         {showAlert && (
           <Alert variant="info" className="mt-2 text-center">
@@ -205,7 +233,7 @@ const EditLeads = () => {
         )}
       </div>
       <form onSubmit={handleSubmit}>
-        <div className="container-fluid border border-2 border-gray mt-1 ">
+        <div className="mt-1 ">
           {/*//!<------------------------------------------------------------------------------Personal Details Section------------------------------------------------------------------> */}
 
           <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray p-3 rounded   mb-4">

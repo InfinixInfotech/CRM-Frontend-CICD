@@ -295,7 +295,7 @@ const SalesOrder = () => {
       
       </div>
         {/* Summary */}
-        <div className="mt-1 border border-2 p-4">
+        <div className="mt-1 border border-2 p-4 bg-white">
           <table
             className="table small-table table-bordered table-striped"
             id="table-data1"
