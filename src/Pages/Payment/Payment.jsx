@@ -11,12 +11,15 @@ import { StatusButton } from "../../Components/Button/StatusButton/StatusButton"
 import {
   deleteLeadPaymentRaiseThunk,
   getAllLeadPaymentRaiseThunk,
+  putLeadPaymentRaiseThunk,
 } from "../../Redux/Services/thunks/LeadPaymentRaiseThunk";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ExportData from "../../Components/Button/DataButton/ExportButton";
 import { FaCreditCard } from "react-icons/fa";
 import FilterImport from "../../Components/FilterImport/FilterImport";
+import { PRButton } from "../../Components/Button/PRButton/PRButton";
+import { SalesOrderButton } from "../../Components/Button/SalesOrderButton/SalesOrderButton";
 
 const Payment = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -27,10 +30,118 @@ const Payment = () => {
   const [itemsPerPage] = useState(10);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  //!------------------------------Prstatus state here----------------------------------
+  const [addPRstatus, setaddPRStatus] = useState("");
+  const [showPrStatusPopup, setShowPrStatusPopup] = useState(false);
+  const [selectedPrId, setSelectedPrId] = useState(null);
+  const [updateStatus, setUpdateStatus] = useState({
+    1: "RECIEVED",
+    2: "PARTIAL RECIEVED",
+    3: "PENDING",
+    4: "NOT RECIEVED",
+    5: "REJECTED",
+    6: "REFUNDED",
+  });
 
+  const handleOpenPrStatusPopup = () => {
+    setShowPrStatusPopup(true);
+  };
+  const handleClosePrStatusPopup = () => {
+    setShowPrStatusPopup(false);
+  };
+
+  const handleChangedropdown = (event) => {
+    console.log("Dropdown value selected:", event.target.value);
+    setaddPRStatus(event.target.value);
+  };
+
+  //!-------------------------------------------Handle PR Status----------------------------------------------
+
+  const handlePrStatus = async (paymentObj) => {
+    console.log("Selected Lead ID:", selectedPrId); // Log the selectedLeadId
+    console.log("Payment Object Pr ID:", paymentObj.prId); // Log the leadId from paymentObj
+    console.log("Payment Object:", paymentObj); // Check the entire paymentObj
+
+    if (!selectedPrId) {
+      console.error("Please select a Pr first.");
+      return;
+    }
+
+    // Ensure the paymentObj has a valid leadId and matches the selectedLeadId
+    if (selectedPrId === paymentObj.prId) {
+      const AddPaymentRaise = paymentObj;
+
+      if (!paymentObj) {
+        console.error("AddPaymentRaise not found");
+        return;
+      }
+  
+      const addNewPr = {
+        employeeCode: paymentObj.employeeCode,
+        employeeName: paymentObj.employeeName,
+        prId: selectedPrId,
+        leadId: paymentObj.leadId,
+        clientDetails: {
+          name: paymentObj.clientName,
+          fatherName: paymentObj.fathersName,
+          motherName: paymentObj.mothersName,
+          mobile: paymentObj.mobile,
+          email: paymentObj.email,
+          dob: paymentObj.dob,
+          remark: paymentObj.remark,
+        },
+        productDetails: {
+          segment: paymentObj.segment,
+          netAmount: paymentObj.netAmount
+            ? parseFloat(paymentObj.netAmount)
+            : 0,
+          paidAmount: paymentObj.paidAmount
+            ? parseFloat(paymentObj.paidAmount)
+            : 0,
+        },
+        paymentDetails: {
+          paymentDate: paymentObj.paymentDate,
+          modeOfPayment: paymentObj.paymentMode,
+          bankName: paymentObj.bankName,
+          transactionInfo: paymentObj.transactionId,
+          panNo: paymentObj.panNo,
+          state: paymentObj.state,
+          city: paymentObj.city,
+        },
+        transactionReceipt: "",
+        paymentStatus:
+          addPRstatus !== "" ? addPRstatus : AddPaymentRaise?.paymentStatus || "",
+      };
+  
+      dispatch(putLeadPaymentRaiseThunk(addNewPr))
+        .then((response) => {
+          if (response.payload === null) {
+            console.error("No data received from the server");
+          }
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 400);
+        })
+        .catch((error) => {
+          console.error("Error adding:", error);
+        });
+    } else {
+      console.log("Pr ID mismatch:", selectedPrId, paymentObj.prId);
+    }
+
+    setSelectedPrId("");
+    handleClosePopup();
+  };
+  //!-------------------------------------------Status logic end----------------------------------------------
   const { data, loading, error } = useSelector(
     (state) => state.leadpaymentraise
   );
+
+  const handleNavigateToSo = (id, paymentObj) => {
+    // console.log("addsalesorder----------", addsalesorder);
+    // alert("clicked")
+    navigate(`/addsalesorder/${id}`, { state: { paymentObj } });
+  };
 
   // !<--------------------------------------------------------------------------- HANDLE NAVIGATE --------------------------------------------------------------------------
 
@@ -48,30 +159,6 @@ const Payment = () => {
       },
     });
   };
-
-
-  // const handleNavigateToViewLead = (id, prId, paymentObj) => {
-  //   if (paymentObj.paymentStatus === 1) {
-  //     Navigate(`/addsalesorder/${id}`, { state: { prId, leadObj } });
-  //   } else {
-  //     alert("Payment status is not approved (1). Cannot generate Sales Order.");
-  //   }
-  // };
-  // <button
-  //   onClick={() => handleNavigateToSo(leadObj.id, leadObj.prId, leadObj)}
-  //   style={{
-  //     padding: 2,
-  //     margin: 0,
-  //     fontSize: "12px",
-  //     color: "white",
-  //     border: "1px solid grey",
-  //     fontWeight: "600",
-  //     borderRadius: "0",
-  //     backgroundColor: "#758694",
-  //   }}
-  // >
-  //   Generate Sales Order
-  // </button>
 
   useEffect(() => {
     dispatch(getAllLeadPaymentRaiseThunk());
@@ -216,7 +303,7 @@ const Payment = () => {
                     <td>{paymentObj.manager || "N/A"}</td>
                     <td>{paymentObj.paymentDetails?.panNo || "N/A"}</td>
                     <td>{paymentObj.productDetails?.segment || "N/A"}</td>
-                    <td>{paymentObj.paymentDetails?.bankName || "N/A"}</td>
+                    <td>{paymentObj.prId || "N/A"}</td>
                     <td>{paymentObj.productDetails?.netAmount || "N/A"}</td>
                     <td>
                       <button
@@ -233,7 +320,83 @@ const Payment = () => {
                     <td>{paymentObj.clientDetails?.dob || "N/A"}</td>
                     <td>
                       <div className="d-flex flex-row gap-2">
-                        <StatusButton className="btn btn-primary btn-sm mr-1 py-0 px-2" />
+                        {/* //!---------------------------------------Status Button Start--------------------------------------------- */}
+                        <div>
+                          <StatusButton
+                            onClick={() => {
+                              handleOpenPrStatusPopup();
+                              setSelectedPrId(paymentObj.prId);
+                            }}
+                          />
+
+                          {showPrStatusPopup && (
+                            <>
+                              <div
+                                className="popup-overlay d-flex justify-content-center align-items-center"
+                                onClick={handleClosePrStatusPopup}
+                              ></div>
+                              <div className="salesOrder-popup-content">
+                                <h3 className="text-center mb-4">
+                                  Lead Status
+                                </h3>
+                                <div className="mb-3">
+                                  <label
+                                    htmlFor="segmentInput"
+                                    className="form-label fw-bold"
+                                  >
+                                    Select Lead Status
+                                  </label>
+                                  <select
+                                    style={{
+                                      fontSize: "14px",
+                                      fontWeight: "500",
+                                    }}
+                                    name="segmentCategory"
+                                    value={addPRstatus || ""}
+                                    onChange={handleChangedropdown} // Use the handler directly
+                                    className="form-select"
+                                  >
+                                    <option value="">Select Status</option>
+                                    {Object.entries(updateStatus).map(
+                                      ([key, value]) => (
+                                        <option key={key} value={value}>
+                                          {value}
+                                        </option>
+                                      )
+                                    )}
+                                  </select>
+                                </div>
+                                <div className="d-flex justify-content-between mt-4">
+                                  <button
+                                    className="btn btn-secondary me-2"
+                                    onClick={handleClosePrStatusPopup}
+                                  >
+                                    Close
+                                  </button>
+                                  <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                      handlePrStatus(paymentObj);
+                                      console.log("paymentObjJSON.stringify-----------------",JSON.stringify(paymentObj.leadId));
+                                    }}
+                                  >
+                                    Save
+                                  </button>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                        {/* //!---------------------------------------Status button end--------------------------------------------- */}
+                        {paymentObj.paymentStatus === 1 &&
+                          paymentObj.leadId && (
+                            <SalesOrderButton
+                              onClick={() => {
+                                handleNavigateToSo(paymentObj.id, paymentObj);
+                              }}
+                            />
+                          )}
+
                         <EditButton
                           onClick={() =>
                             handleNavigate(paymentObj.id, paymentObj)
@@ -241,7 +404,7 @@ const Payment = () => {
                           className="btn btn-primary btn-sm mr-1 py-0 px-2"
                         />
                         <DeleteButton
-                          onDelete={() => handleDeletePayment(paymentObj.id)}
+                          onDelete={() => handleDeletePayment(paymentObj)}
                           className="btn btn-danger btn-sm mr-1  py-0 px-2"
                         />
                       </div>
@@ -272,164 +435,6 @@ const Payment = () => {
                 <i className="bi bi-arrow-right-circle"></i>
               </button>
             </div>
-            {/* // !<------------------------------------------------------------------------------------ TABLE TWO CONTAINER ----------------------------------------------------------------------------  */}
-
-            {/* 
-            <div>
-              <div className=" mb-0 ">
-                <PrintButton tableId="payment-table1" />
-                <PdfButton tableId="payment-table1" />
-                <CsvButton tableId="payment-table1" />
-                <CopyButton tableId="payment-table1" />
-              </div>
-              <div className="mt-2">
-                <table className="table table-bordered" id="payment-table1">
-                  <thead className="payment-tableHeader table-dark">
-                    <tr>
-                      <th>Date Range</th>
-                      <th>Branch</th>
-                      <th>Grand Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>All</td>
-                      <td></td>
-                      <td>3190806</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="pagination">
-                <button onClick={prevPage} disabled={currentPage === 1}>
-                  <i className="bi bi-arrow-left-circle"></i>
-                </button>
-                {Array.from(
-                  { length: totalPages },
-                  (_, index) => index + 1
-                ).map((number) => (
-                  <button
-                    key={number}
-                    onClick={() => paginate(number)}
-                    className={currentPage === number ? "active" : ""}
-                  >
-                    {number}
-                  </button>
-                ))}
-                <button
-                  onClick={nextPage}
-                  disabled={currentPage === totalPages}
-                >
-                  <i className="bi bi-arrow-right-circle"></i>
-                </button>
-              </div>
-            </div> */}
-
-            {/* // !<------------------------------------------------------------------------------------ TABLE THIRD CONTAINER ----------------------------------------------------------------------------  */}
-
-            {/* <div>
-          <div className=" mb-0">
-              <PrintButton tableId="payment-table2" />
-              <PdfButton tableId="payment-table2" />
-              <CsvButton tableId="payment-table2" />
-              <CopyButton tableId="payment-table2" />
-            </div>
-            <div className="mt-2">
-              <table className="table table-bordered" id="payment-table2">
-                <thead className="payment-tableHeader table-dark">
-                  <tr>
-                    <th>Date Range</th>
-                    <th>Total Number Of Payment</th>
-                    <th>Grand Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>All</td>
-                    <td>152</td>
-                    <td>3190806</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-
-            <div className="pagination">
-              <button onClick={prevPage} disabled={currentPage === 1}>
-                <i className="bi bi-arrow-left-circle"></i>
-              </button>
-              {Array.from({ length: totalPages }, (_, index) => index + 1).map(
-                (number) => (
-                  <button
-                    key={number}
-                    onClick={() => paginate(number)}
-                    className={currentPage === number ? "active" : ""}
-                  >
-                    {number}
-                  </button>
-                )
-              )}
-              <button onClick={nextPage} disabled={currentPage === totalPages}>
-                <i className="bi bi-arrow-right-circle"></i>
-              </button>
-            </div>
-          </div> */}
-
-            {/* // !<------------------------------------------------------------------------------------ TABLE FOURTH CONTAINER ----------------------------------------------------------------------------  */}
-            {/* <div>
-              <div className=" mb-0">
-                <PrintButton tableId="payment-table3" />
-                <PdfButton tableId="payment-table3" />
-                <CsvButton tableId="payment-table3" />
-                <CopyButton tableId="payment-table3" />
-              </div>
-              <div className="mt-2">
-                <table className="table table-bordered" id="payment-table3">
-                  <thead className="payment-tableHeader table-dark">
-                    <tr>
-                      <th>Branch Name</th>
-                      <th>Target</th>
-                      <th>Gross Amount</th>
-                      <th>Net Amount</th>
-                      <th>Remaining</th>
-                      <th>Percentage</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td></td>
-                      <td>1</td>
-                      <td>4287223</td>
-                      <td>3572685.83</td>
-                      <td>-4287222</td>
-                      <td>428722300%</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div className="pagination">
-                <button onClick={prevPage} disabled={currentPage === 1}>
-                  <i className="bi bi-arrow-left-circle"></i>
-                </button>
-                {Array.from(
-                  { length: totalPages },
-                  (_, index) => index + 1
-                ).map((number) => (
-                  <button
-                    key={number}
-                    onClick={() => paginate(number)}
-                    className={currentPage === number ? "active" : ""}
-                  >
-                    {number}
-                  </button>
-                ))}
-                <button
-                  onClick={nextPage}
-                  disabled={currentPage === totalPages}
-                >
-                  <i className="bi bi-arrow-right-circle"></i>
-                </button>
-              </div>
-            </div> */}
           </div>
         </div>
       </div>

@@ -6,10 +6,9 @@ import BackButton from "../../Components/Button/BackButton/BackButton";
 import { useLocation, useParams } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 const InsertSalesOrder = () => {
-  const { id } = useParams();
   const { state } = useLocation();
-  const SoData = state?.leadObj;
-  const lead = SoData?.lead;
+  const SoData = state?.paymentObj;
+  const lead = SoData;
   const userName = localStorage.getItem("username");
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,26 +23,26 @@ const InsertSalesOrder = () => {
     leadId: lead.leadId,
     personalDetails: {
       createdDate: lead.createdDate,
-      clientName: lead.clientName,
-      fatherName: lead.fatherName,
-      motherName: lead.motherName,
-      mobile: lead.mobile,
-      email: lead.email,
-      dob: lead.dob,
+      clientName: lead.clientDetails.name,
+      fatherName: lead.clientDetails.fatherName,
+      motherName: lead.clientDetails.motherName,
+      mobile: lead.clientDetails.mobile,
+      email: lead.clientDetails.email,
+      dob: lead.clientDetails.dob,
       address: {
-        city: lead.city,
-        state: lead.state,
+        city: lead.paymentDetails.city,
+        state: lead.paymentDetails.state,
         pinCode: lead.pinCode,
       },
       aadhar: lead.aadhar,
-      panNo: lead.panNo,
+      panNo: lead.paymentDetails.panNo,
       gstin: lead.gstin,
       sac: lead.sac,
     },
     paymentDetails: {
-      paymentDate: lead.paymentDate,
-      modeOfPayment: lead.modeOfPayment,
-      bankName: lead.bankName,
+      paymentDate: lead.paymentDetails.paymentDate,
+      modeOfPayment: lead.paymentDetails.modeOfPayment,
+      bankName: lead.paymentDetails.bankName,
       paymentGateway: lead.paymentGateway,
       serviceMode: lead.serviceMode,
       terms: lead.terms,

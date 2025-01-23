@@ -59,7 +59,7 @@ const SearchByMobileNumberFilter = () => {
           setShowModal(false);
           setErrorMessage("");
           setSearchData([]);
-        }, 2000);
+        }, 100);
       });
   };
 

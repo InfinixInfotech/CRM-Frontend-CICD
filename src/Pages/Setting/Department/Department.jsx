@@ -14,7 +14,7 @@ import { HashLoader } from "react-spinners";
 import { Alert } from "react-bootstrap";
 import { staticToken } from "../../../Redux/Services/apiServer/ApiServer";
 import ExportData from "../../../Components/Button/DataButton/ExportButton";
-import { FaBuilding, FaEye } from "react-icons/fa";
+import { FaBuilding } from "react-icons/fa";
 import CommonPopup from "../../../Components/Button/PopUpButton/PopupButton";
 
 const Department = () => {

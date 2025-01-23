@@ -1,11 +1,11 @@
 :root{
     --width-innerBox : 100%;
-    --background-color-innerBox: rgb(227,227,227);
-    --border-innerBox : 2px solid grey;
+    /* --background-color-innerBox: #E8F1F3; */
+    /* --border-innerBox : 2px solid grey; */
    }
    
    .innerBox{
      width:var(--width-innerBox);
-     background-color:var(--background-color-innerBox);
-     border: var(--border-innerBox);
+     /* background-color:var(--background-color-innerBox); */
+     /* border: var(--border-innerBox); */
    }

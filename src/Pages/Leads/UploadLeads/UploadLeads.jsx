@@ -33,7 +33,6 @@ const UploadLeads = () => {
     if (name === "file") {
       const file = files[0];
       if (file) {
-        // Validate file type to allow only CSV files
         const validFileTypes = ["text/csv"];
         if (!validFileTypes.includes(file.type)) {
           alert("Invalid file type! Please upload a CSV file.");
@@ -49,7 +48,7 @@ const UploadLeads = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    setShowAlert(true); // Show the alert
+    setShowAlert(true);
 
     if (
       !formData.campaignName ||
@@ -103,12 +102,24 @@ const UploadLeads = () => {
             className="fs-1"
             style={{ marginRight: "8px", color: "#009688" }}
           />
-          Upload Leads
+          Leads
         </h2>
       </section>
 
-      <div className="container-fluid border border-2 border-gray mt-3 w-50">
-        <div className="innerBox container-fluid rounded mt-2 mb-2">
+      <div className="container mt-3 w-50">
+        
+        <div className="innerBox rounded mt-2 mb-2 border border-2">
+        <h5
+          className="text-dark border border-1  p-3"
+          style={{
+            // padding: "18px 16px",
+            fontSize: "1.7 rem",
+            backgroundColor: "#E8F1F3",
+          }}
+        >
+          {/* <BackButton to="/payment" /> */}
+          Upload Leads
+        </h5>
           <div
             className="container-fluid mt-3 me-0 ms-0"
             style={{ fontSize: "14px" }}
@@ -188,7 +199,8 @@ const UploadLeads = () => {
               <div className="d-flex justify-content-center">
                 <button
                   type="submit"
-                  className="btn btn-primary mb-2 border border-0 bg-secondary"
+                  className="btn btn-sm mb-2 text-white px-4 fs-6 border border-0 "
+                  style={{ backgroundColor: "#009688" }}
                 >
                   Submit
                 </button>

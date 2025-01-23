@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import "./AddLeads.css";
+// import "./AddLeads.css";
 import { useDispatch } from "react-redux";
 import { postAddLeadThunk } from "../../../Redux/Services/thunks/AddLeadThunk";
 import { Alert } from "react-bootstrap";

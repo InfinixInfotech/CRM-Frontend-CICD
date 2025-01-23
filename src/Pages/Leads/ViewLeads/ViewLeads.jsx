@@ -6,7 +6,6 @@ import { StatusButton } from "../../../Components/Button/StatusButton/StatusButt
 import { SendButton } from "../../../Components/Button/SendButton/SendButton";
 import { EditButton } from "../../../Components/Button/EditButton/EditButton";
 import { DisposeButton } from "../../../Components/Button/DisposeButton/DisposeButton";
-import ConditionalPrSoButton from "../../../Components/Button/ConditionalPrSoButton/ConditionalPrSoButton";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllLeadPaymentRaiseThunk } from "../../../Redux/Services/thunks/LeadPaymentRaiseThunk";
 
@@ -19,13 +18,14 @@ import { UpdateBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLe
 import ExportData from "../../../Components/Button/DataButton/ExportButton";
 import { FaEye } from "react-icons/fa";
 import FilterImport from "../../../Components/FilterImport/FilterImport";
+import { PRButton } from "../../../Components/Button/PRButton/PRButton";
 
 const ViewLeads = () => {
-  const handlePrSoFunctionality = ( leadId ,paymentStatus)=>{
-console.log("leadId here is --------------",leadId);
-console.log("paymentStatus here is --------------",paymentStatus);
+//   const handlePrSoFunctionality = ( leadId ,paymentStatus)=>{
+// console.log("leadId here is --------------",leadId);
+// console.log("paymentStatus here is --------------",paymentStatus);
 
-  }
+//   }
   const [isPrGenerated, setIsPrGenerated] = useState(0)
   const [editAddLead, setEditAddLead] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -240,11 +240,11 @@ console.log("paymentStatus here is --------------",paymentStatus);
   //!<---------------------------------------------------------------------------------REACH EDIT PAGE BY NAVIGATION ---------------------------------------------------------------------->
 
   const Navigate = useNavigate();
-  const handleNavigateToSo = (id, leadObj) => {
-    // console.log("handleNavigateToSo-----------" , leadObj);
-
-    Navigate(`/addsalesorder/${id}`, { state: { leadObj } });
-  };
+  
+  // const handleNavigateToSo = (id, leadObj) => {
+  //   // console.log("handleNavigateToSo-----------" , leadObj);
+  //   Navigate(`/addsalesorder/${id}`, { state: { leadObj } });
+  // };
   const handleNavigateToPR = (id, leadObj) => {
     // console.log("leadObj.lead.leadId ----------", leadObj.lead.leadId);
 
@@ -908,14 +908,15 @@ console.log("paymentStatus here is --------------",paymentStatus);
                               onClick={() => handleDeleteAddLead(leadObj.id)}
                             />
                             <DisposeButton />
-                            <ConditionalPrSoButton
-                              leadId={leadObj.lead.leadId} 
+                            <PRButton
+                              // leadId={leadObj.lead.leadId} 
                               isPrGenerated={isPrGenerated}
                               onClick={() => {
                                 handleNavigateToPR(leadObj.lead.id, leadObj);
                               }}
                             />
-                            <button
+                            
+                            {/* <button
                               onClick={() => {
                                 handleNavigateToSo(leadObj.id, leadObj);
                               }}
@@ -931,7 +932,7 @@ console.log("paymentStatus here is --------------",paymentStatus);
                               }}
                             >
                               Add SO
-                            </button>
+                            </button> */}
                             <SendButton />
                           </div>
                         </td>

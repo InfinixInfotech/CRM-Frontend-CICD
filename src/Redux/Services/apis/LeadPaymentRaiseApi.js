@@ -41,8 +41,11 @@ export const deleteLeadPaymentRaise = async (id) => {
 
 export const putLeadPaymentRaise = async (params) => {
   try {
+    console.log("params--------------------->",params);
+    
     const { id } = params;  // Extract the id from the params object
-    const urlWithId = `${putLeadPaymentRaiseUrl}?id=${id}`;  // Use the id from params to construct the URL
+    const { prId } = params;  // Extract the id from the params object
+    const urlWithId = `${putLeadPaymentRaiseUrl}`;  // Use the id from params to construct the URL
     const response = await apiPostCallWithAuth(urlWithId, params, staticToken);
     return response;
   } catch (error) {

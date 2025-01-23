@@ -1,25 +1,25 @@
 import React, { useEffect, useState } from "react";
-import "./PaymentRaise.css";
+// import "./PaymentRaise.css";
 import { useDispatch } from "react-redux";
 import { postLeadPaymentRaiseThunk } from "../../Redux/Services/thunks/LeadPaymentRaiseThunk";
 import { useLocation, useParams } from "react-router-dom";
 import { emp } from "../../Redux/Services/apiServer/ApiServer";
 import { Alert } from "react-bootstrap";
 import BackButton from "../../Components/Button/BackButton/BackButton";
+import { FaBuilding } from "react-icons/fa";
 const PaymentRaise = () => {
-  const { state } = useLocation();  
- const paymentData = state?.leadObj;
+  const { state } = useLocation();
+  const paymentData = state?.leadObj;
   const lead = paymentData?.lead;
   const userName = localStorage.getItem("username");
   // console.log(userName);
-  
 
   const dispatch = useDispatch();
   const [showAlert, setShowAlert] = useState(false);
   const [AddPaymentRaise, setAddPaymentRaise] = useState({
     employeeCode: emp,
-    employeeName: userName ,
-    leadId : lead.leadId ,
+    employeeName: userName,
+    leadId: lead.leadId,
     clientName: lead.clientName || "",
     fathersName: lead.fatherName || "",
     mothersName: lead.motherName || "",
@@ -42,9 +42,9 @@ const PaymentRaise = () => {
   useEffect(() => {
     if (showAlert) {
       const timer = setTimeout(() => {
-        setShowAlert(false); 
+        setShowAlert(false);
       }, 3000);
-      return () => clearTimeout(timer); 
+      return () => clearTimeout(timer);
     }
   }, [showAlert]);
   //!<----------------------------------------------------------------------------------- HANDLE FIELDS CHANGE ---------------------------------------------------------------------------------
@@ -69,7 +69,7 @@ const PaymentRaise = () => {
     const addnewPR = {
       employeeCode: AddPaymentRaise.employeeCode,
       employeeName: AddPaymentRaise.employeeName,
-      prId: "",
+      prId: "string",
       leadId: AddPaymentRaise.leadId,
       clientDetails: {
         name: AddPaymentRaise.clientName,
@@ -98,8 +98,8 @@ const PaymentRaise = () => {
         state: AddPaymentRaise.state,
         city: AddPaymentRaise.city,
       },
-      transactionReceipt: "string",
-      paymentStatus: 1,
+      transactionReceipt: "",
+      paymentStatus: 0,
     };
     console.log("Payload being sent:", addnewPR);
     dispatch(postLeadPaymentRaiseThunk(addnewPR))
@@ -115,12 +115,38 @@ const PaymentRaise = () => {
       });
   };
   return (
-    <>
-      <h2 className="mb-0 text-center bg-dark text-white py-2 mt-5 mb-0">
-        Payment Raise
-      </h2>
-      <BackButton to="/viewleads"/>
-      <div className="container-fluid border border-2 border-gray mt-2">
+    <div>
+      <section
+        style={{
+          position: "relative",
+          // padding: "12px 30px",
+          backgroundColor: "#fff",
+          borderBottom: "1px solid #E1E6EF",
+          boxShadow:
+            "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
+          marginBottom: "0px", // Uncomment and fix if needed
+          marginBottom: "5px", // Uncomment and fix if needed
+        }}
+        className="mt-2"
+      >
+        <h2
+          className="mb-0 mt-5 mb-2"
+          style={{
+            padding: "18px 16px",
+            fontSize: "30px",
+            color: "#2D2D2D",
+          }}
+        >
+          <FaBuilding
+            className="fs-1"
+            style={{ marginRight: "8px", color: "#009688" }}
+          />
+          Payment Raise
+        </h2>
+      </section>
+
+      {/* <BackButton to="/viewleads" /> */}
+      <div>
         <div>
           {showAlert && (
             <Alert variant="info" className="mt-2 text-center">
@@ -285,7 +311,6 @@ const PaymentRaise = () => {
                   name="paymentDate"
                   value={AddPaymentRaise.paymentDate}
                   onChange={handleInputChange}
-                  placeholder="Payment Date"
                 />
               </div>
               <div className="col-md-4">
@@ -372,7 +397,7 @@ const PaymentRaise = () => {
           </button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default PaymentRaise;

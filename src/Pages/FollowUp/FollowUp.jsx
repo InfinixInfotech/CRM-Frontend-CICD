@@ -10,7 +10,6 @@ import { PrintButton } from "../../Components/Button/DataButton/DataPrintButton/
 import { CsvButton } from "../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { PdfButton } from "../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CopyButton } from "../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
-import ConditionalPrSoButton from "../../Components/Button/ConditionalPrSoButton/ConditionalPrSoButton";
 import { useDispatch, useSelector } from "react-redux";
 import { HashLoader } from "react-spinners";
 import { fetchAllUploadBulkLeadThunk } from "../../Redux/Services/thunks/UploadBulkLeadThunk";
@@ -19,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { emp } from "../../Redux/Services/apiServer/ApiServer";
 import { FaClipboardList } from "react-icons/fa";
 import ExportData from "../../Components/Button/DataButton/ExportButton";
+import { PRButton } from "../../Components/Button/PRButton/PRButton";
 const ViewLeads = () => {
   const isPrGenerated = 0;
   const [editAddLead, setEditAddLead] = useState(null);
@@ -352,7 +352,7 @@ const ViewLeads = () => {
                             onClick={() => handleDeleteAddLead(leadObj.id)}
                           />
                           <DisposeButton />
-                          <ConditionalPrSoButton
+                          <PRButton
                             isPrGenerated={isPrGenerated}
                             onClick={() => {
                               handleNavigateToPR(leadObj.lead.id, leadObj);

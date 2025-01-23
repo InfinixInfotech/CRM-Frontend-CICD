@@ -1,12 +1,12 @@
 import React from 'react'
 
-const handlePR = ()=>{
+const handleSo = ()=>{
     console.log("this is handle PR");
 }
 
-export const PRButton =({
-    onClick = handlePR,
-    className = "PR-btn btn-sm px-1 py-0"
+export const SalesOrderButton =({
+    onClick = handleSo,
+    className = "SO-btn btn-sm px-1 py-0"
 })=>{
    return(
     <button onClick={onClick} className={className} style={{
@@ -17,7 +17,7 @@ export const PRButton =({
         border: "1px solid grey",
         color : "white"
       }}>
-       PR
+       SO
     </button>
    )
 }
