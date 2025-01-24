@@ -22,6 +22,118 @@ const SalesOrder = () => {
   const [selectedEmail, setSelectedEmail] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
+  //!------------------------------SoStatus state here----------------------------------
+const [CurrentSalesOrderObj, setCurrentSalesOrderObj] = useState([]);
+const [addSoStatus, setAddSoStatus] = useState();
+const [showSoStatusPopup, setShowSoStatusPopup] = useState(false);
+const [selectedSoId, setSelectedSoId] = useState(null);
+const [updateStatus, setUpdateStatus] = useState({
+    1 : "APPROVED",
+    2 : "PENDING",
+    3 : "REJECTED",
+})
+
+const handleOpenSOStatusPopup = () => {
+  setShowSoStatusPopup(true);
+};
+const handleCloseSOStatusPopup = () => {
+  setShowSoStatusPopup(false);
+};
+
+const handleChangedropdown = (e) => {
+  const value = e.target.value;
+  setAddSoStatus(value);
+};
+
+//!----------------------------------------------------------------------------------------------------------Handle PR Status-----------------------------------------------------------------------------------------------
+
+  const handleSOStatus = async (salesOrderObj) => {
+    console.log("salesOrderObj Received:", salesOrderObj);
+
+    if (!salesOrderObj || !salesOrderObj.soId) {
+      console.error("Invalid salesOrderObjor missing soId");
+      return;
+    }
+
+    const addNewSo = {
+    id: salesOrderObj?.id || "",
+    soId: salesOrderObj?.soId || "SO12345",
+    employeeCode: salesOrderObj?.employeeCode,
+    employeeName: salesOrderObj?.employeeName || "John Doe",
+    so: salesOrderObj?.so || "wge",
+    leadId: salesOrderObj?.leadId || "L67890",
+    personalDetails: {
+      createdDate:
+      salesOrderObj?.personalDetails?.createdDate ||
+        "2024-12-17T07:19:15.663Z",
+      clientName: salesOrderObj?.personalDetails?.clientName || "",
+      fatherName:
+      salesOrderObj?.personalDetails?.fatherName || "Father's Name",
+      motherName:
+      salesOrderObj?.personalDetails?.motherName || "Mother's Name",
+      mobile: salesOrderObj?.personalDetails?.mobile || "1234567890",
+      email: salesOrderObj?.personalDetails?.email || "email@example.com",
+      dob: salesOrderObj?.personalDetails?.dob || "2000-01-01",
+      address: {
+        city: salesOrderObj?.personalDetails?.address?.city || "CityName",
+        state: salesOrderObj?.personalDetails?.address?.state || "StateName",
+        pinCode: salesOrderObj?.personalDetails?.address?.pinCode || "123456",
+      },
+      aadhar: salesOrderObj?.personalDetails?.aadhar || "123456789012",
+      panNo: salesOrderObj?.personalDetails?.panNo || "ABCDE1234F",
+      gstin: salesOrderObj?.personalDetails?.gstin || "GSTIN12345678",
+      sac: salesOrderObj?.personalDetails?.sac || "SAC123",
+    },
+    paymentDetails: {
+      paymentDate:
+      salesOrderObj?.paymentDetails?.paymentDate ||
+        "2024-12-17T07:19:15.663Z",
+      modeOfPayment:
+      salesOrderObj?.paymentDetails?.modeOfPayment || "Online Payment",
+      bankName: salesOrderObj?.paymentDetails?.bankName || "BankName",
+      paymentGateway:
+      salesOrderObj?.paymentDetails?.paymentGateway || "Gateway",
+      serviceMode: salesOrderObj?.paymentDetails?.serviceMode || "SMS",
+      terms: salesOrderObj?.paymentDetails?.terms || "Daily",
+      paymentIdOrRefNo:
+      salesOrderObj?.paymentDetails?.paymentIdOrRefNo || "PAY123456",
+      serviceStatus:
+      salesOrderObj?.paymentDetails?.serviceStatus || "Activate",
+    },
+    businessDetails: {
+      businessType:
+      salesOrderObj?.businessDetails?.businessType || "New Business",
+      comment: salesOrderObj?.businessDetails?.comment || "Some comment here",
+    },
+    productDetails: salesOrderObj?.productDetails || [
+      {
+        product: salesOrderObj.product,
+        startDate: salesOrderObj.startDate,
+        endDate: salesOrderObj.endDate,
+        grandTotal: salesOrderObj.grandTotal,
+        remaining: salesOrderObj.remaining,
+        discount: salesOrderObj.discount,
+        adjustment: salesOrderObj.adjustment,
+      },
+    ],
+  };
+
+    dispatch(putLeadPaymentRaiseThunk(addNewSo))
+      .then((response) => {
+        if (response.payload === null) {
+          console.error("No data received from the server");
+        } else {
+          console.log("Response from server:", response.payload);
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding:", error);
+      });
+    handleCloseSOStatusPopup();  
+  };
+
+  //!---------------------------------------------------------------------------------------------Status Handle logic end------------------------------------------------------------------------------------------------------------
+
 
   const Navigate = useNavigate();
   const handleNavigate = (id, salesOrderObj) => {
@@ -245,6 +357,85 @@ const SalesOrder = () => {
                     <td>{salesOrderObj.description}</td> */}
                     <td className="text-center">
                       <div className="d-flex justify-content-center align-items-center gap-2">
+                      //!--------------------------------------------------Status Button Start-------------------------------------------
+                        <div>
+                          <StatusButton
+                            onClick={() => {
+                              handleOpenSOStatusPopup(salesOrderObj);
+                              console.log("Opening popup for:", salesOrderObj);
+                              console.log(
+                                "Current popup for:",
+                                CurrentSalesOrderObj
+                              );
+                              setCurrentSalesOrderObj(salesOrderObj);
+                            }}
+                          />
+
+                          {showSoStatusPopup && (
+                            <>
+                              <div
+                                className="popup-overlay d-flex justify-content-center align-items-center"
+                                onClick={handleCloseSOStatusPopup}
+                              ></div>
+                              <div className="salesOrder-popup-content">
+                                <h3 className="text-center mb-4">
+                                  Sales Order Status
+                                </h3>
+                                <div className="mb-3">
+                                  <label
+                                    htmlFor="soInput"
+                                    className="form-label fw-bold"
+                                  >
+                                    Select Sales Order Status
+                                  </label>
+                                  <select
+                                    style={{
+                                      fontSize: "14px",
+                                      fontWeight: "500",
+                                    }}
+                                    name="salesOrderStatus"
+                                    value={addSoStatus || ""}
+                                    onChange={(e) => handleChangedropdown(e)}
+                                  >
+                                    <option value="">Select Status</option>
+                                    {Object.entries(updateStatus).map(
+                                      ([key, value]) => (
+                                        <option key={key} value={key}>
+                                          {value}
+                                        </option>
+                                      )
+                                    )}
+                                  </select>
+                                </div>
+                                <div className="d-flex justify-content-between mt-4">
+                                  <button
+                                    className="btn btn-secondary me-2"
+                                    onClick={handleCloseSOStatusPopup}
+                                  >
+                                    Close
+                                  </button>
+                                  <button
+                                    className="btn btn-primary"
+                                    onClick={() => {
+                                      console.log(
+                                        "Selected Sales Object:",
+                                        salesOrderObj.soId
+                                      );
+                                      console.log(
+                                        "Current SalesOrder Object:",
+                                        CurrentSalesOrderObj
+                                      );
+                                      addSoStatus(CurrentSalesOrderObj);
+                                    }}
+                                  >
+                                    Save
+                                  </button>
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                        //!---------------------------------------------------------------Status Button Start------------------------------
                         <button className="btn btn-success btn-sm py-0 px-2">
                           Status
                         </button>

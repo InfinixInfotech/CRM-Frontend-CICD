@@ -136,7 +136,7 @@ const ViewLeads = () => {
     }
   };
 
-  const handleSaveSegment = async () => {
+  const handleupdate = async () => {
     if (!selectedLeadId) {
       console.error("Please select a lead first.");
       return;
@@ -231,7 +231,7 @@ const ViewLeads = () => {
 
   const requestData = {
     EmployeeCode: emp,
-    CampaignName: "INF21JAN2025",
+    CampaignName: "INF24JAN2025",
   };
 
   const dispatch = useDispatch();
@@ -606,7 +606,7 @@ const ViewLeads = () => {
                                         className="btn btn-primary"
                                         onClick={() => {
                                           // Add Save logic here
-                                          handleSaveSegment(leadObj);
+                                          handleupdate(leadObj);
                                         }}
                                       >
                                         Save
@@ -689,7 +689,7 @@ const ViewLeads = () => {
                                         <button
                                           className="btn btn-primary"
                                           onClick={() => {
-                                            handleSaveSegment(leadObj);
+                                            handleupdate(leadObj);
                                           }}
                                         >
                                           Save
@@ -759,7 +759,7 @@ const ViewLeads = () => {
                                       <button
                                         className="btn btn-primary"
                                         onClick={() => {
-                                          handleSaveSegment(leadObj);
+                                          handleupdate(leadObj);
                                         }}
                                       >
                                         Save
@@ -816,7 +816,7 @@ const ViewLeads = () => {
                                   <button
                                     className="btn btn-primary"
                                     onClick={() => {
-                                      handleSaveSegment(leadObj);
+                                      handleupdate(leadObj);
                                     }}
                                   >
                                     Save
@@ -884,7 +884,7 @@ const ViewLeads = () => {
                                       <button
                                         className="btn btn-primary"
                                         onClick={() => {
-                                          handleSaveSegment(leadObj);
+                                          handleupdate(leadObj);
                                           console.log(leadObj);
                                         }}
                                       >

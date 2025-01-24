@@ -31,7 +31,8 @@ const Payment = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //!------------------------------Prstatus state here----------------------------------
-  const [addPRstatus, setaddPRStatus] = useState("");
+  const [CurrentPaymentObj, setCurrentPaymentObj] = useState([]);
+  const [addPRstatus, setaddPRStatus] = useState();
   const [showPrStatusPopup, setShowPrStatusPopup] = useState(false);
   const [selectedPrId, setSelectedPrId] = useState(null);
   const [updateStatus, setUpdateStatus] = useState({
@@ -50,88 +51,82 @@ const Payment = () => {
     setShowPrStatusPopup(false);
   };
 
-  const handleChangedropdown = (event) => {
-    console.log("Dropdown value selected:", event.target.value);
-    setaddPRStatus(event.target.value);
-  };
+  // const handleChangedropdown = (e) => {
+  //   const value = e.target.value;
+  //   const statusKey = Object.keys(updateStatus).find(
+  //     (key) => updateStatus[key] === value
+  //   );
+  //   setaddPRStatus(statusKey || value);
+  // };
 
+  const handleChangedropdown = (e) => {
+    const value = e.target.value; // Get the selected key
+    setaddPRStatus(value); // Set the selected key directly
+  };
   //!-------------------------------------------Handle PR Status----------------------------------------------
 
   const handlePrStatus = async (paymentObj) => {
-    console.log("Selected Lead ID:", selectedPrId); // Log the selectedLeadId
-    console.log("Payment Object Pr ID:", paymentObj.prId); // Log the leadId from paymentObj
-    console.log("Payment Object:", paymentObj); // Check the entire paymentObj
+    console.log("Payment Object Received:", paymentObj);
 
-    if (!selectedPrId) {
-      console.error("Please select a Pr first.");
+    if (!paymentObj || !paymentObj.prId) {
+      console.error("Invalid Payment Object or missing prId");
       return;
     }
 
-    // Ensure the paymentObj has a valid leadId and matches the selectedLeadId
-    if (selectedPrId === paymentObj.prId) {
-      const AddPaymentRaise = paymentObj;
+    const addNewPr = {
+      id: paymentObj.id,
+      employeeCode: paymentObj.employeeCode,
+      employeeName: paymentObj.employeeName,
+      prId: paymentObj.prId,
+      leadId: paymentObj.leadId,
+      clientDetails: {
+        name: paymentObj.clientName,
+        fatherName: paymentObj.fathersName,
+        motherName: paymentObj.mothersName,
+        mobile: paymentObj.mobile,
+        email: paymentObj.email,
+        dob: paymentObj.dob,
+        remark: paymentObj.remark,
+      },
+      productDetails: {
+        segment: paymentObj.segment,
+        netAmount: paymentObj.netAmount ? parseFloat(paymentObj.netAmount) : 0,
+        paidAmount: paymentObj.paidAmount
+          ? parseFloat(paymentObj.paidAmount)
+          : 0,
+      },
+      paymentDetails: {
+        paymentDate: paymentObj.paymentDate,
+        modeOfPayment: paymentObj.paymentMode,
+        bankName: paymentObj.bankName,
+        transactionInfo: paymentObj.transactionId,
+        panNo: paymentObj.panNo,
+        state: paymentObj.state,
+        city: paymentObj.city,
+      },
+      transactionReceipt: "",
+      paymentStatus:
+        addPRstatus !== "" ? addPRstatus : paymentObj?.paymentStatus || "",
+    };
 
-      if (!paymentObj) {
-        console.error("AddPaymentRaise not found");
-        return;
-      }
+    dispatch(putLeadPaymentRaiseThunk(addNewPr))
+      .then((response) => {
+        if (response.payload === null) {
+          console.error("No data received from the server");
+        } else {
+          console.log("Response from server:", response.payload);
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding:", error);
+      });
+    handleClosePrStatusPopup();
+    useEffect(() => {
+      dispatch(getAllLeadPaymentRaiseThunk());
+    }, [dispatch]);
   
-      const addNewPr = {
-        employeeCode: paymentObj.employeeCode,
-        employeeName: paymentObj.employeeName,
-        prId: selectedPrId,
-        leadId: paymentObj.leadId,
-        clientDetails: {
-          name: paymentObj.clientName,
-          fatherName: paymentObj.fathersName,
-          motherName: paymentObj.mothersName,
-          mobile: paymentObj.mobile,
-          email: paymentObj.email,
-          dob: paymentObj.dob,
-          remark: paymentObj.remark,
-        },
-        productDetails: {
-          segment: paymentObj.segment,
-          netAmount: paymentObj.netAmount
-            ? parseFloat(paymentObj.netAmount)
-            : 0,
-          paidAmount: paymentObj.paidAmount
-            ? parseFloat(paymentObj.paidAmount)
-            : 0,
-        },
-        paymentDetails: {
-          paymentDate: paymentObj.paymentDate,
-          modeOfPayment: paymentObj.paymentMode,
-          bankName: paymentObj.bankName,
-          transactionInfo: paymentObj.transactionId,
-          panNo: paymentObj.panNo,
-          state: paymentObj.state,
-          city: paymentObj.city,
-        },
-        transactionReceipt: "",
-        paymentStatus:
-          addPRstatus !== "" ? addPRstatus : AddPaymentRaise?.paymentStatus || "",
-      };
-  
-      dispatch(putLeadPaymentRaiseThunk(addNewPr))
-        .then((response) => {
-          if (response.payload === null) {
-            console.error("No data received from the server");
-          }
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 400);
-        })
-        .catch((error) => {
-          console.error("Error adding:", error);
-        });
-    } else {
-      console.log("Pr ID mismatch:", selectedPrId, paymentObj.prId);
-    }
-
-    setSelectedPrId("");
-    handleClosePopup();
   };
+
   //!-------------------------------------------Status logic end----------------------------------------------
   const { data, loading, error } = useSelector(
     (state) => state.leadpaymentraise
@@ -187,6 +182,9 @@ const Payment = () => {
     dispatch(deleteLeadPaymentRaiseThunk(id))
       .unwrap()
       .then((response) => {
+        setAddPaymentRaise((prevStatuses) =>
+          prevStatuses.filter((AddPaymentRaise) => AddPaymentRaise.id !== id)
+        );
         setMsg(response.message || "deleted successfully");
       })
       .catch((error) => {
@@ -215,8 +213,8 @@ const Payment = () => {
           borderBottom: "1px solid #E1E6EF",
           boxShadow:
             "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-          marginBottom: "0px", // Uncomment and fix if needed
-          marginBottom: "5px", // Uncomment and fix if needed
+          marginBottom: "0px",
+          marginBottom: "5px",
         }}
         className="mt-2"
       >
@@ -324,8 +322,13 @@ const Payment = () => {
                         <div>
                           <StatusButton
                             onClick={() => {
-                              handleOpenPrStatusPopup();
-                              setSelectedPrId(paymentObj.prId);
+                              handleOpenPrStatusPopup(paymentObj);
+                              console.log("Opening popup for:", paymentObj);
+                              console.log(
+                                "Current popup for:",
+                                CurrentPaymentObj
+                              );
+                              setCurrentPaymentObj(paymentObj);
                             }}
                           />
 
@@ -353,13 +356,12 @@ const Payment = () => {
                                     }}
                                     name="segmentCategory"
                                     value={addPRstatus || ""}
-                                    onChange={handleChangedropdown} // Use the handler directly
-                                    className="form-select"
+                                    onChange={(e) => handleChangedropdown(e)}
                                   >
                                     <option value="">Select Status</option>
                                     {Object.entries(updateStatus).map(
                                       ([key, value]) => (
-                                        <option key={key} value={value}>
+                                        <option key={key} value={key}>
                                           {value}
                                         </option>
                                       )
@@ -376,8 +378,15 @@ const Payment = () => {
                                   <button
                                     className="btn btn-primary"
                                     onClick={() => {
-                                      handlePrStatus(paymentObj);
-                                      console.log("paymentObjJSON.stringify-----------------",JSON.stringify(paymentObj.leadId));
+                                      console.log(
+                                        "Selected Payment Object:",
+                                        paymentObj.prId
+                                      );
+                                      console.log(
+                                        "Current Payment Object:",
+                                        CurrentPaymentObj
+                                      );
+                                      handlePrStatus(CurrentPaymentObj);
                                     }}
                                   >
                                     Save
@@ -387,6 +396,7 @@ const Payment = () => {
                             </>
                           )}
                         </div>
+
                         {/* //!---------------------------------------Status button end--------------------------------------------- */}
                         {paymentObj.paymentStatus === 1 &&
                           paymentObj.leadId && (
@@ -404,7 +414,7 @@ const Payment = () => {
                           className="btn btn-primary btn-sm mr-1 py-0 px-2"
                         />
                         <DeleteButton
-                          onDelete={() => handleDeletePayment(paymentObj)}
+                          onDelete={() => handleDeletePayment(paymentObj.id)}
                           className="btn btn-danger btn-sm mr-1  py-0 px-2"
                         />
                       </div>
