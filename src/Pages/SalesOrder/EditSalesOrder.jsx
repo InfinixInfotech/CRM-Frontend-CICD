@@ -145,7 +145,7 @@ const EditSalesOrder = () => {
             grandTotal: 1000,
             remaining: 500,
             discount: 10,
-            adjustment: 5,
+            adjustment: 5, 
           },
         ],
       });

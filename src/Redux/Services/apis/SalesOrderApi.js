@@ -44,9 +44,10 @@ export const putSalesOrder = async (params) => {
   try {
     console.log("So params---------------",params);
     
-    const Id = params.id;
-    const SoId = params.soId;
-    const urlWithId = `${putSalesOrderUrl}?id=${Id}&soId=${SoId}`;
+    // const Id = params.id;
+    // const SoId = params.soId;
+    // const urlWithId = `${putSalesOrderUrl}?id=${Id}&soId=${SoId}`;
+    const urlWithId = `${putSalesOrderUrl}`;
     const response = await apiPostCallWithAuth(urlWithId, params, staticToken);
     return response; 
   } catch (error) {

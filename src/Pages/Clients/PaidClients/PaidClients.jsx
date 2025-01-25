@@ -7,6 +7,7 @@ import { EditButton } from "../../../Components/Button/EditButton/EditButton";
 import { StatusButton } from "../../../Components/Button/StatusButton/StatusButton";
 import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";
 import { PRButton } from "../../../Components/Button/PRButton/PRButton";
+import ExportData from "../../../Components/Button/DataButton/ExportButton";
 
 const PaidClients = () => {
   const [paidClientData, setPaidClientData] = useState([
@@ -89,6 +90,7 @@ const PaidClients = () => {
                   {msg}
                 </Alert>
               )} */}
+              <ExportData tableId="table-data" />
 
               <table
                 id="table-data"

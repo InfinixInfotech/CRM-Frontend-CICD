@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+ import React, { useEffect, useState } from "react";
 import "./ViewLeads.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";

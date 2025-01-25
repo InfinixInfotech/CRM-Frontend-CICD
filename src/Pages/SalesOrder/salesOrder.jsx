@@ -58,14 +58,14 @@ const handleSOStatus = async (salesOrderObj) => {
   }
 
   const addNewSo = {
-    id: salesOrderObj?.id || "",
-    soId: salesOrderObj?.soId || "SO12345",
-    employeeCode: salesOrderObj?.employeeCode,
-    soStatus: addSoStatus !== "" ? addSoStatus : salesOrderObj?.soStatus || "",
+    id: salesOrderObj.id || "",
+    soId: salesOrderObj.soId || "SO12345",
+    employeeCode: salesOrderObj.employeeCode,
+    soStatus: addSoStatus !== "" ? addSoStatus : salesOrderObj.soStatus || "",
     employeeName: salesOrderObj?.employeeName || "John Doe",
     // so: salesOrderObj?.so || "DefaultSO",
-    leadId: salesOrderObj?.leadId || "L67890",
-    prId: salesOrderObj?.prId || "string",
+    leadId: salesOrderObj.leadId || "L67890",
+    prId: salesOrderObj.prId || "string",
     personalDetails: {
       createdDate:
         salesOrderObj?.personalDetails?.createdDate ||
