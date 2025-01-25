@@ -51,6 +51,7 @@ import IncentivePlans from "./Pages/Policies/IncentivePlans/IncentivePlans";
 import LeavePolicy from "./Pages/Policies/LeavePolicy/LeavePolicy";
 import Probation from "./Pages/Policies/Probation/Probation";
 import TableSearch from "./Components/Filter/SearchByMobileNumberFilter/TableSearch/TableSearch";
+import PaidClients from "./Pages/Clients/PaidClients/PaidClients";
 
 export default function App() {
   const username = localStorage.getItem("username");
@@ -119,6 +120,7 @@ export default function App() {
                     <Route path="/leavepolicy" element={<LeavePolicy/>} />
                     <Route path="/probation" element={<Probation/>} />
                     <Route path="/tablesearch" element={<TableSearch/>} />
+                    <Route path="/paidclients" element={<PaidClients/>} />
                   </Routes>
                   </div>
                 </div>

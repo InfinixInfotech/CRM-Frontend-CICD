@@ -10,11 +10,13 @@ import "./SalesOrder.css";
 import {
   deleteSalesOrderThunk,
   getAllSalesOrderThunk,
+  putSalesOrderThunk,
 } from "../../Redux/Services/thunks/SalesOrderThunk";
 import { useDispatch } from "react-redux";
 import ExportData from "../../Components/Button/DataButton/ExportButton";
 import { FaShoppingCart } from "react-icons/fa";
 import FilterImport from "../../Components/FilterImport/FilterImport";
+import { StatusButton } from "../../Components/Button/StatusButton/StatusButton";
 
 const SalesOrder = () => {
   const [salesOrder, setsalesOrder] = useState([]);
@@ -47,30 +49,30 @@ const handleChangedropdown = (e) => {
 
 //!----------------------------------------------------------------------------------------------------------Handle PR Status-----------------------------------------------------------------------------------------------
 
-  const handleSOStatus = async (salesOrderObj) => {
-    console.log("salesOrderObj Received:", salesOrderObj);
+const handleSOStatus = async (salesOrderObj) => {
+  console.log("salesOrderObj Received:", salesOrderObj);
 
-    if (!salesOrderObj || !salesOrderObj.soId) {
-      console.error("Invalid salesOrderObjor missing soId");
-      return;
-    }
+  if (!salesOrderObj || !salesOrderObj.soId) {
+    console.error("Invalid salesOrderObj or missing soId");
+    return;
+  }
 
-    const addNewSo = {
+  const addNewSo = {
     id: salesOrderObj?.id || "",
     soId: salesOrderObj?.soId || "SO12345",
     employeeCode: salesOrderObj?.employeeCode,
+    soStatus: addSoStatus !== "" ? addSoStatus : salesOrderObj?.soStatus || "",
     employeeName: salesOrderObj?.employeeName || "John Doe",
-    so: salesOrderObj?.so || "wge",
+    // so: salesOrderObj?.so || "DefaultSO",
     leadId: salesOrderObj?.leadId || "L67890",
+    prId: salesOrderObj?.prId || "string",
     personalDetails: {
       createdDate:
-      salesOrderObj?.personalDetails?.createdDate ||
-        "2024-12-17T07:19:15.663Z",
+        salesOrderObj?.personalDetails?.createdDate ||
+        new Date().toISOString().split("T")[0],
       clientName: salesOrderObj?.personalDetails?.clientName || "",
-      fatherName:
-      salesOrderObj?.personalDetails?.fatherName || "Father's Name",
-      motherName:
-      salesOrderObj?.personalDetails?.motherName || "Mother's Name",
+      fatherName: salesOrderObj?.personalDetails?.fatherName || "Father's Name",
+      motherName: salesOrderObj?.personalDetails?.motherName || "Mother's Name",
       mobile: salesOrderObj?.personalDetails?.mobile || "1234567890",
       email: salesOrderObj?.personalDetails?.email || "email@example.com",
       dob: salesOrderObj?.personalDetails?.dob || "2000-01-01",
@@ -86,23 +88,18 @@ const handleChangedropdown = (e) => {
     },
     paymentDetails: {
       paymentDate:
-      salesOrderObj?.paymentDetails?.paymentDate ||
+        salesOrderObj?.paymentDetails?.paymentDate ||
         "2024-12-17T07:19:15.663Z",
-      modeOfPayment:
-      salesOrderObj?.paymentDetails?.modeOfPayment || "Online Payment",
+      modeOfPayment: salesOrderObj?.paymentDetails?.modeOfPayment || "Online Payment",
       bankName: salesOrderObj?.paymentDetails?.bankName || "BankName",
-      paymentGateway:
-      salesOrderObj?.paymentDetails?.paymentGateway || "Gateway",
+      paymentGateway: salesOrderObj?.paymentDetails?.paymentGateway || "Gateway",
       serviceMode: salesOrderObj?.paymentDetails?.serviceMode || "SMS",
       terms: salesOrderObj?.paymentDetails?.terms || "Daily",
-      paymentIdOrRefNo:
-      salesOrderObj?.paymentDetails?.paymentIdOrRefNo || "PAY123456",
-      serviceStatus:
-      salesOrderObj?.paymentDetails?.serviceStatus || "Activate",
+      paymentIdOrRefNo: salesOrderObj?.paymentDetails?.paymentIdOrRefNo || "PAY123456",
+      serviceStatus: salesOrderObj?.paymentDetails?.serviceStatus || "Activate",
     },
     businessDetails: {
-      businessType:
-      salesOrderObj?.businessDetails?.businessType || "New Business",
+      businessType: salesOrderObj?.businessDetails?.businessType || "New Business",
       comment: salesOrderObj?.businessDetails?.comment || "Some comment here",
     },
     productDetails: salesOrderObj?.productDetails || [
@@ -118,19 +115,19 @@ const handleChangedropdown = (e) => {
     ],
   };
 
-    dispatch(putLeadPaymentRaiseThunk(addNewSo))
-      .then((response) => {
-        if (response.payload === null) {
-          console.error("No data received from the server");
-        } else {
-          console.log("Response from server:", response.payload);
-        }
-      })
-      .catch((error) => {
-        console.error("Error adding:", error);
-      });
-    handleCloseSOStatusPopup();  
-  };
+  dispatch(putSalesOrderThunk(addNewSo))
+    .then((response) => {
+      if (response.payload === null) {
+        console.error("No data received from the server");
+      } else {
+        console.log("Response from server:", response.payload);
+      }
+    })
+    .catch((error) => {
+      console.error("Error adding:", error);
+    });
+  handleCloseSOStatusPopup();
+};
 
   //!---------------------------------------------------------------------------------------------Status Handle logic end------------------------------------------------------------------------------------------------------------
 
@@ -357,7 +354,7 @@ const handleChangedropdown = (e) => {
                     <td>{salesOrderObj.description}</td> */}
                     <td className="text-center">
                       <div className="d-flex justify-content-center align-items-center gap-2">
-                      //!--------------------------------------------------Status Button Start-------------------------------------------
+                      {/* //!--------------------------------------------------Status Button Start------------------------------------------- */}
                         <div>
                           <StatusButton
                             onClick={() => {
@@ -425,7 +422,7 @@ const handleChangedropdown = (e) => {
                                         "Current SalesOrder Object:",
                                         CurrentSalesOrderObj
                                       );
-                                      addSoStatus(CurrentSalesOrderObj);
+                                      handleSOStatus(CurrentSalesOrderObj);
                                     }}
                                   >
                                     Save
@@ -435,7 +432,7 @@ const handleChangedropdown = (e) => {
                             </>
                           )}
                         </div>
-                        //!---------------------------------------------------------------Status Button Start------------------------------
+                        {/* //!---------------------------------------------------------------Status Button Start------------------------------ */}
                         <button className="btn btn-success btn-sm py-0 px-2">
                           Status
                         </button>

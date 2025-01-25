@@ -42,8 +42,12 @@ export const deleteSalesOrder = async (id) => {
 
 export const putSalesOrder = async (params) => {
   try {
-    const urlWithId = `${putSalesOrderUrl}?id=${id}`;
-    const response = await apiPutCallWithAuth(urlWithId, params, staticToken);
+    console.log("So params---------------",params);
+    
+    const Id = params.id;
+    const SoId = params.soId;
+    const urlWithId = `${putSalesOrderUrl}?id=${Id}&soId=${SoId}`;
+    const response = await apiPostCallWithAuth(urlWithId, params, staticToken);
     return response; 
   } catch (error) {
     console.error("Error updating lead status:", error);

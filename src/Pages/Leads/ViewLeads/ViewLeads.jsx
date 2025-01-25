@@ -231,7 +231,7 @@ const ViewLeads = () => {
 
   const requestData = {
     EmployeeCode: emp,
-    CampaignName: "INF24JAN2025",
+    CampaignName: "CampaignName",
   };
 
   const dispatch = useDispatch();

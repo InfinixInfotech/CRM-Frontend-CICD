@@ -66,7 +66,7 @@ const Payment = () => {
   //!-------------------------------------------Handle PR Status----------------------------------------------
 
   const handlePrStatus = async (paymentObj) => {
-    console.log("Payment Object Received:", paymentObj);
+    console.log("Payment Object Received------------------------------------here:", JSON.stringify(paymentObj));
 
     if (!paymentObj || !paymentObj.prId) {
       console.error("Invalid Payment Object or missing prId");
@@ -80,31 +80,31 @@ const Payment = () => {
       prId: paymentObj.prId,
       leadId: paymentObj.leadId,
       clientDetails: {
-        name: paymentObj.clientName,
-        fatherName: paymentObj.fathersName,
-        motherName: paymentObj.mothersName,
-        mobile: paymentObj.mobile,
-        email: paymentObj.email,
-        dob: paymentObj.dob,
-        remark: paymentObj.remark,
+        name: paymentObj.clientDetails.name,
+        fatherName: paymentObj.clientDetails.fatherName,
+        motherName: paymentObj.clientDetails.motherName,
+        mobile: paymentObj.clientDetails.mobile,
+        email: paymentObj.clientDetails.email,
+        dob: paymentObj.clientDetails.dob,
+        remark: paymentObj.clientDetails.remark,
       },
       productDetails: {
-        segment: paymentObj.segment,
-        netAmount: paymentObj.netAmount ? parseFloat(paymentObj.netAmount) : 0,
-        paidAmount: paymentObj.paidAmount
+        segment: paymentObj.productDetails.segment,
+        netAmount: paymentObj.productDetails.netAmount ? parseFloat(paymentObj.netAmount) : 0,
+        paidAmount: paymentObj.productDetails.paidAmount
           ? parseFloat(paymentObj.paidAmount)
           : 0,
       },
       paymentDetails: {
-        paymentDate: paymentObj.paymentDate,
-        modeOfPayment: paymentObj.paymentMode,
-        bankName: paymentObj.bankName,
-        transactionInfo: paymentObj.transactionId,
-        panNo: paymentObj.panNo,
-        state: paymentObj.state,
-        city: paymentObj.city,
+        paymentDate: paymentObj.paymentDetails.paymentDate,
+        modeOfPayment: paymentObj.paymentDetails.modeOfPayment,
+        bankName: paymentObj.paymentDetails.bankName,
+        transactionInfo: paymentObj.paymentDetails.transactionInfo,
+        panNo: paymentObj.paymentDetails.panNo,
+        state: paymentObj.paymentDetails.state,
+        city: paymentObj.paymentDetails.city,
       },
-      transactionReceipt: "",
+      transactionReceipt: paymentObj.transactionReceipt,
       paymentStatus:
         addPRstatus !== "" ? addPRstatus : paymentObj?.paymentStatus || "",
     };
@@ -127,7 +127,7 @@ const Payment = () => {
   
   };
 
-  //!-------------------------------------------Status logic end----------------------------------------------
+  //!-----------------------------------------------------------------------------Status logic end--------------------------------------------------------------------------
   const { data, loading, error } = useSelector(
     (state) => state.leadpaymentraise
   );

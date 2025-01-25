@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Menu, X, LayoutDashboard, Users, PenLine, FileText, IndianRupee, Mail, BookOpen, ChevronDown,UserPlus,Eye ,Upload   } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Users, PenLine, FileText, IndianRupee, Mail, BookOpen, DollarSign,UserPlus,Eye ,Upload, UserCheck   } from 'lucide-react';
 const Sidebar = () => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState({
@@ -48,6 +48,12 @@ const Sidebar = () => {
       text: "Upload Leads",
       id: "uploadleads",
       path: "/uploadleads",
+    },
+    {
+      icon: UserCheck ,
+      text: "Paid Clients",
+      id: "paidclients",
+      path: "/paidclients",
     },
     {
       icon: FileText,

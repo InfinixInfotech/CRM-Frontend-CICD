@@ -21,6 +21,7 @@ const InsertSalesOrder = () => {
     soId: lead.soId,
     so: lead.so,
     leadId: lead.leadId,
+    prId: lead?.prId || "string",
     personalDetails: {
       createdDate: lead.createdDate,
       clientName: lead.clientDetails.name,
