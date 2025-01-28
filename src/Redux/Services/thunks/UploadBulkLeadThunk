@@ -57,6 +57,25 @@ export const UpdateBulkLeadThunk = createAsyncThunk(
     }
 );
 
+
+
+
+export const getCampaignNameThunk = createAsyncThunk (
+    'getCampaignName/getCampaignName',
+    async({rejectWithValue}) => {
+        try {
+            const response = await fetchCampaignName();
+            if (response?.success) {
+                return response.data;
+            }
+            return rejectWithValue(response?.message || 'Failed to fetch lead by ID');
+        } catch (error) {
+            return rejectWithValue(error.message || 'An error occurred while fetching lead by ID');
+        }
+    }
+)
+
+
 // export const getByIdLeadPaymentRaiseThunk = createAsyncThunk(
 //     'leadpaymentraise/getByIdLeadPaymentRaise',
 //     async(param, {rejectWithValue}) => {

@@ -2,10 +2,6 @@ import React, { useEffect, useState } from "react";
 import "./Payment.css";
 import DeleteButton from "../../Components/Button/DeleteButton/DeleteButton";
 import { EditButton } from "../../Components/Button/EditButton/EditButton";
-import { PrintButton } from "../../Components/Button/DataButton/DataPrintButton/DataPrintButton";
-import { CsvButton } from "../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
-import { PdfButton } from "../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
-import { CopyButton } from "../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
 import { StatusButton } from "../../Components/Button/StatusButton/StatusButton";
 
 import {
@@ -43,6 +39,9 @@ const Payment = () => {
     5: "REJECTED",
     6: "REFUNDED",
   });
+
+  const storedUsername = localStorage.getItem("userName");
+
 
   const handleOpenPrStatusPopup = () => {
     setShowPrStatusPopup(true);
@@ -124,7 +123,7 @@ const Payment = () => {
     useEffect(() => {
       dispatch(getAllLeadPaymentRaiseThunk());
     }, [dispatch]);
-  
+
   };
 
   //!-----------------------------------------------------------------------------Status logic end--------------------------------------------------------------------------
@@ -161,7 +160,7 @@ const Payment = () => {
 
   useEffect(() => {
     if (data?.data) {
-      setAddPaymentRaise(data.data);
+      setAddPaymentRaise(Array.isArray(data.data) ? data.data : [data.data]);
     }
   }, [data]);
 
@@ -197,7 +196,10 @@ const Payment = () => {
   const totalPages = Math.ceil(AddPaymentRaise.length / itemsPerPage);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentPR = AddPaymentRaise.slice(indexOfFirstItem, indexOfLastItem);
+  const currentPR = Array.isArray(AddPaymentRaise) ? AddPaymentRaise.slice(indexOfFirstItem, indexOfLastItem) : [];
+  console.log("Paymnet data " + JSON.stringify(AddPaymentRaise))
+
+
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
   const nextPage = () =>
@@ -297,7 +299,7 @@ const Payment = () => {
                     <td>{paymentObj.paymentDetails?.paymentDate || "N/A"}</td>
                     <td>{paymentObj.clientDetails?.name || "N/A"}</td>
                     <td>{paymentObj.clientDetails?.mobile || "N/A"}</td>
-                    <td>{paymentObj.employeeName || "N/A"}</td>
+                    <td>{paymentObj.employeeCode || "N/A"}</td>
                     <td>{paymentObj.manager || "N/A"}</td>
                     <td>{paymentObj.paymentDetails?.panNo || "N/A"}</td>
                     <td>{paymentObj.productDetails?.segment || "N/A"}</td>
@@ -320,17 +322,18 @@ const Payment = () => {
                       <div className="d-flex flex-row gap-2">
                         {/* //!---------------------------------------Status Button Start--------------------------------------------- */}
                         <div>
-                          <StatusButton
-                            onClick={() => {
-                              handleOpenPrStatusPopup(paymentObj);
-                              console.log("Opening popup for:", paymentObj);
-                              console.log(
-                                "Current popup for:",
-                                CurrentPaymentObj
-                              );
-                              setCurrentPaymentObj(paymentObj);
-                            }}
-                          />
+                          {paymentObj.leadId &&
+                            (["admin", "Admin", "ADMIN"].includes(storedUsername)) && (
+                              <StatusButton
+                                onClick={() => {
+                                  handleOpenPrStatusPopup(paymentObj);
+                                  console.log("Opening popup for:", paymentObj);
+                                  console.log("Current popup for:", CurrentPaymentObj);
+                                  setCurrentPaymentObj(paymentObj);
+                                }}
+                              />
+                            )
+                          }
 
                           {showPrStatusPopup && (
                             <>

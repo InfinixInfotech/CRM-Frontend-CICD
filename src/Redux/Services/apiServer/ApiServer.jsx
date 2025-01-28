@@ -54,14 +54,16 @@ export const getByIdGroupsUrl = `${apiUrl}/api/Groups/GetGroupsById`;
 export const postSalesOrderUrl = `${apiUrl}/api/SO/InsertSO`;
 export const putSalesOrderUrl = `${apiUrl}/api/SO/UpdateSO`;
 export const deleteSalesOrderUrl = `${apiUrl}/api/SO/DeleteSO`;
-export const getAllSalesOrderUrl = `${apiUrl}/api/SO/GetAllSO `;
+export const getAllSalesOrderUrl = `${apiUrl}/api/SO/GetByEmployeeCode`;
+export const getAllSOUrl = `${apiUrl}/api/SO/GetAllSO`;
 export const getByIdSalesOrderUrl = `${apiUrl}/api/SO/GetSOById`;
 // ---------------------------------------------PaymentRise Api's--------------------------------------------------------------------------------------------------------------
 export const postLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/AddLeadPR`;
 export const putLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/UpdateLeadPRById`;
 export const deleteLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/DeleteLeadPRById`;
-export const getAllLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/GetAllLeadPR`;
+export const getAllLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/GetLeadPRByEmployeeCode`;
 export const getByIdLeadPaymentRaiseUrl = `${apiUrl}/api/LeadPaymentRaise/GetLeadPRById`;
+export const getAllPRUrl = `${apiUrl}/api/LeadPaymentRaise/GetAllLeadPR`;
 // ---------------------------------------------AddLeads Api's----------------------------------------------------------------------------
 export const postAddLeadUrl = `${apiUrl}/api/Lead/AddLead`;
 export const putAddLeadUrl = `${apiUrl}/api/Lead/UpdateLeadById`;
@@ -81,12 +83,23 @@ export const GetByIdUploadBulkLeadUrl = `${apiUrl}/api/BulkLead/GetLeadByEmploye
 export const UpdateByIdBulkLeadUrl = `${apiUrl}/api/BulkLead/UpdateLeadById`;
 // ---------------------------------------------Search Api's----------------------------------------------------------------------------
 export const GetLeadByMobileOrLeadIdUrl = `${apiUrl}/api/BulkLead/SearchLead`;
+export const loginUrl = `${apiUrl}/api/Auth/login`;
+export const forgetPassUrl = `${apiUrl}/api/Auth/UpdatePassword`;
+// export const campaignName = `${apiUrl}/api/BulkLead/GetAllCampaignNames`;
+// ---------------------------------------------Paid Clients Api's----------------------------------------------------------------------------
+export const GetPaidClientByEmpCodeUrl = `${apiUrl}/api/PaidClient/GetPaidClientByEmpCode`;
+export const GetcampaignNameByEmpCodeUrl = `${apiUrl}/api/BulkLead/GetAllCampaignNames`;
+export const GetAllPaidClientUrl = `${apiUrl}/api/PaidClient/GetAllPaidClient`;
+export const GetAllEmployeeSalesReport = `${apiUrl}/api/PaidClient/GetEmployeeSalesReportGrandTotals`;
+export const GetTotalGrandTotalUrl = `${apiUrl}/api/PaidClient/GetTotalGrandTotal`;
 
-
-
+// export const GetcampaignNameByEmpCodeUrl = `${apiUrl}/LeadHistory/GetByEmployeeCode`;
 
 export const staticToken =localStorage.getItem("authToken")
-export const emp= localStorage.getItem("employcode")
+export const emp= localStorage.getItem("empCode")
+const storedUsername = localStorage.getItem("userName");
+
+
 // export  const username=  localStorage.getItem("username")
 
 export default function ApiServer() {

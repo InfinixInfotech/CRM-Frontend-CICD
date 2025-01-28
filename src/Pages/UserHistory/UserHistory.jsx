@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Calendar, Clock, User, Activity, Filter, Download, Search } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { emp } from "../../Redux/Services/apiServer/ApiServer";
+import { emp, staticToken } from "../../Redux/Services/apiServer/ApiServer";
 
 const UserHistory = () => {
   const [leadData, setLeadData] = useState(null);
@@ -11,12 +11,19 @@ const UserHistory = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
 
-  emp
   useEffect(() => {
     const fetchLeadHistory = async () => {
       try {
+        
         const response = await fetch(
-          `http://192.168.1.227:5118/api/LeadHistory/GetByEmployeeCode?employeeCode=${emp}`
+          `http://192.168.1.227:5118/api/LeadHistory/GetByEmployeeCode?employeeCode=${emp}`,
+          {
+            method: 'GET',
+            headers: {
+              'Authorization': `Bearer ${staticToken}`, 
+              'Content-Type': 'application/json', 
+            },
+          }
         );
         const result = await response.json();
         if (result.success) {
@@ -30,9 +37,10 @@ const UserHistory = () => {
         setLoading(false);
       }
     };
-
+  
     fetchLeadHistory();
   }, []);
+  
 
   const getStatusBadge = (type) => {
     switch (type) {

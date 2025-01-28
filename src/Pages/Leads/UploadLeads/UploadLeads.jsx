@@ -8,10 +8,10 @@ import { FaUpload } from "react-icons/fa";
 const UploadLeads = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [formData, setFormData] = useState({
-    campaignName: "INF26DEC2024",
+    campaignName: "",
     file: null,
-    segmentName: "gold",
-    leadSource: "freshpool",
+    segmentName: "",
+    leadSource: "",
   });
 
   const dispatch = useDispatch();
@@ -189,9 +189,9 @@ const UploadLeads = () => {
                   <option value="" disabled>
                     --Select Lead Source--
                   </option>
-                  <option value="Source 1">Source 1</option>
-                  <option value="Source 2">Source 2</option>
-                  <option value="Source 3">Source 3</option>
+                  <option value="Fresh Pool">Fresh Pool</option>
+                  <option value="Diamond Pool">Diamond Pool</option>
+                  <option value="Platinum Pool">Platinum Pool</option>
                 </select>
               </div>
 

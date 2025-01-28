@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import BackButton from "../../../Components/Button/BackButton/BackButton";
 import { SendButton } from "../../../Components/Button/SendButton/SendButton";
@@ -8,37 +8,33 @@ import { StatusButton } from "../../../Components/Button/StatusButton/StatusButt
 import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";
 import { PRButton } from "../../../Components/Button/PRButton/PRButton";
 import ExportData from "../../../Components/Button/DataButton/ExportButton";
+import { getAllPaidClientsThunk } from "../../../Redux/Services/thunks/PaidClientsThunk";
+import { useDispatch, useSelector } from "react-redux";
+import { emp } from "../../../Redux/Services/apiServer/ApiServer";
 
 const PaidClients = () => {
-  const [paidClientData, setPaidClientData] = useState([
-    {
-      Id: 1,
-      ClientName: "priyanshu",
-      Mobile: "9340770705",
-      AssignedTo: "INFHARSH21158",
-      LeadSource: "Gold",
-      SO: "salesOrder",
-      Description: "discription",
-    },
-    {
-      Id: 1,
-      ClientName: "priyanshu",
-      Mobile: "9340770705",
-      AssignedTo: "INFHARSH21158",
-      LeadSource: "Gold",
-      SO: "salesOrder",
-      Description: "discription",
-    },
-    {
-      Id: 1,
-      ClientName: "priyanshu",
-      Mobile: "9340770705",
-      AssignedTo: "INFHARSH21158",
-      LeadSource: "Gold",
-      SO: "salesOrder",
-      Description: "discription",
-    },
-  ]);
+  const employeeCode = emp;
+  const [paidClientData, setPaidClientData] = useState([]);
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.paidclients);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      dispatch(getAllPaidClientsThunk(employeeCode));
+    };
+    fetchData();
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (data?.data) {
+      const timer = setTimeout(() => {
+        setPaidClientData(Array.isArray(data.data) ? data.data : [data.data]);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [data]);
+  console.log("paidClientData---------------", paidClientData);
+
   return (
     <div className="mt-5">
       <section
@@ -85,50 +81,54 @@ const PaidClients = () => {
         <div className="">
           <div className="lead-status-container ">
             <div className="bg-white p-2">
-              {/* {msg && (
-                <Alert variant="info" className="mt-2 text-center">
-                  {msg}
-                </Alert>
-              )} */}
               <ExportData tableId="table-data" />
 
               <table
                 id="table-data"
                 className="table table-bordered table-striped mt-2"
+                style={{ fontSize: "14px" }}
               >
                 <thead>
                   <tr>
                     <th>Id</th>
+                    <th>Lead Id</th>
+                    <th>Mobile Number</th>
                     <th>Client Name</th>
-                    <th>Mobile</th>
-                    <th>Assigned To</th>
-                    <th>Lead Source</th>
-                    <th>SO</th>
-                    <th>Description</th>
-                    <th>Action</th>
+                    <th>Employee Code</th>
+                    <th>Employee Name</th>
+                    <th>Reporting To</th>
+                    <th>Group Name</th>
+                    <th>SO Id</th>
+                    <th>Create Date</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>SO Status</th>
+                    <th>Grand Total</th>
+                    <th>Comment</th>
+                    {/* <th>Action</th> */}
                   </tr>
                 </thead>
                 <tbody>
                   {paidClientData.map((clientData) => (
-                    <tr key={clientData.Id}>
-                      <td>{clientData.Id}</td>
-                      <td>{clientData.ClientName}</td>
-                      <td>{clientData.Mobile}</td>
-                      <td>{clientData.AssignedTo}</td>
-                      <td>{clientData.LeadSource}</td>
-                      <td>{clientData.SO}</td>
-                      <td>{clientData.Description}</td>
-                      <td>
-                        <div className="btn-group d-grid gap-2 d-sm-flex">
-                          <StatusButton />
-                          <EditButton />
-                          <DeleteButton />
-                          <DisposeButton />
-                          <PRButton />
-                          <SendButton />
-                        </div>
-                      </td>
-                    </tr>
+                    clientData.paymentHistory.map((history, index) => (
+                      <tr key={`${clientData.id}-${index}`}>
+                        <td>{clientData.id}</td>
+                        <td>{clientData.leadId}</td>
+                        <td>{clientData.mobileNumber}</td>
+                        <td>{clientData.clientName}</td>
+                        <td>{history.employeeCode}</td>
+                        <td>{history.employeeName}</td>
+                        <td>{history.reportingTo}</td>
+                        <td>{history.groupName}</td>
+                        <td>{history.soId}</td>
+                        <td>{history.createDate}</td>
+                        <td>{history.startDate}</td>
+                        <td>{history.endDate}</td>
+                        <td>{history.soStatus}</td>
+                        <td>{history.grandTotal}</td>
+                        <td>{history.comment}</td>
+                      </tr>
+                    ))
                   ))}
                 </tbody>
               </table>
@@ -140,4 +140,4 @@ const PaidClients = () => {
   );
 };
 
-export default PaidClients;
+export default PaidClients

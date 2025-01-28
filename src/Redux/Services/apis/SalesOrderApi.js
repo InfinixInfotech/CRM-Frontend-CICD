@@ -1,5 +1,5 @@
 import { apiDeleteCallWithAuth, apiGetCallWithAuth, apiPostCallWithAuth, apiPutCallWithAuth } from "../../../Utils/apiUtils";
-import { deleteSalesOrderUrl, getAllSalesOrderUrl, getByIdSalesOrderUrl, postSalesOrderUrl, putSalesOrderUrl, staticToken } from "../apiServer/ApiServer";
+import { deleteSalesOrderUrl, emp, getAllSalesOrderUrl, getAllSOUrl, getByIdSalesOrderUrl, postSalesOrderUrl, putSalesOrderUrl, staticToken } from "../apiServer/ApiServer";
 
 
 export const postSalesOrder = async (params) => {
@@ -20,7 +20,24 @@ export const postSalesOrder = async (params) => {
 
 export const getAllSalesOrder = async () => {
   try {
-    const response = await apiGetCallWithAuth(getAllSalesOrderUrl, staticToken);
+   const employeeCode = localStorage.getItem("empCode");
+
+const storedUsername = localStorage.getItem("userName");
+console.log(storedUsername)
+    let url = '';
+    if (["admin", "Admin", "ADMIN"].includes(storedUsername)) {
+      console.log("Admin found in the string.");
+      url = `${getAllSOUrl}`;
+      console.log(url)
+
+    }
+     else {
+      console.log("Admin not found in the string.");
+      url = `${getAllSalesOrderUrl}?employeeCode=${emp}`;
+      console.log(url)
+    }
+
+    const response =await apiGetCallWithAuth(url,staticToken);
     return response;
 
   } catch (error) {

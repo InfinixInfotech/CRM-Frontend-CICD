@@ -3,72 +3,46 @@ import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintB
 import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
-
-
+import { getAllTotalGrandTotalThunk } from "../../../../Redux/Services/thunks/TotalGrandTotalThunk";
+import { useDispatch, useSelector } from "react-redux";
+import { IndianRupee } from "lucide-react";
 
 const SalesOrderReport = () => {
-  const [data, setData] = useState([]);
+  const [Totaldata, setTotalData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
   const [showPopup, setShowPopup] = useState(false);
-
-  // Create a ref to target the content for printing (table)
   const printContentRef = useRef(null);
 
-  // Sample data (replace with API response if needed)
-  const mockData = [
-    {
-      leadId: 1491853,
-      clientName: "NIKHIL MAKWANA",
-      mobile: "9879581161",
-      segment: "Stock Option",
-      option: "S",
-      startDate: "19 Nov 2024",
-      endDate: "19 Nov 2024",
-      total: 11564,
-      assigned: "Ayushi.Tanwar",
-      createdBy: "Ayushi.Tanwar",
-    },
-    {
-      leadId: 1876665,
-      clientName: "Shrikant Dhopade",
-      mobile: "8806970733",
-      segment: "Stock Option",
-      option: "S",
-      startDate: "19 Nov 2024",
-      endDate: "19 Dec 2024",
-      total: 11800,
-      assigned: "Rahul.Lokahnde",
-      createdBy: "Rahul.Lokahnde",
-    },
-    {
-      leadId: 1912516,
-      clientName: "Binoy Balakrishnan",
-      mobile: "9590688751",
-      segment: "Stock Option",
-      option: "S",
-      startDate: "19 Nov 2024",
-      endDate: "19 Dec 2024",
-      total: 17700,
-      assigned: "Abhishek Meena",
-      createdBy: "Abhishek Meena",
-    },
-    // Add more mock data here
-  ];
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector(
+    (state) => state.grandTotal
+  );
+
+  useEffect(() => {
+    dispatch(getAllTotalGrandTotalThunk());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (data?.data) {
+      console.log(data); // Debugging API response
+      setTotalData(data?.data);
+    }
+  }, [data]);
 
   // Pagination logic
-  useEffect(() => {
-    setData(mockData);
-  }, []);
+  // useEffect(() => {
+  //   setTotalData(mockData);
+  // }, []);
 
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
-  const totalPages = Math.ceil(data.length / recordsPerPage);
+  // const indexOfLastRecord = currentPage * recordsPerPage;
+  // const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  // const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
+  // const totalPages = Math.ceil(data.length / recordsPerPage);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Open popup
+  // // Open popup
   const handleOpenPopup = () => {
     setShowPopup(true);
   };
@@ -78,7 +52,7 @@ const SalesOrderReport = () => {
     setShowPopup(false);
   };
 
- 
+
   return (
     <div >
       {/* Print-Specific CSS */}
@@ -100,7 +74,7 @@ const SalesOrderReport = () => {
       >
         <div className="card-body">
           <h5 className="card-title">Total Sales</h5>
-          <h3 className="card-text">$45,064</h3>
+          <h3 className="card-text"> <IndianRupee className="w-6 h-6 text-green-600" />{Totaldata?.totalGrandTotal || 0}</h3>
         </div>
       </div>
       {/* Popup */}
@@ -157,7 +131,7 @@ const SalesOrderReport = () => {
 
             <h4 className="mb-3 text-center">Sales Order Report</h4>
             <div className="table-responsive w-100">
-              <table   id="table-data" className="table table-bordered table-striped">
+              <table id="table-data" className="table table-bordered table-striped">
                 <thead className="table-danger">
                   <tr>
                     <th className="text-center">Lead ID</th>
@@ -195,9 +169,8 @@ const SalesOrderReport = () => {
                 {Array.from({ length: totalPages }, (_, index) => (
                   <li
                     key={index}
-                    className={`page-item ${
-                      currentPage === index + 1 ? "active" : ""
-                    }`}
+                    className={`page-item ${currentPage === index + 1 ? "active" : ""
+                      }`}
                   >
                     <button
                       className="page-link no-print"
@@ -223,10 +196,10 @@ const SalesOrderReport = () => {
             >
               Print Table
             </button> */}
-            <PrintButton/>
-            <PdfButton/>
-            <CsvButton/>
-            <CopyButton/>
+            <PrintButton />
+            <PdfButton />
+            <CsvButton />
+            <CopyButton />
           </div>
         </>
       )}

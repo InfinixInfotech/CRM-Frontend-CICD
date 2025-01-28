@@ -15,6 +15,8 @@ const PaymentRaise = () => {
   // console.log(userName);
 
   const dispatch = useDispatch();
+
+
   const [showAlert, setShowAlert] = useState(false);
   const [AddPaymentRaise, setAddPaymentRaise] = useState({
     employeeCode: emp,
@@ -47,6 +49,7 @@ const PaymentRaise = () => {
       return () => clearTimeout(timer);
     }
   }, [showAlert]);
+
   //!<----------------------------------------------------------------------------------- HANDLE FIELDS CHANGE ---------------------------------------------------------------------------------
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -55,13 +58,17 @@ const PaymentRaise = () => {
       [name]: value,
     }));
   };
+
   const handleFileChange = (e) => {
     const uploadedFile = e.target.files[0];
     setAddPaymentRaise((prevState) => ({
       ...prevState,
       file: uploadedFile,
     }));
+    
   };
+
+  
   //!<----------------------------------------------------------------------------------- HANDLE SUBMIT---------------------------------------------------------------------------------
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -77,7 +84,8 @@ const PaymentRaise = () => {
         motherName: AddPaymentRaise.mothersName,
         mobile: AddPaymentRaise.mobile,
         email: AddPaymentRaise.email,
-        dob: AddPaymentRaise.dob,
+        dob: lead.dob ? new Date(lead.dob).toISOString().split('T')[0] : null,
+
         remark: AddPaymentRaise.remark,
       },
       productDetails: {

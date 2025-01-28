@@ -6,13 +6,13 @@ const handlePR = ()=>{
 
 export const PRButton =({
     onClick = handlePR,
-    className = "PR-btn btn-sm px-1 py-0"
+    className = "PR-btn btn-sm px-1 py-0 rounded-1"
 })=>{
    return(
     <button onClick={onClick} className={className} style={{
         fontWeight: "600",
         borderRadius: "0",
-        backgroundColor: "#758694",
+        backgroundColor: "#31493C",
         fontSize: "12px",
         border: "1px solid grey",
         color : "white"

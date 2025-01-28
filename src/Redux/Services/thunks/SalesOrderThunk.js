@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { deleteSalesOrder, getAllSalesOrder, getByIdSalesOrder, postSalesOrder, putSalesOrder } from "../apis/salesOrderApi";
+import { deleteSalesOrder, getAllSalesOrder, getByIdSalesOrder, postSalesOrder, putSalesOrder } from "../apis/SalesOrderApi";
 
 export const postSalesOrderThunk = createAsyncThunk(
     'salesorder/postSalesOrder',

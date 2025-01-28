@@ -1,5 +1,5 @@
 import { apiDeleteCallWithAuth, apiGetCallWithRersponseAuth, apiPostCallWithAuth, apiPostCallWithAuthFormData } from "../../../Utils/apiUtils";
-import { fetchAllUploadBulkLeadUrl, GetByIdUploadBulkLeadUrl, postUploadBulkLeadUrl, staticToken, UpdateByIdBulkLeadUrl } from "../apiServer/ApiServer";
+import { GetcampaignNameByEmpCodeUrl, fetchAllUploadBulkLeadUrl, GetByIdUploadBulkLeadUrl, postUploadBulkLeadUrl, staticToken, UpdateByIdBulkLeadUrl } from "../apiServer/ApiServer";
 export const postUploadBulkLead = async (params) => {  
   try {
     const response = await apiPostCallWithAuthFormData(
@@ -26,6 +26,8 @@ export const getByIdUploadBulkLead = async (params) => {
     return null;
   }
 };
+
+
 export const fetchAllUploadBulkLead = async (params) => {
   try {
     const { EmployeeCode, CampaignName } = params;
@@ -36,6 +38,19 @@ export const fetchAllUploadBulkLead = async (params) => {
     return null;
   }
 };
+
+
+export const fetchCampaignName = async () => {
+  try {
+    const response = await apiGetCallWithRersponseAuth(GetcampaignNameByEmpCodeUrl,staticToken);
+    return response;
+  } catch (error) {
+    return null;
+  }
+};
+
+
+
 export const UpdateBulkLead = async (params) => {
   try {
     // const { leadId } = params; 

@@ -34,6 +34,7 @@ const [updateStatus, setUpdateStatus] = useState({
     2 : "PENDING",
     3 : "REJECTED",
 })
+const storedUsername = localStorage.getItem("userName");
 
 const handleOpenSOStatusPopup = () => {
   setShowSoStatusPopup(true);
@@ -356,6 +357,8 @@ const handleSOStatus = async (salesOrderObj) => {
                       <div className="d-flex justify-content-center align-items-center gap-2">
                       {/* //!--------------------------------------------------Status Button Start------------------------------------------- */}
                         <div>
+                        {salesOrderObj.leadId &&
+                            (["admin", "Admin", "ADMIN"].includes(storedUsername)) && (
                           <StatusButton
                             onClick={() => {
                               handleOpenSOStatusPopup(salesOrderObj);
@@ -367,6 +370,7 @@ const handleSOStatus = async (salesOrderObj) => {
                               setCurrentSalesOrderObj(salesOrderObj);
                             }}
                           />
+                            )}
 
                           {showSoStatusPopup && (
                             <>
@@ -433,9 +437,9 @@ const handleSOStatus = async (salesOrderObj) => {
                           )}
                         </div>
                         {/* //!---------------------------------------------------------------Status Button Start------------------------------ */}
-                        <button className="btn btn-success btn-sm py-0 px-2">
+                        {/* <button className="btn btn-success btn-sm py-0 px-2">
                           Status
-                        </button>
+                        </button> */}
                         <button className="btn btn-info btn-sm py-0 px-2">
                           Invoice
                         </button>

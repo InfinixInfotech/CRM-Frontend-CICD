@@ -13,6 +13,10 @@ import addLeadReducer from "../Reducers/AddLeadReducer"
 import uploadBulkLeadReducer from "../Reducers/UploadBulkLeadReducer"
 import designationReducer from "../Reducers/DesignationReducer"
 import GetLeadByMobileOrLeadIdUrlReducer from "../Reducers/GetLeadByMobileOrLeadIdReducer"
+import PaidClientsReducer from "../Reducers/PaidClientsReducer"
+import getEmployeeSalesReportReducer from "../Reducers/getEmployeeSalesReportReducer"
+import grandTotalReducer from "../Reducers/GetGrandTotalReducer"
+
 
 
 const store = configureStore({
@@ -31,6 +35,9 @@ const store = configureStore({
     uploadbulklead: uploadBulkLeadReducer,
     designation: designationReducer,
     GetLeadByMobileOrLeadId: GetLeadByMobileOrLeadIdUrlReducer,
+    paidclients: PaidClientsReducer,
+    salesReport: getEmployeeSalesReportReducer,
+    grandTotal:grandTotalReducer,
   },
 });
 

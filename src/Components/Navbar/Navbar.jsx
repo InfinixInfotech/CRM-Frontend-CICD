@@ -56,7 +56,7 @@ const Navbar = () => {
             </ul>
           </li>
 
-          {username && ["admin", "Admin", "ADMIN"].includes(username) && (
+          {/* {username && ["admin", "Admin", "ADMIN"].includes(username) && (
           <li className="nav-item">
             <button
               className="btn text-white btn-sm fs-5"
@@ -66,7 +66,7 @@ const Navbar = () => {
               <FaCog />
             </button>
           </li>
-            )}
+            )} */}
         </ul>
       </div>
     </nav>

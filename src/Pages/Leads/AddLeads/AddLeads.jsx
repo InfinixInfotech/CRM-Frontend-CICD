@@ -9,7 +9,7 @@ import { AiOutlineUserAdd } from 'react-icons/ai';
 const AddLeads = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [leads, setLeads] = useState({
-    CampaignName: "INF26DEC2024",
+    CampaignName: "",
     ClientName: "",
     AssignedTo: "",
     LeadSource: "",
@@ -20,7 +20,7 @@ const AddLeads = () => {
     Email: "",
     City: "",
     State: "",
-    Dob: "",
+    Dob: 0,
     Investment: "",
     Profile: "",
     Trading: "",
@@ -36,9 +36,9 @@ const AddLeads = () => {
     Language: "",
     LeadStatus: "",
     Segment: "",
-    FreeTrialStartDate: "",
-    FreeTrialEndDate: "",
-    FollowUp: "",
+    FreeTrialStartDate: 0,
+    FreeTrialEndDate: 0,
+    FollowUp: 0,
     Comment: "",
   });
 
@@ -80,7 +80,7 @@ const AddLeads = () => {
       email: leads.Email,
       city: leads.City,
       state: leads.State,
-      dob: leads.Dob,
+      dob: leads.Dob ? new Date(leads.Dob).toISOString().split('T')[0] : null,  
       investmentDetail: {
         investment: leads.Investment,
         profile: leads.Profile,
@@ -101,9 +101,18 @@ const AddLeads = () => {
       followupDetail: {
         leadStatus: leads.LeadStatus,
         segment: leads.Segment,
-        freeTrialStartDate: leads.FreeTrialStartDate,
-        freeTrialEndDate: leads.FreeTrialEndDate,
-        followUpDate: leads.FollowUp,
+        freeTrialStartDate: leads.FreeTrialStartDate 
+        ? new Date(leads.FreeTrialStartDate).toISOString().split('T')[0] 
+        : null,
+    
+    freeTrialEndDate: leads.FreeTrialEndDate 
+        ? new Date(leads.FreeTrialEndDate).toISOString().split('T')[0] 
+        : null,
+    
+    followUpDate: leads.FollowUp 
+        ? new Date(leads.FollowUp).toISOString().split('T')[0] 
+        : null,
+    
         comment: leads.Comment,
       },
     };
@@ -115,7 +124,7 @@ const AddLeads = () => {
         if (response.payload === null) {
           console.error("No data received from the server");
         }
-        alert("Payment Raise Submitted!");
+        alert("Add Lead Successfully Submitted!");
         console.log("Added successfully:", response);
       })
       .catch((error) => {

@@ -1,4 +1,4 @@
- import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./ViewLeads.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import DeleteButton from "../../../Components/Button/DeleteButton/DeleteButton";
@@ -13,19 +13,14 @@ import { HashLoader } from "react-spinners";
 import { fetchAllUploadBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 import { getByIdUploadBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 import { useNavigate } from "react-router-dom";
-import { emp } from "../../../Redux/Services/apiServer/ApiServer";
+import { emp, GetcampaignNameByEmpCodeUrl, staticToken } from "../../../Redux/Services/apiServer/ApiServer";
 import { UpdateBulkLeadThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 import ExportData from "../../../Components/Button/DataButton/ExportButton";
 import { FaEye } from "react-icons/fa";
 import FilterImport from "../../../Components/FilterImport/FilterImport";
 import { PRButton } from "../../../Components/Button/PRButton/PRButton";
-
+import { getCampaignNameThunk } from "../../../Redux/Services/thunks/UploadBulkLeadThunk";
 const ViewLeads = () => {
-//   const handlePrSoFunctionality = ( leadId ,paymentStatus)=>{
-// console.log("leadId here is --------------",leadId);
-// console.log("paymentStatus here is --------------",paymentStatus);
-
-//   }
   const [isPrGenerated, setIsPrGenerated] = useState(0)
   const [editAddLead, setEditAddLead] = useState(null);
   const [editValue, setEditValue] = useState("");
@@ -36,7 +31,6 @@ const ViewLeads = () => {
   const [addSegment, setaddSegment] = useState("");
   const [addComment, setaddComment] = useState("");
   const [addstatus, setaddStatus] = useState("");
-
   const [addfreeTrialStartDate, setAddFreeTrialStartDate] = useState("");
   const [addfreeTrialEndDate, setAddFreeTrialEndDate] = useState("");
   const [addFollowUpDate, setAddFollowUpDate] = useState("");
@@ -48,7 +42,43 @@ const ViewLeads = () => {
   const [showStatusPopup, setShowStatusPopup] = useState(false);
   const [paymentData, setPaymentData] = useState([]);
   const [errorMessage, setErrorMessage] = useState("");
+  const [CampaignNames, setcampaignNames] = useState([]);
+  const [selectedCampaign, setSelectedCampaign] = useState('');
+  const [firstCampaign, setFirstCampaign] = useState('');
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.uploadbulklead);
+  const CampaignNamesUrl = GetcampaignNameByEmpCodeUrl;
+  const todayDate = new Date().toISOString().split('T')[0];
 
+  const handleCampaignNames = (event) => {
+    setSelectedCampaign(event.target.value);
+  };
+
+  useEffect(() => {
+    fetch(CampaignNamesUrl, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${staticToken}`,
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          setcampaignNames(data.data);
+          if (data.data.length > 0) {
+            setFirstCampaign(data.data[0]);
+            setSelectedCampaign(data.data[0]);
+          }
+        } else {
+          setError(data.message);
+        }
+      })
+      .catch((err) => {
+        setError('An error occurred while fetching campaign names');
+        console.error(err);
+      });
+  }, []);
   const [updateStatus, setUpdateStatus] = useState({
     1: "BUSY",
     2: "FUTURE FOLLOWUP",
@@ -59,7 +89,6 @@ const ViewLeads = () => {
     7: "PAID CLIENT",
     8: "SWITCH OFF",
   });
-
   const handleOpenPopup = (fromWhere) => {
     if (fromWhere == "segment") {
       setShowCommentPopup(false);
@@ -152,8 +181,8 @@ const ViewLeads = () => {
       console.error("Lead not found");
       return;
     }
-
     const addNewLead = {
+      id: lead.id,
       leadId: lead.leadId,
       campaignName: lead.campaignName,
       clientName: lead.clientName,
@@ -167,7 +196,7 @@ const ViewLeads = () => {
       email: lead.email,
       city: lead.city,
       state: lead.state,
-      dob: lead.dob,
+      dob: lead.dob ? new Date(lead.dob).toISOString().split('T')[0] : null,
       investmentDetail: {
         investment: lead.investmentDetail?.investment,
         profile: lead.investmentDetail?.profile,
@@ -192,28 +221,28 @@ const ViewLeads = () => {
         followUpDate:
           addFollowUpDate !== ""
             ? addFollowUpDate
-            : lead.followupDetail?.followUpDate || "",
+            : lead.followupDetail?.followUpDate || todayDate,
         comment:
           addComment !== "" ? addComment : lead.followupDetail?.comment || "",
         freeTrialStartDate:
           addfreeTrialStartDate !== ""
             ? addfreeTrialStartDate
-            : lead.followupDetail?.freeTrialStartDate || "",
+            : lead.followupDetail?.freeTrialStartDate || todayDate,
         freeTrialEndDate:
           addfreeTrialEndDate !== ""
             ? addfreeTrialEndDate
-            : lead.followupDetail?.freeTrialEndDate || "",
+            : lead.followupDetail?.freeTrialEndDate || todayDate,
       },
     };
-
     dispatch(UpdateBulkLeadThunk(addNewLead))
       .then((response) => {
         if (response.payload === null) {
           console.error("No data received from the server");
         }
+        setIsLoading(true);
         setTimeout(() => {
           window.location.reload();
-        }, 400);
+        }, 100);
       })
       .catch((error) => {
         console.error("Error adding:", error);
@@ -231,16 +260,15 @@ const ViewLeads = () => {
 
   const requestData = {
     EmployeeCode: emp,
-    CampaignName: "CampaignName",
+    CampaignName: selectedCampaign,
   };
 
-  const dispatch = useDispatch();
-  const { data, loading, error } = useSelector((state) => state.uploadbulklead);
+
 
   //!<---------------------------------------------------------------------------------REACH EDIT PAGE BY NAVIGATION ---------------------------------------------------------------------->
 
   const Navigate = useNavigate();
-  
+
   // const handleNavigateToSo = (id, leadObj) => {
   //   // console.log("handleNavigateToSo-----------" , leadObj);
   //   Navigate(`/addsalesorder/${id}`, { state: { leadObj } });
@@ -278,15 +306,18 @@ const ViewLeads = () => {
   };
 
   useEffect(() => {
-    dispatch(getByIdUploadBulkLeadThunk(requestData));
-  }, [dispatch]);
+    if (selectedCampaign && emp) { // Check if both selectedCampaign and emp are available
+      dispatch(getByIdUploadBulkLeadThunk(requestData));
+    }
+  }, [dispatch, selectedCampaign, emp]);
 
   useEffect(() => {
     if (data) {
-      const timer = setTimeout(() => {
-        setLeads(data);
-      }, 300);
-      return () => clearTimeout(timer);
+      setLeads(data);
+      // const timer = setTimeout(() => {
+      //   setLeads(data);
+      // }, 300);
+      // return () => clearTimeout(timer);
     }
   }, [data]);
 
@@ -321,7 +352,7 @@ const ViewLeads = () => {
 
   return (
     <>
-    
+
       <section
         style={{
           position: "relative",
@@ -350,18 +381,7 @@ const ViewLeads = () => {
           View Leads
         </h2>
       </section>
-      {/* <div>
-      <h1>Filtered Payments</h1>
-      {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
-      {paymentData
-        .filter((payment) => payment.paymentStatus === 1)
-        .map((filteredPayment) => (
-          <div key={filteredPayment.leadId}>
-            Lead ID: {filteredPayment.leadId}, Payment Status: {filteredPayment.paymentStatus}
-            {handlePrSoFunctionality(filteredPayment.leadId , filteredPayment.paymentStatus )}
-          </div>
-        ))}
-    </div> */}
+
       {/* //!-------------------------------------------------------------------------------------Filter Import------------------------------------------------------------------------------------------ */}
       <FilterImport />
 
@@ -369,40 +389,14 @@ const ViewLeads = () => {
         <div className="viewLead-outerBgBox  mb-2">
           <div className="mt-3 ms-0 me-0">
             <div className="">
-              {/* 
-              <div className="row d-flex gap-2 mb-0 justify-content-between">
-                {[
-                  "Action",
-                  "Marked As",
-                  "Status",
-                  "Vendor",
-                  "State",
-                  "By Date",
-                  "Manager",
-                  "Assigned",
-                  "Lead Source",
-                  "Segment",
-                ].map((filter, index) => (
-                  <div className="col-md-2" key={index}>
-                    <div>
-                      <label className="ViewLeadFormLable form-label ">
-                        {filter}
-                      </label>
-                      <select className="formControl form-control px-2">
-                        <option value="all">{filter}</option>
-                        <option value="option1">Option 1</option>
-                        <option value="option2">Option 2</option>
-                      </select>
-                    </div>
-                  </div>
-                ))}
-              </div> */}
+
             </div>
 
             <div className="border border-2 p-2 bg-white">
               <div className="d-flex gap-1">
                 <div>
                   <ExportData tableId="leads-table" />
+
                 </div>
                 <div>
                   <button
@@ -414,6 +408,28 @@ const ViewLeads = () => {
                     <i class="bi bi-box-arrow-down"></i> Fetch Lead
                   </button>
                 </div>
+                <div>
+                  <div>
+                    <div className="dropdown-content-ManagerData w-100">
+                      {/* <label>Manager</label> */}
+                      <select
+                        value={selectedCampaign} // Bind the selected campaign value
+                        onChange={handleCampaignNames} // Handle selection change
+                        name="employee"
+                        id="employee-dropdown"
+                        className="form-select"
+                      >
+                        <option value="" disabled>Select a Campaign</option>
+                        {CampaignNames.map((campaign, index) => (
+                          <option key={index} value={campaign}>
+                            {campaign}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    {error && <p>{error}</p>}
+                  </div>
+                </div>
               </div>
 
               <table
@@ -423,6 +439,7 @@ const ViewLeads = () => {
                 <thead className="viewLead-tableHeader thead-dark">
                   <tr>
                     <th>#</th>
+                    <th>Lead Id</th>
                     <th>Client Name</th>
                     <th>Mobile</th>
                     <th>Assigned To</th>
@@ -474,6 +491,9 @@ const ViewLeads = () => {
                       <tr key={leadObj.lead.leadId}>
                         <td>
                           <input type="checkbox" />
+                        </td>
+                        <td>
+                          {leadObj.lead.leadId}
                         </td>
                         <td>
                           {editAddLead === leadObj.id ? (
@@ -826,8 +846,8 @@ const ViewLeads = () => {
                             </div>
                           )}
                         </td>
-                        <td>
-                          <div className="btn-group d-grid gap-1 d-sm-flex">
+                        <td className="text-start">
+                          <div className="btn-group   gap-1">
                             <div>
                               <StatusButton
                                 onClick={() => {
@@ -907,15 +927,16 @@ const ViewLeads = () => {
                             <DeleteButton
                               onClick={() => handleDeleteAddLead(leadObj.id)}
                             />
-                            <DisposeButton />
-                            <PRButton
-                              // leadId={leadObj.lead.leadId} 
-                              isPrGenerated={isPrGenerated}
-                              onClick={() => {
-                                handleNavigateToPR(leadObj.lead.id, leadObj);
-                              }}
-                            />
-                            
+                            {/* <DisposeButton /> */}
+                            {leadObj.lead.followupDetail !== null &&(
+                                <PRButton
+                                  onClick={() => {
+                                    handleNavigateToPR(leadObj.lead.id, leadObj);
+                                  }}
+                                />
+                              )
+                            }
+
                             {/* <button
                               onClick={() => {
                                 handleNavigateToSo(leadObj.id, leadObj);
@@ -933,7 +954,7 @@ const ViewLeads = () => {
                             >
                               Add SO
                             </button> */}
-                            <SendButton />
+                            {/* <SendButton /> */}
                           </div>
                         </td>
                       </tr>

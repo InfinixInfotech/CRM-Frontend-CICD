@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -16,6 +16,9 @@ import TeamMember from "./TeamMember/TeamMember";
 import FollowUp from "./FollowUp/FollowUp";
 import TodayTrial from "./TodayTrial/TodayTrial";
 import { FaChartLine } from "react-icons/fa";
+import { GetAllEmployeeSalesReport } from "../../../Redux/Services/apiServer/ApiServer";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllSalesReportThunk } from "../../../Redux/Services/thunks/EmployeeSalesReportThunk";
 
 // Register Chart.js components
 ChartJS.register(
@@ -28,7 +31,37 @@ ChartJS.register(
 );
 
 export default function SalesDashboard() {
-  // List of card data with dummy image URLs
+
+  const [barChartData, setBarChartData] = useState([]);
+  
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector(
+    (state) => state.salesReport
+  );
+  
+
+useEffect(() => {
+    dispatch(getAllSalesReportThunk());
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (data?.data) {
+      console.log(data); // Debugging API response
+  
+      // Transform API data into required format
+      const transformedData = [
+        {
+          title: "Sales Team",
+          data: data.data.map((emp) => emp.GrandTotal), // Convert to thousands
+          labels: data.data.map((emp) => emp.EmployeeName),
+        },
+      ];
+  
+      setBarChartData(transformedData);
+    }
+  }, [data]);
+
+
   const cardData = [
     {
       id: 1,
@@ -62,42 +95,7 @@ export default function SalesDashboard() {
     },
   ];
 
-  // Dummy data for the bar charts
-  // Dummy data for the bar charts (Updated with 6 teams)
-  const barChartData = [
-    {
-      title: "Team 1",
-      data: [1500, 2500, 4000], // Money in thousands
-      labels: ["Member A", "Member B", "Member C"],
-    },
-    {
-      title: "Team 2",
-      data: [1200, 1800, 2200], // Money in thousands
-      labels: ["Member D", "Member E", "Member F"],
-    },
-    {
-      title: "Team 3",
-      data: [3000, 3500, 4200], // Money in thousands
-      labels: ["Member G", "Member H", "Member I"],
-    },
-    {
-      title: "Team 4",
-      data: [2200, 2800, 3500], // Money in thousands
-      labels: ["Member J", "Member K", "Member L"],
-    },
-    {
-      title: "Team 5",
-      data: [1400, 2200, 3000], // Money in thousands
-      labels: ["Member M", "Member N", "Member O"],
-    },
-    {
-      title: "Team 6",
-      data: [2000, 2400, 3100], // Money in thousands
-      labels: ["Member P", "Member Q", "Member R"],
-    },
-  ];
-
-  // Chart options for each bar chart with hover effects
+  
   const options = {
     responsive: true,
     plugins: {
@@ -136,13 +134,13 @@ export default function SalesDashboard() {
       <section
         style={{
           position: "relative",
-          // padding: "12px 30px",
+       
           backgroundColor: "#fff",
           borderBottom: "1px solid #E1E6EF",
           boxShadow:
             "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-          marginBottom: "0px", // Uncomment and fix if needed
-          marginBottom: "5px", // Uncomment and fix if needed
+          marginBottom: "0px",
+          marginBottom: "5px", 
         }}
         className="mt-2"
       >

@@ -3,6 +3,7 @@ import { postUploadBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThunk"
 import { getByIdUploadBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThunk";
 import { fetchAllUploadBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThunk";
 import { UpdateBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThunk";
+import { getCampaignNameThunk } from "../Services/thunks/UploadBulkLeadThunk";
 
 const uploadBulkLeadReducer = createSlice({
   name: "uploadbulklead",
@@ -66,6 +67,20 @@ const uploadBulkLeadReducer = createSlice({
         state.loading = false;
         state.putError = action.payload;
       })
+
+      .addCase(getCampaignNameThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getCampaignNameThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload; 
+      })
+      .addCase(getCampaignNameThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
 
     //   .addCase(deleteSegmentPlanThunk.pending, (state) => {
     //     state.loading = true;

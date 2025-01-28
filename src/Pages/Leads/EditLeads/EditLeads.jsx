@@ -12,12 +12,12 @@ const EditLeads = () => {
   const { state } = useLocation();
   const recievedLeadData = state?.leadObj?.lead || {};
   const recievedLeadTableData = state?.SearchData || {};
-  console.log("recievedLeadTableData---------------", recievedLeadTableData);
+  // console.log("recievedLeadTableData---------------", recievedLeadTableData);
 
-  console.log(
-    "recievedLeadData-----------------------",
-    recievedLeadData.leadId
-  );
+  // console.log(
+  //   "recievedLeadData-----------------------",
+  //   recievedLeadData.leadId
+  // );
 
   const [leads, setLeads] = useState({
     leadId: recievedLeadData?.leadId || recievedLeadTableData?.leadId || "",
@@ -97,10 +97,10 @@ const EditLeads = () => {
   useEffect(() => {
     if (showAlert) {
       const timer = setTimeout(() => {
-        setShowAlert(false); // Hide the alert after 3000ms
+        setShowAlert(false); 
       }, 3000);
 
-      return () => clearTimeout(timer); // Cleanup the timer
+      return () => clearTimeout(timer);
     }
   }, [showAlert]);
 
@@ -171,7 +171,7 @@ const EditLeads = () => {
       LeadStatus:
         recievedLeadData?.leadStatus || recievedLeadTableData?.leadStatus || "",
       Segment:
-        recievedLeadData?.segment || recievedLeadTableData?.segment || "",
+        recievedLeadData?.followupDetail?.segment || recievedLeadTableData?.segment || "",
       FreeTrialStartDate:
         recievedLeadData?.freeTrialStartDate ||
         recievedLeadTableData?.freeTrialStartDate ||
@@ -269,8 +269,8 @@ const EditLeads = () => {
         if (response.payload === null) {
           console.error("No data received from the server");
         }
-        alert("Payment Raise Submitted!");
-        console.log("Added successfully:", response);
+        alert("Edit Leads Submitted!");
+        // console.log("Added successfully:", response);
       })
       .catch((error) => {
         console.error("Error adding:", error);
