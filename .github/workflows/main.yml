@@ -1,4 +1,4 @@
-name: Deploy React Frontend
+name: Deploy Pre-Built Frontend
 on:
   push:
     branches: [main]
@@ -9,24 +9,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Build React App
-        run: |
-          npm install
-          npm run build
-
       - name: Install sshpass (for password auth)
         run: |
           sudo apt-get update
           sudo apt-get install -y sshpass
 
-      - name: Deploy to Server
+      - name: Upload files to server
         run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -r build/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/frontend/
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -r dist/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/frontend/
 
       - name: Restart Nginx
         run: |
