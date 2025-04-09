@@ -5,14 +5,32 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
+    
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Upload files to server
+      - name: Validate dist folder
         run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -r dist/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/frontend/
+          if [ ! -d "dist" ]; then
+            echo "❌ Error: dist folder not found!"
+            ls -la
+            exit 1
+          fi
+          echo "✔ dist folder exists with contents:"
+          ls -la dist/
+
+      - name: Deploy files
+        run: |
+          echo "Deploying files to /var/www/frontend..."
+          sudo rm -rf /var/www/frontend/*
+          sudo cp -r dist/* /var/www/frontend/
+          sudo chown -R www-data:www-data /var/www/frontend
+          echo "✔ Files deployed successfully"
 
       - name: Restart Nginx
         run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo systemctl restart nginx"
+          echo "Restarting Nginx..."
+          sudo systemctl restart nginx
+          echo "✔ Nginx restarted"
