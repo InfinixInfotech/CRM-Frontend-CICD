@@ -17,7 +17,7 @@ const AssignedFilter = () => {
         <div className="dropdown w-75">
           <label>Assigned</label>
           <select
-            className="form-select"
+            className="form-select input-box"
             value={assigned}
             onChange={handleAssignedData}
             aria-label="Select Assigned"

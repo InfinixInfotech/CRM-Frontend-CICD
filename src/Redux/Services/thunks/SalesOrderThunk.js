@@ -17,9 +17,9 @@ export const postSalesOrderThunk = createAsyncThunk(
 
 export const getAllSalesOrderThunk = createAsyncThunk(
     'salesorder/getAllSalesOrder',
-    async(_, {rejectWithValue})=>{
+    async(params, {rejectWithValue})=>{
         try {
-            const response = await getAllSalesOrder();
+            const response = await getAllSalesOrder(params);
             return response;
         } catch (error) {
            return rejectWithValue(error);
@@ -63,7 +63,7 @@ export const getByIdSalesOrderThunk = createAsyncThunk(
         try {
             const response = await getByIdSalesOrder(param);
             if (response?.success) {
-                return response.data;
+                return response;
             }
             return rejectWithValue(response?.message || 'Failed to fetch lead status by ID');
         } catch (error) {

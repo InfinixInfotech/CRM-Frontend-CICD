@@ -12,9 +12,11 @@ const SegmentFilter = () => {
   };
 
   const segmentOption = [
-    { value: "gold", lable: "Gold" },
-    { value: "stockCash", lable: "Stock Cash" },
-    { value: "stockOption", lable: "Stock Option" },
+    { value: "Index Option", lable: "Index Option" },
+    { value: "Index Future", lable: "Index Future" },
+    { value: "Stock Future", lable: "Stock Future" },
+    { value: "Stock Option", lable: "Stock Option" },
+    { value: "Stock Cash", lable: "Stock Cash" },
   ];
   return (
     <div>
@@ -23,7 +25,7 @@ const SegmentFilter = () => {
           <label>Segment</label>
           <select
             value={segment}
-            className="form-select"
+            className="form-select input-box"
             onChange={handleSegment}
             name="segment"
             id="segment-dropdown"

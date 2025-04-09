@@ -18,10 +18,10 @@ export const postUser = async (params) => {
 };
 
 
-export const getAllUser = async () => {     
+export const getAllUser = async (params) => {     
   try {
-    const response = await apiGetCallWithAuth(getAllUserUrl, staticToken);
-
+    const url =`${getAllUserUrl}?pageNumber=${params.pageNumber}&limit=${params.itemsPerPage}`;
+    const response = await apiGetCallWithAuth(url, staticToken);
     return response; 
   } catch (error) {
     

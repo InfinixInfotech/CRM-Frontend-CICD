@@ -10,8 +10,8 @@ export const EditButton = ({
 }) => {
   return (
 
-<button onClick={onClick} className="btn btn-sm py-0 d-flex align-items-center text-white justify-content-center rounded-1" 
-style={{ width: "25px", height: "25px" , fontSize:"12px", backgroundColor: "#009688",}}>
+<button onClick={onClick} className="btn btn-sm py-0 d-flex align-items-center text-white justify-content-center " 
+style={{ width: "22px", height: "22px" , fontSize:"11px", backgroundColor: "#2c3e50",}}>
   <i className="fas fa-pencil-alt "></i>
   </button>
 

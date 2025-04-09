@@ -211,14 +211,14 @@ const SegmentList = () => {
         >
           <FaList
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Segment List
         </h2>
       </section>
 
       <div className="mt-1">
-        <div className="border border-2 border-grey">
+      <div className="border border-2 border-grey">
           <h5
             className="text-dark border border-1 pb-2"
             style={{
@@ -237,7 +237,7 @@ const SegmentList = () => {
                   <button
                     onClick={handleOpenPopup}
                     className="btn btn-exp btn-sm text-white d-flex align-items-center"
-                    style={{ backgroundColor: "#009688" }}
+                    style={{ backgroundColor: "#2c3e50" }}
                   >
                     <GrAdd className="text-white fs-6 fw-bold me-1" />
                     Add Segment
@@ -283,7 +283,7 @@ const SegmentList = () => {
                                 name="segmentName"
                                 value={formData.segmentName}
                                 onChange={handleChange}
-                                className="form-control"
+                                className="form-control input-box"
                                 placeholder="Trade Segment Name"
                               />
                             </div>
@@ -294,7 +294,7 @@ const SegmentList = () => {
                                 name="segmentType"
                                 value={formData.segmentType}
                                 onChange={handleChange}
-                                className="form-select"
+                                className="form-select input-box"
                               >
                                 <option value="Equity">Equity</option>
                                 <option value="FNO">FNO</option>
@@ -311,7 +311,7 @@ const SegmentList = () => {
                                 name="segmentCategory"
                                 value={formData.segmentCategory}
                                 onChange={handleChange}
-                                className="form-select"
+                                className="form-select input-box"
                               >
                                 <option value="High Risk">High Risk</option>
                                 <option value="Moderate Risk">
@@ -344,7 +344,7 @@ const SegmentList = () => {
                               style={
                                 editSegment === null
                                   ? {
-                                      backgroundColor: "#009688",
+                                      backgroundColor: "#2c3e50",
                                       color: "white",
                                     }
                                   : {}

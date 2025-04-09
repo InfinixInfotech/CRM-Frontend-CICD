@@ -171,7 +171,7 @@ const ViewLeads = () => {
         >
           <FaEye
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           View Marketing Leads
         </h2>
@@ -192,7 +192,7 @@ const ViewLeads = () => {
             "Segment",
           ].map((filter, index) => (
             <div className="col-md-2" key={index}>
-              <select className="form-control">
+              <select className="form-control input-box">
                 <option value="all">{filter}</option>
                 <option value="option1">Option 1</option>
                 <option value="option2">Option 2</option>

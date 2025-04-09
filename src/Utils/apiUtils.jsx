@@ -1,7 +1,35 @@
 import React from 'react'
+import CryptoJS from 'crypto-js';
+const secretKey = "e93f08c5a7d2e234b7fae1b4c8f1a3d9b6c2d4e5f8a9c3d7e1f2b3c4d5e6f7g8"; 
+
+// Encrypt Data (Before Sending to API)
+export const encryptData = (data) => {
+    try {
+        const encrypted = CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+        return encrypted;
+    } catch (error) {
+        console.error("Encryption error:", error);
+        return null;
+    }
+};
+
+// Decrypt Data (After Receiving from API)
+export const decryptData = (encryptedData) => {
+    try {
+        if (!encryptedData) return null;
+
+        const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
+        const decryptedText = bytes.toString(CryptoJS.enc.Utf8);
+
+        return JSON.parse(decryptedText); 
+    } catch (error) {
+        console.error("Decryption error:", error);
+        return null;
+    }
+};
 
 export async function apiCallWithoutAuth(endpoint, params) {
-    console.log(endpoint)
+    // console.log(endpoint)
     try {
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -13,7 +41,7 @@ export async function apiCallWithoutAuth(endpoint, params) {
   
       if (response.ok) {
         const data = await response.json();
-        console.log('Response:', data);
+        // console.log('Response:', data);
         return data;
       } else {
         console.error('Error:', response.status, response.statusText);
@@ -25,9 +53,8 @@ export async function apiCallWithoutAuth(endpoint, params) {
     }
   }
 
-
   export async function apiGetCallWithoutAuth(endpoint) {
-    console.log(endpoint)
+    // console.log(endpoint)
     try {
       const response = await fetch(endpoint, {
         method: 'GET',
@@ -38,7 +65,7 @@ export async function apiCallWithoutAuth(endpoint, params) {
   
       if (response.ok) {
         const data = await response.json();
-        console.log('Response:', data);
+        // console.log('Response:', data);
         return data;
       } else {
         console.error('Error:', response.status, response.statusText);
@@ -52,7 +79,7 @@ export async function apiCallWithoutAuth(endpoint, params) {
 
 
   export async function apiDeleteCallWithoutAuth(endpoint) {
-    console.log(endpoint);
+    // console.log(endpoint);
     try {
         const response = await fetch(endpoint, {
             method: 'DELETE', // Standard HTTP method (uppercase)
@@ -63,7 +90,7 @@ export async function apiCallWithoutAuth(endpoint, params) {
         });
         if (response.ok) {
             const data = await response.json();
-            console.log('Response:', data);
+            // console.log('Response:', data);
             return data; // Return the response data
         } else {
             const errorData = await response.json(); // Capture server-side error message
@@ -79,7 +106,7 @@ export async function apiCallWithoutAuth(endpoint, params) {
 
 
 export async function apiPutCallWithoutAuth(endpoint, data) {
-  console.log(endpoint);
+  // console.log(endpoint);
   try {
       const response = await fetch(endpoint, {
           method: 'PUT',
@@ -107,7 +134,7 @@ export async function apiPutCallWithoutAuth(endpoint, data) {
 
 
 export async function apiPostCallWithAuth(endpoint,params, token) {
-  console.log(token)
+  // console.log(token)
   try {
     // console.log("apiPostCallWithAuthParams:-------------------   "+JSON.stringify(params))
       const response = await fetch(endpoint,{
@@ -147,7 +174,7 @@ export async function apiPostCallWithAuthFormData(endpoint, formData, token) {
 
     if (response.ok) {
       const data = await response.json();
-      console.log('Response:', data);
+      // console.log('Response:', data);
       return data;
     } else {
       console.error('Error:', response.status, response.statusText);
@@ -162,7 +189,7 @@ export async function apiPostCallWithAuthFormData(endpoint, formData, token) {
 
 export async function apiGetCallWithAuth(endpoint,token) {
   
-  console.log(endpoint);
+  // console.log(endpoint);
   try {
       const response = await fetch(endpoint, {
           method: 'GET',
@@ -173,7 +200,7 @@ export async function apiGetCallWithAuth(endpoint,token) {
       });
       if (response.ok) {
           const data = await response.json();
-          console.log('Response-------555---------:', data);
+          // console.log('Response-------555---------:', data);
           return data;
       }else {
           console.error('Error:', response.status, response.statusText);
@@ -186,7 +213,7 @@ export async function apiGetCallWithAuth(endpoint,token) {
 }
 //--------------------------------------get call by send response--------------------------------------
 export async function apiGetCallWithRersponseAuth(endpoint, params, token) {
-  console.log(endpoint);
+  // console.log(endpoint);
   try {
       const response = await fetch(endpoint, {
           method: 'GET',
@@ -212,7 +239,7 @@ export async function apiGetCallWithRersponseAuth(endpoint, params, token) {
 
 
 export async function apiDeleteCallWithAuth(endpoint, token) {
-  console.log(endpoint);
+  // console.log(endpoint);
   try {
       const response = await fetch(endpoint, {
           method: 'DELETE',
@@ -238,7 +265,7 @@ export async function apiDeleteCallWithAuth(endpoint, token) {
 //-----------------------------------------------------------apply for both for form and raw data , put api --------------------------------------------------
 
 export async function apiPutCallWithAuth(endpoint, data, token) {
-  console.log(endpoint);
+  // console.log(endpoint);
   try {
     const headers = {
       'Authorization': `Bearer ${token}`, 
@@ -256,11 +283,11 @@ export async function apiPutCallWithAuth(endpoint, data, token) {
     });
     if (response.ok) {
       const responseData = await response.json();
-      console.log('Response:', responseData);
+      // console.log('Response:', responseData);
       return responseData;
     } else {
       const errorData = await response.text();
-      console.error('Error:', response.status, response.statusText, errorData);
+      // console.error('Error:', response.status, response.statusText, errorData);
       return null;
     }
   } catch (error) {

@@ -1,5 +1,5 @@
 import { apiDeleteCallWithAuth, apiGetCallWithAuth, apiPostCallWithAuth, apiPutCallWithAuth } from "../../../Utils/apiUtils";
-import { deleteSalesOrderUrl, emp, getAllSalesOrderUrl, getAllSOUrl, getByIdSalesOrderUrl, postSalesOrderUrl, putSalesOrderUrl, staticToken } from "../apiServer/ApiServer";
+import { deleteSalesOrderUrl, emp, getAllSalesOrderUrl, getAllSOUrl, getByIdSalesOrderUrl, postSalesOrderUrl, putSalesOrderUrl, staticToken, storedUsername } from "../apiServer/ApiServer";
 
 
 export const postSalesOrder = async (params) => {
@@ -18,22 +18,21 @@ export const postSalesOrder = async (params) => {
   }
 };
 
-export const getAllSalesOrder = async () => {
+export const getAllSalesOrder = async (params) => {
   try {
-   const employeeCode = localStorage.getItem("empCode");
-
-const storedUsername = localStorage.getItem("userName");
-console.log(storedUsername)
+  //  const employeeCode = localStorage.getItem("empCode");
+// const storedUsername = localStorage.getItem("userName");
+// console.log(storedUsername)
     let url = '';
     if (["admin", "Admin", "ADMIN"].includes(storedUsername)) {
       console.log("Admin found in the string.");
-      url = `${getAllSOUrl}`;
+      url = `${getAllSOUrl}?pageNumber=${params.pageNumber}&limit=${params.itemsPerPage}`;
       console.log(url)
 
     }
      else {
       console.log("Admin not found in the string.");
-      url = `${getAllSalesOrderUrl}?employeeCode=${emp}`;
+      url = `${getAllSalesOrderUrl}?employeeCode=${emp}&pageNumber=${params.pageNumber}&limit=${params.itemsPerPage}`;
       console.log(url)
     }
 

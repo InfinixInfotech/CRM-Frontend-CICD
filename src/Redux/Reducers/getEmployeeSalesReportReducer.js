@@ -24,6 +24,19 @@ const getEmployeeSalesReportReducer = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
+
+      // .addCase(getAllSmsByEmpCodeThunk .pending, (state) => {
+      //   state.loading = true;
+      //   state.error = null;
+      // })
+      // .addCase(getAllSmsByEmpCodeThunk .fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.data = action.payload;
+      // })
+      // .addCase(getAllSmsByEmpCodeThunk .rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.payload;
+      // })
     },
 });
 

@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import { Alert } from "react-bootstrap";
 import BackButton from "../../Components/Button/BackButton/BackButton";
 import { FaGraduationCap, FaShoppingCart } from "react-icons/fa";
+import { HashLoader } from "react-spinners";
 const EditSalesOrder = () => {
   const [data, setData] = useState("");
   const [loading, setLoading] = useState(true);
@@ -20,9 +21,7 @@ const EditSalesOrder = () => {
     so: recievedSoData?.so || "wge",
     leadId: recievedSoData?.leadId || "L67890",
     personalDetails: {
-      createdDate:
-        recievedSoData?.personalDetails?.createdDate ||
-        "2024-12-17T07:19:15.663Z",
+    
       clientName: recievedSoData?.personalDetails?.clientName || "",
       fatherName:
         recievedSoData?.personalDetails?.fatherName || "Father's Name",
@@ -64,9 +63,9 @@ const EditSalesOrder = () => {
     },
     productDetails: recievedSoData?.productDetails || [
       {
-        product: "Product A",
-        startDate: "2024-12-17T07:19:15.663Z",
-        endDate: "2024-12-31T07:19:15.663Z",
+        product: "",
+        startDate: "",
+        endDate: "",
         grandTotal: 1000,
         remaining: 500,
         discount: 10,
@@ -92,9 +91,6 @@ const EditSalesOrder = () => {
         so: recievedSoData?.so || "wge",
         leadId: recievedSoData?.leadId || "L67890",
         personalDetails: {
-          createdDate:
-            recievedSoData?.personalDetails?.createdDate ||
-            "2024-12-17T07:19:15.663Z",
           clientName: recievedSoData?.personalDetails?.clientName || "",
           fatherName:
             recievedSoData?.personalDetails?.fatherName || "Father's Name",
@@ -139,13 +135,13 @@ const EditSalesOrder = () => {
         },
         productDetails: recievedSoData?.productDetails || [
           {
-            product: "Product A",
-            startDate: "2024-12-17T07:19:15.663Z",
-            endDate: "2024-12-31T07:19:15.663Z",
-            grandTotal: 1000,
-            remaining: 500,
-            discount: 10,
-            adjustment: 5, 
+            product: " ",
+            startDate: recievedSoData?.productDetails.startDate,
+            endDate: " ",
+            grandTotal: 0,
+            remaining:0,
+            discount: 0,
+            adjustment: 0, 
           },
         ],
       });
@@ -199,6 +195,8 @@ const EditSalesOrder = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowAlert(true);
+    setLoading(true); // Ensure loading state is set before the request
+  
     try {
       const response = await fetch(mainUrl, {
         method: "POST",
@@ -208,25 +206,32 @@ const EditSalesOrder = () => {
         },
         body: JSON.stringify(formData),
       });
+  
+      const data = await response.json(); // Parse response
+  
       if (response.ok) {
-        const data = await response.json();
-        setData(data); // Store the API response
+        setData(data);
+        alert(data.message || "Request successful!"); // Show success message
       } else {
-        const errorData = await response.json();
-        setError(errorData); // Store the error response
+        setError(data);
+        alert(data.error || data.message || "Something went wrong!"); // Show error message from API
       }
     } catch (err) {
       console.error("Error fetching data:", err);
-      setError(err);
+      setError({ error: "Network error, please try again." });
+      alert("Network error, please try again.");
     } finally {
       setLoading(false);
     }
   };
+  
   useEffect(() => {
     setLoading(false);
   }, []);
+  
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {JSON.stringify(error)}</div>;
+  if (error) return <div>Error: {error.error || error.message || JSON.stringify(error)}</div>;
+  
   return (
     <div>
       <section
@@ -253,7 +258,7 @@ const EditSalesOrder = () => {
         >
           <FaShoppingCart
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Sales Order
         </h2>
@@ -271,13 +276,27 @@ const EditSalesOrder = () => {
           Edit Sales Order
         </h5>
         <div className="p-4">
-          <div>
+        {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 9999,
+            backgroundColor: "transparent",
+          }}
+        >
+          <HashLoader color="#0060f1" size={50} />
+        </div>
+       )} 
+          {/* <div>
             {showAlert && (
               <Alert variant="info" className="mt-2 text-center">
                 SO Updated Successfully
               </Alert>
             )}
-          </div>
+          </div> */}
           {/* //!<--------------------------------------------------------------------------------- FORM STARTING POINT ----------------------------------------------------------------------> */}
           <form onSubmit={handleSubmit}>
             <div className="row">
@@ -288,7 +307,7 @@ const EditSalesOrder = () => {
                   Personal Details
                 </h5>
                 {[
-                  { label: "Created Date", name: "createdDate", type: "date" },
+                  // { label: "Created Date", name: "createdDate", type: "date" },
                   { label: "Client Name", name: "clientName", type: "text" },
                   { label: "Father's Name", name: "fatherName", type: "text" },
                   { label: "Mother's Name", name: "motherName", type: "text" },
@@ -311,7 +330,7 @@ const EditSalesOrder = () => {
                           : formData.personalDetails[name]
                       }
                       onChange={handleChange}
-                      className="form-control"
+                      className="form-control input-box"
                     />
                   </div>
                 ))}
@@ -322,7 +341,7 @@ const EditSalesOrder = () => {
                     name="personalDetails.address.pinCode"
                     value={formData.personalDetails.address.pinCode || ""}
                     onChange={handleChange}
-                    className="form-control"
+                    className="form-control input-box"
                   />
                 </div>
                 <div>
@@ -332,7 +351,7 @@ const EditSalesOrder = () => {
                     name="personalDetails.address.city"
                     value={formData.personalDetails.address.city || ""}
                     onChange={handleChange}
-                    className="form-control"
+                    className="form-control input-box"
                   />
                 </div>
                 <div className="form-group mb-3">
@@ -341,7 +360,7 @@ const EditSalesOrder = () => {
                     name="personalDetails.address.state"
                     value={formData.personalDetails.address.state}
                     onChange={handleChange}
-                    className="form-control"
+                    className="form-control input-box"
                   >
                     <option value="Madhya Pradesh">Madhya Pradesh</option>
                     <option value="Haryana">Haryana</option>
@@ -369,7 +388,7 @@ const EditSalesOrder = () => {
                       name={`paymentDetails.${name}`}
                       value={formData.paymentDetails[name]}
                       onChange={handleChange}
-                      className="form-control"
+                      className="form-control input-box"
                     />
                   </div>
                 ))}
@@ -396,7 +415,7 @@ const EditSalesOrder = () => {
                       name={`paymentDetails.${name}`}
                       value={formData.paymentDetails[name]}
                       onChange={handleChange}
-                      className="form-control"
+                      className="form-control input-box"
                     >
                       {options.map((option, i) => (
                         <option key={i} value={option}>
@@ -410,9 +429,9 @@ const EditSalesOrder = () => {
                   <label>Comment</label>
                   <textarea
                     name="comment"
-                    value={formData.paymentDetails.comments}
+                    value={formData.paymentDetails.comment}
                     onChange={handleChange}
-                    className="form-control"
+                    className="form-control input-box"
                     placeholder="Enter Comments"
                   ></textarea>
                 </div>
@@ -439,7 +458,8 @@ const EditSalesOrder = () => {
                         name={`productDetails[0].${name}`}
                         value={formData.productDetails[0][name] || ""}
                         onChange={handleChange}
-                        className="form-control"
+                        className="form-control input-box"
+                        required
                       />
                     </div>
                   ))}
@@ -447,7 +467,7 @@ const EditSalesOrder = () => {
               </div>
               {/* Update Button */}
               <div className="col-md-12 text-center ">
-                <button type="submit" className="btn text-white py-1 px-4" style={{backgroundColor:"#009688"}}>
+                <button type="submit" className="btn text-white py-1 px-4" style={{backgroundColor:"#2c3e50"}}>
                   Update
                 </button>
               </div>

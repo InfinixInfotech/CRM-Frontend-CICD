@@ -17,9 +17,9 @@ export const postUserThunk = createAsyncThunk(
 
 export const getAllUserThunk = createAsyncThunk(
     'user/getAllUser',
-    async(_, {rejectWithValue})=>{
+    async(params, {rejectWithValue})=>{
         try {
-            const response = await getAllUser();
+            const response = await getAllUser(params);
             return response;   
         } catch (error) {
            return rejectWithValue(error);

@@ -63,7 +63,7 @@
 //               <label className="fw-semibold">To:</label>
 //               <input
 //                 type="email"
-//                 className="form-control"
+//                 className="form-control input-box"
 //                 name="to"
 //                 value={formData.to}
 //                 onChange={handleInputChange}
@@ -74,7 +74,7 @@
 //               <label className="fw-semibold">CC:</label>
 //               <input
 //                 type="email"
-//                 className="form-control"
+//                 className="form-control input-box"
 //                 name="cc"
 //                 value={formData.cc}
 //                 onChange={handleInputChange}
@@ -84,7 +84,7 @@
 //               <label className="fw-semibold">BCC:</label>
 //               <input
 //                 type="email"
-//                 className="form-control"
+//                 className="form-control input-box"
 //                 name="bcc"
 //                 value={formData.bcc}
 //                 onChange={handleInputChange}
@@ -94,7 +94,7 @@
 //               <label className="fw-semibold">Subject:</label>
 //               <input
 //                 type="text"
-//                 className="form-control"
+//                 className="form-control input-box"
 //                 name="subject"
 //                 value={formData.subject}
 //                 onChange={handleInputChange}

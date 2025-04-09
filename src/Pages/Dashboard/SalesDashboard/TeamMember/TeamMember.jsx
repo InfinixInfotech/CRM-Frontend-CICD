@@ -3,70 +3,43 @@ import { PrintButton } from "../../../../Components/Button/DataButton/DataPrintB
 import { PdfButton } from "../../../../Components/Button/DataButton/DataPdfButton/DataPdfButton";
 import { CsvButton } from "../../../../Components/Button/DataButton/DataCsvButtton/DataCsvButton";
 import { CopyButton } from "../../../../Components/Button/DataButton/DataCopyButton/DataCopyButton";
+import { getAllYesterdayTotalThunk } from "../../../../Redux/Services/thunks/YesterdayTotalThunk";
+import { useDispatch, useSelector } from "react-redux";
 
 const TodaySalesOrderReport = () => {
-  const [data, setData] = useState([]);
+  const [Yesterday, setYesterday] = useState({});
   const [currentPage, setCurrentPage] = useState(1);
   const [recordsPerPage] = useState(10);
   const [showPopup, setShowPopup] = useState(false);
+  const dispatch = useDispatch();
+  const { Yesterdaydata, loading, error } = useSelector(
+    (state) => state.yesterdayTotal
+  );
 
-  // Create a ref to target the content for printing (table)
-  const printContentRef = useRef(null);
+// useEffect(() => {
+//    const timer = setTimeout(() => {
+//     //dispatch(getAllYesterdayTotalThunk());
+//       }, 300);
+//       return () => clearTimeout(timer);
+//   }, [dispatch]);
 
-  // Sample data (replace with API response if needed)
-  const mockData = [
-    {
-      leadId: 1491853,
-      clientName: "NIKHIL MAKWANA",
-      mobile: "9879581161",
-      segment: "Stock Option",
-      option: "S",
-      startDate: "19 Nov 2024",
-      endDate: "19 Nov 2024",
-      total: 11564,
-      assigned: "Ayushi.Tanwar",
-      createdBy: "Ayushi.Tanwar",
-    },
-    {
-      leadId: 1876665,
-      clientName: "Shrikant Dhopade",
-      mobile: "8806970733",
-      segment: "Stock Option",
-      option: "S",
-      startDate: "19 Nov 2024",
-      endDate: "19 Dec 2024",
-      total: 11800,
-      assigned: "Rahul.Lokahnde",
-      createdBy: "Rahul.Lokahnde",
-    },
-    {
-      leadId: 1912516,
-      clientName: "Binoy Balakrishnan",
-      mobile: "9590688751",
-      segment: "Stock Option",
-      option: "S",
-      startDate: "19 Nov 2024",
-      endDate: "19 Dec 2024",
-      total: 17700,
-      assigned: "Abhishek Meena",
-      createdBy: "Abhishek Meena",
-    },
-    // Add more mock data here
-  ];
+  // useEffect(() => {
+  //   if (Yesterdaydata?.data) {
+  //     // console.log("Yesterday data ",data); 
+  //     setYesterday(Yesterdaydata?.data);
+  //   }
+  // }, []);
 
-  // Pagination logic
-  useEffect(() => {
-    setData(mockData);
-  }, []);
 
-  const indexOfLastRecord = currentPage * recordsPerPage;
-  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
-  const currentRecords = data.slice(indexOfFirstRecord, indexOfLastRecord);
-  const totalPages = Math.ceil(data.length / recordsPerPage);
+  // const printContentRef = useRef(null);
+  // const indexOfLastRecord = currentPage * recordsPerPage;
+  // const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  // const currentRecords = Yesterdaydata.slice(indexOfFirstRecord, indexOfLastRecord);
+  // const totalPages = Math.ceil(Yesterdaydata.length / recordsPerPage);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  // const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Open popup
+  // // Open popup
   const handleOpenPopup = () => {
     setShowPopup(true);
   };
@@ -92,13 +65,13 @@ const TodaySalesOrderReport = () => {
 
       {/* Total Sales Container */}
       <div
-        className="card bg-light text-center mb-4"
-        style={{ width: "18rem", cursor: "pointer", margin: "0 auto" }}
+        className="card text-white text-center mb-4"
+        style={{ width: "18rem", cursor: "pointer", margin: "0 auto", backgroundColor:"#2c3e50"}}
         onClick={handleOpenPopup}
       >
         <div className="card-body">
-          <h5 className="card-title">Teame Member</h5>
-          <h3 className="card-text">227</h3>
+          <h5 className="card-title">Yesterday Sales</h5>
+          <h3 className="card-text">{(Yesterday?.grandTotal || 0).toString()}</h3>
         </div>
       </div>
       {/* Popup */}

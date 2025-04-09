@@ -84,7 +84,7 @@ const ViewGroups = () => {
   }, [msg]);
 
   const handleEditGroups = (id) => {
-    if (editValue.trim() !== "") {
+    if (editValue !== "") {
       dispatch(putGroupsThunk({ id, status: editValue })).then((response) => {
         setMsg(response?.payload?.message || "updated successfully");
         dispatch(getAllGroupsThunk());
@@ -146,7 +146,7 @@ const ViewGroups = () => {
         >
           <FaUsers
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Groups
         </h2>
@@ -162,7 +162,7 @@ const ViewGroups = () => {
         >
           {/* <FaEye
             className="fs-2"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           /> */}
           <BackButton />
           View Groups
@@ -177,7 +177,7 @@ const ViewGroups = () => {
             <div className=" d-flex gap-1">
               <button
                 className="btn text-white px-2 py-0"
-                style={{ backgroundColor: "#009688" }}
+                style={{ backgroundColor: "#2c3e50" }}
                 onClick={handleNavigateToAddGrp}
               >
                 <GrAdd className="fs-6 me-1" />
@@ -226,7 +226,7 @@ const ViewGroups = () => {
                 <tr>
                   <th>S.No</th>
                   <th>Group Name</th>
-                  <th>Lead Limit</th>
+                  <th>Group ID</th>
                   <th>Fetch Limit</th>
                   <th className="text-center">Action</th>
                 </tr>

@@ -19,12 +19,18 @@ import { GrAdd } from "react-icons/gr";
 
 const SegmentPlans = () => {
   const [plans, setPlans] = useState([]);
+
+
   const [newSegment, setNewSegment] = useState("");
   const [newAmount, setNewAmount] = useState("");
   const [newTimePeriod, setNewTimePeriod] = useState("");
+
+
   const [editSegmentPlan, setEditSegmentPlan] = useState(null);
   const [editValue, setEditValue] = useState("");
   const [editAmount, setEditAmount] = useState("");
+
+  
   const [editTimePeriod, setEditTimePeriod] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
@@ -214,7 +220,7 @@ const SegmentPlans = () => {
         >
           <FaLayerGroup
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Segment Plans
         </h2>
@@ -245,7 +251,7 @@ const SegmentPlans = () => {
                   <button
                     onClick={handleOpenPopup}
                     className="btn btn-exp btn-sm text-white d-flex align-items-center px-2 py-1"
-                    style={{ backgroundColor: "#009688" }}
+                    style={{ backgroundColor: "#2c3e50" }}
                   >
                     <GrAdd className="text-white fs-6 fw-bold me-2 " />
                     Add Plans
@@ -326,7 +332,7 @@ const SegmentPlans = () => {
                               style={
                                 editSegmentPlan === null
                                   ? {
-                                      backgroundColor: "#009688",
+                                      backgroundColor: "#2c3e50",
                                       color: "white",
                                     }
                                   : {}

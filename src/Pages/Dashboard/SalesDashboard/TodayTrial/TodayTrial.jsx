@@ -92,8 +92,8 @@ const TodayTrialReport = () => {
 
       {/* Total Sales Container */}
       <div
-        className="card bg-light text-center mb-4"
-        style={{ width: "18rem", cursor: "pointer", margin: "0 auto" }}
+        className="card text-white  mb-4"
+        style={{ width: "18rem", cursor: "pointer", margin: "0 auto", backgroundColor:"#2c3e50"}}
         onClick={handleOpenPopup}
       >
         <div className="card-body">

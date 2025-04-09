@@ -77,7 +77,7 @@ const SipTrunk = () => {
         >
           <FaNetworkWired
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Sip Trunck
         </h2>
@@ -102,7 +102,7 @@ const SipTrunk = () => {
                 <label className="form-label">Server</label>
                 <select
                   style={{ fontSize: "14px" }}
-                  className="form-select"
+                  className="form-select input-box"
                   name="server"
                   value={formData.server}
                   onChange={handleChange}
@@ -116,7 +116,7 @@ const SipTrunk = () => {
                 <input
                   style={{ fontSize: "14px" }}
                   type="text"
-                  className="form-control"
+                  className="form-control input-box"
                   name="trunkName"
                   value={formData.trunkName}
                   onChange={handleChange}
@@ -128,7 +128,7 @@ const SipTrunk = () => {
                 <input
                   style={{ fontSize: "14px" }}
                   type="text"
-                  className="form-control"
+                  className="form-control input-box"
                   name="trunkIP"
                   value={formData.trunkIP}
                   onChange={handleChange}
@@ -140,7 +140,7 @@ const SipTrunk = () => {
                 <input
                   style={{ fontSize: "14px" }}
                   type="text"
-                  className="form-control"
+                  className="form-control input-box"
                   name="userName"
                   value={formData.userName}
                   onChange={handleChange}
@@ -152,7 +152,7 @@ const SipTrunk = () => {
                 <input
                   style={{ fontSize: "14px" }}
                   type="password"
-                  className="form-control"
+                  className="form-control input-box"
                   name="password"
                   value={formData.password}
                   onChange={handleChange}
@@ -163,7 +163,7 @@ const SipTrunk = () => {
                 className="btn mb-3 text-white"
                 type="button"
                 onClick={handleCreate}
-                style={{backgroundColor:"#009688"}}
+                style={{backgroundColor:"#2c3e50"}}
               >
                 Create
               </button>

@@ -92,8 +92,8 @@ const TodaySalesOrderReport = () => {
 
       {/* Total Sales Container */}
       <div
-        className="card bg-light text-center mb-4"
-        style={{ width: "18rem", cursor: "pointer", margin: "0 auto" }}
+        className="card text-white text-center mb-4"
+        style={{ width: "18rem", cursor: "pointer", margin: "0 auto", backgroundColor:"#2c3e50"}}
         onClick={handleOpenPopup}
       >
         <div className="card-body">
@@ -160,7 +160,7 @@ const TodaySalesOrderReport = () => {
                   <tr>
                     <th className="text-center">Lead ID</th>
                     <th className="text-center">Client Name</th>
-                    <th className="text-center">Mobile Number</th>
+                    {/* <th className="text-center">Mobile Number</th> */}
                     <th className="text-center">Segment</th>
                     <th className="text-center">Option</th>
                     <th className="text-center">Start Date</th>
@@ -175,7 +175,7 @@ const TodaySalesOrderReport = () => {
                     <tr key={index}>
                       <td className="text-center">{item.leadId}</td>
                       <td className="text-center">{item.clientName}</td>
-                      <td className="text-center">{item.mobile}</td>
+                      {/* <td className="text-center">{item.mobile}</td> */}
                       <td className="text-center">{item.segment}</td>
                       <td className="text-center">{item.option}</td>
                       <td className="text-center">{item.startDate}</td>

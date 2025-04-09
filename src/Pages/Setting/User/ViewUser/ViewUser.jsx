@@ -15,53 +15,96 @@ import { useNavigate } from "react-router-dom";
 import ExportData from "../../../../Components/Button/DataButton/ExportButton";
 import { FaEye, FaUser, FaUsers } from "react-icons/fa";
 import { GrAdd } from "react-icons/gr";
+import { LucideChevronLeft, LucideChevronRight } from "lucide-react";
+import { searchUserThunk } from "../../../../Redux/Services/thunks/AdditionalApiThunk";
 const ViewUser = () => {
   const [users, setUsers] = useState([]);
-  const [status, setStatus] = useState("");
-  const [search, setSearch] = useState("");
+ const [itemsPerPage, setItemperPage] = useState(10);
   const [editUser, setEditUser] = useState(null);
-  const [editValue, setEditValue] = useState("");
+  
   const [msg, setMsg] = useState("");
-  const [currentPage, setCurrentPage] = useState(1); // Page state
-  const [usersPerPage] = useState(10);
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.user);
-
+  const { data: searchuser, loading: searchuserloading, error: searchusererror } = useSelector((state) => state.additional);
+  const totalCount = data?.totalCount || 0;
+  const [currentPage, setCurrentPage] = useState(1);
+  // const itemsPerPage = 10;
+  const [searchUserData, setSearchUser] = useState("");
   const Navigate = useNavigate();
+  const pageOptions = [10, 20, 30, 50, 70, 100];
 
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
 
-  const totalPages = Math.ceil(users.length / usersPerPage);
 
-  const pageNumbers = [];
-  const pageRange = 2;
-  for (
-    let i = Math.max(1, currentPage - pageRange);
-    i <= Math.min(totalPages, currentPage + pageRange);
-    i++
-  ) {
-    pageNumbers.push(i);
-  }
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
-
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
+  const handleExtensionUpdate = async (userId, newExtension) => {
+    const updateData = {
+      id: userId,
+      extension: {
+        callingExt: newExtension.toString()
+      }
+    };
+  
+    try {
+      const response = await dispatch(putUserThunk(updateData)); 
+  
+      if (response?.payload?.success) {
+        console.log("Extension updated successfully:", response);
+        setIsSuccess(true);
+        setIsError(false);
+      } else {
+        console.error("Failed to update extension:", response);
+        setIsError(true);
+        setIsSuccess(false);
+      }
+    } catch (error) {
+      console.error("Error updating extension:", error);
+      setIsError(true);
+      setIsSuccess(false);
     }
   };
+  
 
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+
 
   useEffect(() => {
-    dispatch(getAllUserThunk());
-  }, [dispatch]);
+    if (searchUserData !== "") {
+      const params = {
+        employeeName: searchUserData,
+        employeeCode: searchUserData,
+        CallingExt:searchUserData,
+      };
+      dispatch(searchUserThunk(params));
+    }
+  }, [searchUserData, dispatch]);
+
+
+
+  useEffect(() => {
+  console.log("Fetched Users Data:", users);
+}, [users]);
+
+
+useEffect(() => {
+  if (searchUserData) {
+    setUsers(searchuser?.data || []);
+  } else {
+    setUsers(data?.data || []);
+  }
+}, [searchuser, searchUserData, data]);
+
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const params = {
+        pageNumber: currentPage,
+        itemsPerPage: itemsPerPage
+      };
+      dispatch(getAllUserThunk(params));
+
+    };
+    fetchData();
+  }, [dispatch, currentPage, itemsPerPage]);
+
 
   useEffect(() => {
     if (data?.data) {
@@ -81,6 +124,28 @@ const ViewUser = () => {
       return () => clearTimeout(alertTimer);
     }
   }, [msg]);
+
+
+
+
+
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+    }
+  };
+
+
+  // const filteredUsers = users.filter((user) =>
+  //   user.fullName.toLowerCase().includes(searchUserData.toLowerCase()) ||
+  //   user.employeeCode.toLowerCase().includes(searchUserData.toLowerCase()) ||
+  //   user.mobileNumber.includes(searchUserData)
+  // );
+
+
+
 
   // !  <---------------------------------------------------------------------Edit Functionality------------------------------------------------------------------------------>
 
@@ -119,13 +184,7 @@ const ViewUser = () => {
       });
   };
 
-  const fetchUserById = (id) => {
-    dispatch(getByIdUserThunk(id)).then((response) => {
-      const user = response.payload?.data;
-      setEditUser(user?.id);
-      setEditValue(user?.user);
-    });
-  };
+
 
   return (
     <>
@@ -151,7 +210,7 @@ const ViewUser = () => {
         >
           <FaUser
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Users
         </h2>
@@ -176,24 +235,42 @@ const ViewUser = () => {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                gap: "51vw",
-                maxWidth: "100vw",
+
+                maxWidth: "82vw",
               }}
             >
               <div className="iteam_1 d-flex gap-1">
                 <button
                   className="btn btn-exp btn-sm text-white"
-                  style={{ backgroundColor: "#009688" }}
+                  style={{ backgroundColor: "#2c3e50" }}
                   onClick={handleNavigateToAddUser}
                 >
                   <GrAdd className="fs-6 me-1" />
                   Add Users
                 </button>
                 <ExportData tableId="table-data" />
+                <div>
+                  <div>
+                    {/* <label htmlFor="itemsPerPage">Items per page:</label> */}
+                    <select
+                      id="itemsPerPage"
+                      value={itemsPerPage}
+                      onChange={(e) => setItemperPage(Number(e.target.value))}
+                      className="form-select input-box"
+                    >
+                      {pageOptions.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
               </div>
 
               <div className="iteam_2 d-flex gap-1">
-                <select
+                {/* <select
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                   style={{ padding: "5px", height: "30px" }}
@@ -204,15 +281,14 @@ const ViewUser = () => {
                   <option value="Active">Active</option>
                   <option value="Inactive">Inactive</option>
                   <option value="All">All</option>
-                </select>
+                </select> */}
 
                 <input
                   type="text"
-                  placeholder="Search..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="search-box"
-                  style={{ padding: "10px", width: "200px", height: "30px" }}
+                  placeholder="Search by name, employee code, or mobile number..."
+                  value={searchUserData}
+                  onChange={(e) => setSearchUser(e.target.value)}
+                  className="search-input py-0"
                 />
               </div>
 
@@ -233,6 +309,7 @@ const ViewUser = () => {
               <thead>
                 <tr>
                   <th>S.No</th>
+                  <th>Employee Name</th>
                   <th>User Name</th>
                   <th>Employee Code</th>
                   <th>Extension</th>
@@ -273,13 +350,15 @@ const ViewUser = () => {
                       Error: {error}
                     </td>
                   </tr>
-                ) : currentUsers.length > 0 ? (
-                  currentUsers.map((user, index) => (
-                    <tr key={user.employeeCode || index}>
+                ) : users.length > 0 ? (
+                  users.map((user, index) => (
+                    <tr style={{ fontSize: "14px" }} key={user.employeeCode || index}>
                       <td>{user.id || "N/A"}</td>
+                      <td>{user.fullName || "N/A"}</td>
                       <td>{user.userName || "N/A"}</td>
                       <td>{user.employeeCode || "N/A"}</td>
-                      <td>{user.extension?.callingExt || "No Extension"}</td>
+                      <td>{user.extension?.callingExt || "No Extension"} </td>
+                 
                       {/* <td>
                         <input type="file" className="upload-file" />
                       </td> */}
@@ -326,22 +405,38 @@ const ViewUser = () => {
               </tbody>
             </table>
             {/* Pagination Controls */}
-            <div className="pagination">
-              <button onClick={prevPage} disabled={currentPage === 1}>
-                <i class="bi bi-arrow-left-circle"></i>
-              </button>
-              {pageNumbers.map((number) => (
+            <div className="d-flex align-items-center justify-content-between">
+              <div className="mb-3">
+                Showing {currentPage * itemsPerPage - itemsPerPage + 1} -{' '}
+                {Math.min(currentPage * itemsPerPage, totalCount)} of {totalCount} entries
+              </div>
+              <div className="pagination d-flex  justify-content-end">
                 <button
-                  key={number}
-                  onClick={() => paginate(number)}
-                  className={currentPage === number ? "active" : ""}
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="btn btn-outline-primary p-0 btn-circle ms-0"
                 >
-                  {number}
+                  <LucideChevronLeft />
+
                 </button>
-              ))}
-              <button onClick={nextPage} disabled={currentPage === totalPages}>
-                <i class="bi bi-arrow-right-circle"></i>
-              </button>
+
+                <button
+
+                  className="btn btn-outline-primary p-2 py-0 btn-circle ms-0"
+
+                >
+                  {currentPage}
+                </button>
+
+                <button
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={currentPage === totalPages}
+                  className="btn btn-outline-primary p-0 btn-circle ms-0"
+                >
+                  <LucideChevronRight />
+                </button>
+              </div>
+
             </div>
           </div>
         </div>

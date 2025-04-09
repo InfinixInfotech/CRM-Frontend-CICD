@@ -12,12 +12,11 @@ const ExportData = ({ tableId }) => {
   const handleDropdownToggle = () => {
     setShowDropdown((prev) => !prev);
   };
-
   return (
-    <div className="dropdown ">
+    <div >
       <button
-        className="text-white btn btn-exp btn-sm"
-        style={{backgroundColor:"#009688"}}
+        className="text-white btn  btn-sm "
+        style={{backgroundColor:"#2c3e50"}}
         // type="button"
         onClick={handleDropdownToggle}
         aria-expanded={showDropdown}
@@ -30,16 +29,16 @@ const ExportData = ({ tableId }) => {
         style={{ minWidth: '150px', marginTop:"4px" }}
       >
         <div className="item text-center">
-          <CopyButton tableId={tableId} /> {/* Pass tableId */}
+          <CopyButton tableId={tableId} /> 
         </div>
         <div className="dropdown text-center">
-          <CsvButton tableId={tableId} /> {/* Pass tableId */}
+          <CsvButton tableId={tableId} /> 
         </div>
         <div className="dropdown text-center">
-          <PdfButton tableId={tableId} /> {/* Pass tableId */}
+          <PdfButton tableId={tableId} /> 
         </div>
         <div className="dropdown text-center">
-          <PrintButton tableId={tableId} /> {/* Pass tableId */}
+          <PrintButton tableId={tableId} /> 
         </div>
       </div>
     </div>

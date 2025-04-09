@@ -27,9 +27,9 @@ const Delete = ({ id, onDelete }) => {
               <BsFillTrashFill className="fs-6" />
             </button> */}
 
-            <button  onClick={handleDeleteClick} className="btn btn-danger d-flex align-items-center justify-content-center rounded-1" 
-            style={{ width: "25px", height: "25px" , fontSize:"12px" }}>
-                <i className="fas fa-trash"></i>
+            <button  onClick={handleDeleteClick} className=" btn-secondary d-flex align-items-center justify-content-center px-1" 
+            style={{ width: "22px", height: "22px" , fontSize:"11px" }}>
+                <i className="fas fa-trash " ></i>
             </button>
 
 

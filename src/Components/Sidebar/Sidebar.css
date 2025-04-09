@@ -6,7 +6,7 @@
   }
   
   .sidebar .nav-link:hover {
-    background-color: #495057;
+    background-color:rgb(255, 255, 255);
     color: #fff;
   }
   
@@ -20,3 +20,37 @@
   }
   
 
+
+
+
+  /* Default styles for large screens */
+main {
+  flex: 1;
+  margin-left: 200px;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* When sidebar is collapsed */
+main.collapsed {
+  margin-left: 60px;
+}
+
+/* Tablet screens (768px - 1024px) */
+@media (max-width: 1024px) {
+  main {
+    margin-left: 180px;
+  }
+  main.collapsed {
+    margin-left: 55px;
+  }
+}
+
+/* Mobile screens (< 768px) */
+@media (max-width: 768px) {
+  main {
+    margin-left: 160px;
+  }
+  main.collapsed {
+    margin-left: 50px;
+  }
+}

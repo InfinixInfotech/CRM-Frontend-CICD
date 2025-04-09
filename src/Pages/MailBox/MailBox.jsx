@@ -98,7 +98,7 @@ const MailBox = () => {
         >
           <FaInbox
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Inbox
         </h2>

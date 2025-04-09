@@ -21,7 +21,7 @@ const handleCopy = (tableId) => {
   rows.forEach((row) => {
     const cells = row.querySelectorAll("td, th");
     const rowData = Array.from(cells)
-      .map(cell => cell.textContent.trim())
+      .map(cell => cell.textContent)
       .join("\t"); 
     copiedContent += rowData + "\n"; 
   });

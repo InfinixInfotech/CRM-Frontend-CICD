@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { getEmployeeSalesReport } from "../apis/EmployeeSalesReportApi";
+import { getAllSMSByEmployeeCode, getEmployeeSalesReport } from "../apis/EmployeeSalesReportApi";
 
 
 export const getAllSalesReportThunk = createAsyncThunk(
@@ -13,3 +13,5 @@ export const getAllSalesReportThunk = createAsyncThunk(
         }
     }
 );
+
+

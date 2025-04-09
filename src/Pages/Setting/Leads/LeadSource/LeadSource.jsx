@@ -66,8 +66,8 @@ const LeadSource = () => {
     e.preventDefault();
 
     if (
-      newLeadSource.trim() !== "" &&
-      !leadSource.includes(newLeadSource.trim())
+      newLeadSource !== "" &&
+      !leadSource.includes(newLeadSource)
     ) {
       const newAddLeadSource = {
         leadSourceValue: newLeadSource,
@@ -89,7 +89,7 @@ const LeadSource = () => {
   //!<---------------------------------------------------------------------------------EDIT Functionality---------------------------------------------------------------------->
 
   const handleEditSource = async (id) => {
-    if (editValue.trim() !== "") {
+    if (editValue !== "") {
       try {
         const token = staticToken;
         const response = await fetch(`/api/LeadSource/UpdateLeadSource`, {

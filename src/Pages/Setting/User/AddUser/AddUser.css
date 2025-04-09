@@ -30,6 +30,8 @@
  --display-AdduserCheckboxes : grid;
  --grid-template-columns-AdduserCheckboxes : repeat(7,1fr);
  --gap-AdduserCheckboxes : 0px;
+ --checkbox-width: 18px;
+  --checkbox-height: 18px;
 }
 
 .formWrapper {
@@ -89,6 +91,12 @@
   display: var(--display-AdduserCheckboxes);
   grid-template-columns: var(--grid-template-columns-AdduserCheckboxes);
   gap: var(--gap-AdduserCheckboxes);
+  /* width: var(--checkbox-width);
+  height: var(--checkbox-height); */
+
+  /* width: 18px;
+  height: 18px; */
+ 
 }
 
 .inputField{

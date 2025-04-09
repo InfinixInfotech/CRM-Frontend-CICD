@@ -1,29 +1,35 @@
 import React, { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { emp, staticToken } from "../../Redux/Services/apiServer/ApiServer";
+import { createSalesOrderUrl, emp, staticToken } from "../../Redux/Services/apiServer/ApiServer";
 import { Alert } from "react-bootstrap";
 import BackButton from "../../Components/Button/BackButton/BackButton";
 import { useLocation, useParams } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
+import { HashLoader } from "react-spinners";
 const InsertSalesOrder = () => {
   const { state } = useLocation();
   const SoData = state?.paymentObj;
   const lead = SoData;
   const userName = localStorage.getItem("username");
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showAlert, setShowAlert] = useState(false);
   // console.log("lead.employeeName----------", lead);
+  const [searchState, setSearchState] = useState("");
+  const [isClientActive, setIsClientActive] = useState(true);
+
+  const currentDate = new Date().toISOString().split('T')[0];
+
   const [formData, setFormData] = useState({
     employeeCode: emp,
     employeeName: userName,
     soId: lead.soId,
     so: lead.so,
     leadId: lead.leadId,
-    prId: lead?.prId || "string",
+    prId: lead?.prId || " N/A",
     personalDetails: {
-      createdDate: lead.createdDate,
+      createdDate: currentDate,
       clientName: lead.clientDetails.name,
       fatherName: lead.clientDetails.fatherName,
       motherName: lead.clientDetails.motherName,
@@ -52,26 +58,41 @@ const InsertSalesOrder = () => {
     },
     businessDetails: {
       businessType: lead.businessType,
-      comment: lead.comment,
+      comment: lead.remark,
     },
     productDetails: [
       {
         product: lead.product,
         startDate: lead.startDate,
         endDate: lead.endDate,
-        grandTotal: 0,
+        grandTotal: lead.productDetails.netAmount,
         remaining: 0,
         discount: 0,
         adjustment: 0,
       },
     ],
   });
+
+  const indianStates = [
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+    "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+    "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
+    "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim",
+    "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand",
+    "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
+    "Lakshadweep", "Delhi", "Puducherry"
+  ];
+
+  const filteredStates = indianStates.filter((state) =>
+    state.toLowerCase().includes(searchState.toLowerCase())
+  );
+
   useEffect(() => {
     if (showAlert) {
       const timer = setTimeout(() => {
-        setShowAlert(false); // Hide the alert after 3000ms
+        setShowAlert(false);
       }, 3000);
-      return () => clearTimeout(timer); // Cleanup the timer
+      return () => clearTimeout(timer);
     }
   }, [showAlert]);
   //!<---------------------------------------------------------------------------------HANDLE CHANGE---------------------------------------------------------------------->
@@ -121,8 +142,10 @@ const InsertSalesOrder = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setShowAlert(true);
+    setLoading(true);
+
     try {
-      const response = await fetch(mainUrl, {
+      const response = await fetch(createSalesOrderUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -130,9 +153,15 @@ const InsertSalesOrder = () => {
         },
         body: JSON.stringify(formData),
       });
+
       if (response.ok) {
         const data = await response.json();
-        setData(data); // Store the API response
+        setData(data);
+
+        if (formData.clientId) {
+          setIsClientActive(false);
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
         const errorData = await response.json();
         setError(errorData);
@@ -144,23 +173,33 @@ const InsertSalesOrder = () => {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    setLoading(false);
-  }, []);
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {JSON.stringify(error)}</div>;
   return (
     <div>
+      {loading && (
+        <div
+          style={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 9999,
+            backgroundColor: "transparent",
+          }}
+        >
+          <HashLoader color="#0060f1" size={50} />
+        </div>
+      )}
       <section
         style={{
           position: "relative",
           // padding: "12px 30px",
-          backgroundColor: "#fff",
+          background: "#2c3e50",
+
           borderBottom: "1px solid #E1E6EF",
           boxShadow:
             "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
-          marginBottom: "0px", // Uncomment and fix if needed
-          marginBottom: "5px", // Uncomment and fix if needed
+          marginBottom: "0px",
+          marginBottom: "5px",
         }}
         className="mt-2"
       >
@@ -169,13 +208,13 @@ const InsertSalesOrder = () => {
           style={{
             padding: "18px 16px",
             fontSize: "30px",
-            color: "#2D2D2D",
+            color: "white",
             // backgroundColor: "#E3E3E3",
           }}
         >
           <FaShoppingCart
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "white" }}
           />
           Sales Order
         </h2>
@@ -195,8 +234,8 @@ const InsertSalesOrder = () => {
         <div className="p-4">
           <div>
             {showAlert && (
-              <Alert variant="info" className="mt-2 text-center">
-                SO Updated Successfully
+              <Alert variant={error ? "danger" : "success"} className="mt-2 text-center">
+                {error ? error.message || "Something went wrong!" : data?.message || "Sales order created successfully!"}
               </Alert>
             )}
           </div>
@@ -210,7 +249,7 @@ const InsertSalesOrder = () => {
                   Personal Details
                 </h5>
                 {[
-                  { label: "Created Date", name: "createdDate", type: "date" },
+                  // { label: "Created Date", name: "createdDate", type: "date" },
                   { label: "Client Name", name: "clientName", type: "text" },
                   { label: "Father's Name", name: "fatherName", type: "text" },
                   { label: "Mother's Name", name: "motherName", type: "text" },
@@ -233,7 +272,7 @@ const InsertSalesOrder = () => {
                           : formData.personalDetails[name]
                       }
                       onChange={handleChange}
-                      className="form-control"
+                      className="form-control input-box"
                     />
                   </div>
                 ))}
@@ -244,7 +283,7 @@ const InsertSalesOrder = () => {
                     name="personalDetails.address.pinCode"
                     value={formData.personalDetails.address.pinCode || ""}
                     onChange={handleChange}
-                    className="form-control"
+                    className="form-control input-box"
                   />
                 </div>
                 <div>
@@ -254,19 +293,33 @@ const InsertSalesOrder = () => {
                     name="personalDetails.address.city"
                     value={formData.personalDetails.address.city || ""}
                     onChange={handleChange}
-                    className="form-control"
+                    className="form-control input-box"
                   />
                 </div>
                 <div className="form-group mb-3">
                   <label>State</label>
+
+                  {/* Search input for filtering states */}
+                  {/* <input
+                    type="text"
+                    placeholder="Search State"
+                    value={searchState}
+                    onChange={(e) => setSearchState(e.target.value)}
+                    className="form-control mb-2"
+                  /> */}
+
                   <select
                     name="personalDetails.address.state"
-                    value={formData.personalDetails.address.state}
+                    value={formData.personalDetails.address.state || ""}
                     onChange={handleChange}
-                    className="form-control"
+                    className="form-control input-box"
                   >
-                    <option value="Madhya Pradesh">Madhya Pradesh</option>
-                    <option value="Haryana">Haryana</option>
+                    <option value="" disabled>-- Select State --</option>
+                    {filteredStates.map((state, index) => (
+                      <option key={index} value={state}>
+                        {state}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -291,7 +344,7 @@ const InsertSalesOrder = () => {
                       name={`paymentDetails.${name}`}
                       value={formData.paymentDetails[name]}
                       onChange={handleChange}
-                      className="form-control"
+                      className="form-control input-box"
                     />
                   </div>
                 ))}
@@ -304,12 +357,12 @@ const InsertSalesOrder = () => {
                   {
                     label: "Terms",
                     name: "terms",
-                    options: ["Daily", "Weekly"],
+                    options: ["For 1 Month", "For 2 Month", "For 3 Month", "For 4 Month", "For 5 Month", "For 6 Month"],
                   },
                   {
                     label: "Service Status",
                     name: "serviceStatus",
-                    options: ["Activate", "Hold"],
+                    options: ["New Business", "Renew", "Upgrade"],
                   },
                 ].map(({ label, name, options }, index) => (
                   <div className="form-group mb-3" key={index}>
@@ -318,7 +371,7 @@ const InsertSalesOrder = () => {
                       name={`paymentDetails.${name}`}
                       value={formData.paymentDetails[name]}
                       onChange={handleChange}
-                      className="form-control"
+                      className="form-control input-box"
                     >
                       {options.map((option, i) => (
                         <option key={i} value={option}>
@@ -332,14 +385,14 @@ const InsertSalesOrder = () => {
                   <label>Comment</label>
                   <textarea
                     name="comment"
-                    value={formData.paymentDetails.comments}
+                    value={formData.businessDetails.comment}
                     onChange={handleChange}
-                    className="form-control"
+                    className="form-control input-box"
                     placeholder="Enter Comments"
                   ></textarea>
                 </div>
                 {/* //!----------------------------------------------------------------------------PRODUCT DETAILS SECTION-------------------------------------------------------------------- */}
-                <div className="col-md-12" style={{ marginTop: "8vh" }}>
+                <div className="col-md-12">
                   <h5 className="fw-bold text-dark  border-bottom">
                     Product Details
                   </h5>
@@ -347,9 +400,9 @@ const InsertSalesOrder = () => {
                     { label: "Start Date", name: "startDate", type: "date" },
                     { label: "End Date", name: "endDate", type: "date" },
                     {
-                      label: "Grand Total",
-                      name: "grandTotal",
-                      type: "number",
+                      label: "Grand Total" || 0,
+                      name: "grandTotal" || 0,
+                      type: "number" || 0,
                     },
                     { label: "Discount", name: "discount", type: "number" },
                     { label: "Adjustment", name: "adjustment", type: "number" },
@@ -361,7 +414,8 @@ const InsertSalesOrder = () => {
                         name={`productDetails[0].${name}`}
                         value={formData.productDetails[0][name] || ""}
                         onChange={handleChange}
-                        className="form-control"
+                        className="form-control input-box"
+                        required
                       />
                     </div>
                   ))}
@@ -369,7 +423,7 @@ const InsertSalesOrder = () => {
               </div>
               {/* Update Button */}
               <div className="col-md-12 text-center ">
-                <button type="submit" className="btn text-white py-1 px-4" style={{backgroundColor:"#009688"}}>
+                <button type="submit" className="btn text-white py-1 px-4" style={{ backgroundColor: "#2c3e50" }}>
                   Add
                 </button>
               </div>

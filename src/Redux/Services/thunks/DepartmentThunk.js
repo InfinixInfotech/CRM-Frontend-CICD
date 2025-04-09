@@ -13,7 +13,6 @@ export const postDepartmentThunk = createAsyncThunk(
     }
 );
 
-
 export const getAllDepartmentThunk = createAsyncThunk(
     'department/getAllDepartment',
     async(_, {rejectWithValue})=>{

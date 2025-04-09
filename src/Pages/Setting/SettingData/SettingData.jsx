@@ -49,7 +49,7 @@ const SettingData = () => {
         >
           <FaCog
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Settings
         </h2>
@@ -78,7 +78,7 @@ const SettingData = () => {
                 type="text"
                 id="title"
                 name="title"
-                className="form-control"
+                className="form-control input-box"
                 value={settings.title}
                 onChange={handleChange}
               />
@@ -93,7 +93,7 @@ const SettingData = () => {
                 type="text"
                 id="name"
                 name="name"
-                className="form-control"
+                className="form-control input-box"
                 value={settings.name}
                 onChange={handleChange}
               />
@@ -108,7 +108,7 @@ const SettingData = () => {
                 type="text"
                 id="notifications"
                 name="notifications"
-                className="form-control"
+                className="form-control input-box"
                 value={settings.notifications}
                 onChange={handleChange}
               />
@@ -123,20 +123,20 @@ const SettingData = () => {
                 type="text"
                 id="liveUpdates"
                 name="liveUpdates"
-                className="form-control"
+                className="form-control input-box"
                 value={settings.liveUpdates}
                 onChange={handleChange}
               />
             </div>
 
             <div className="d-flex justify-content-between mt-4">
-              <button type="button" className="btn px-2 py-2 text-white" style={{backgroundColor:"#009688"}}>
+              <button type="button" className="btn px-2 py-2 text-white" style={{backgroundColor:"#2c3e50"}}>
                 CRM Payment
               </button>
               <button
                 type="button"
                 className="btn px-2 py-1 text-white"
-                style={{backgroundColor:"#009688"}}
+                style={{backgroundColor:"#2c3e50"}}
                 onClick={handleUpdate}
               >
                 Update

@@ -69,8 +69,8 @@ const LeadStatus = () => {
   const handleAddStatus = (e) => {
     e.preventDefault();
     if (
-      newStatus.trim() !== "" &&
-      !statuses.some((s) => s.status === newStatus.trim())
+      newStatus !== "" &&
+      !statuses.some((s) => s.status === newStatus)
     ) {
       const newLeadStatus = { status: newStatus };
 
@@ -100,7 +100,7 @@ const LeadStatus = () => {
   //!<---------------------------------------------------------------------------------EDIT Functionality---------------------------------------------------------------------->
 
   const handleEditStatus = async (id) => {
-    if (editValue.trim() !== "") {
+    if (editValue !== "") {
       try {
         const token = staticToken; // Replace with your token retrieval logic
         const response = await fetch(`/api/LeadStatus/UpdateLeadStatus`, {
@@ -175,7 +175,7 @@ const LeadStatus = () => {
         >
           <FaChartLine
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Lead Status
         </h2>
@@ -202,7 +202,7 @@ const LeadStatus = () => {
           >
             {/* <FaEye
               className="fs-1"
-              style={{ marginRight: "8px", color: "#009688" }}
+              style={{ marginRight: "8px", color: "#2c3e50" }}
             /> */}
             <BackButton />
             View Lead Status

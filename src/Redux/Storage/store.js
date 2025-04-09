@@ -16,8 +16,16 @@ import GetLeadByMobileOrLeadIdUrlReducer from "../Reducers/GetLeadByMobileOrLead
 import PaidClientsReducer from "../Reducers/PaidClientsReducer"
 import getEmployeeSalesReportReducer from "../Reducers/getEmployeeSalesReportReducer"
 import grandTotalReducer from "../Reducers/GetGrandTotalReducer"
-
-
+import getAllSmsByEmpCodeReducer from "../Reducers/AllSmsByEmpCodeReducer"
+import todayTotalReducer from "../Reducers/TodayTotalReducer"
+import TargetByEmployeeCodeReducer from "../Reducers/TargetByEmployeeCodeReducer"
+import yesterdayTotalReducer from "../Reducers/YesterdayTotalReducer"
+import ageFilterReducer from "../Reducers/AgeFilterReducer"
+import searchStateFilterReducer from "../Reducers/SearchstatefilterReducer"
+import addtionalApiReducer from "../Reducers/AdditionalApiReducer"
+import poolAccessReducer from "../Reducers/PoolAccessReducer"
+import FollowUpTillDateReducer from "../Reducers/FollowUpTillDateReducer"
+import FollowUpTillDateDataReducer from "../Reducers/FollowUpTillDateDataReducer"
 
 const store = configureStore({
   reducer: {
@@ -33,11 +41,22 @@ const store = configureStore({
     leadpaymentraise: leadPaymentRaiseReducer, 
     addlead: addLeadReducer,
     uploadbulklead: uploadBulkLeadReducer,
+    followuptilldate:FollowUpTillDateReducer,
+    followuptilldatedata:FollowUpTillDateDataReducer,
     designation: designationReducer,
     GetLeadByMobileOrLeadId: GetLeadByMobileOrLeadIdUrlReducer,
     paidclients: PaidClientsReducer,
     salesReport: getEmployeeSalesReportReducer,
     grandTotal:grandTotalReducer,
+    allSmsByEmpCode: getAllSmsByEmpCodeReducer,
+    todayTotal: todayTotalReducer,
+    targetEmployeeCode: TargetByEmployeeCodeReducer,
+    yesterdayTotal:yesterdayTotalReducer,
+    yesterdayTotal:yesterdayTotalReducer,
+    agefilter:ageFilterReducer,
+    searchstatefilter:searchStateFilterReducer,
+    additional:addtionalApiReducer,
+    poolAccess:poolAccessReducer
   },
 });
 

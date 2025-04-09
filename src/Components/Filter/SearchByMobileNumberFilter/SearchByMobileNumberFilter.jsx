@@ -21,29 +21,32 @@ const SearchByMobileNumberFilter = () => {
   const handleShow = () => setTableShowModal(true);
   const handleClose = () => setTableShowModal(false);
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleSendMessage();
+    }
+  };
+
   const handleSearch = () => {
     if (!inputValue.trim()) {
       setErrorMessage("Please enter a mobile number or Lead ID.");
       return;
     }
-    // Proceed with your search logic
-    setErrorMessage(""); // Clear the error message if input is valid
+  
+    setErrorMessage(""); // Clear previous error
     console.log("Searching for:", inputValue);
-
+  
     const payload = {
       employeeCode: emp,
       data: inputValue,
     };
+  
     dispatch(GetLeadByMobileOrLeadIdThunk(payload))
       .then((response) => {
         console.log("Full API Response:", response);
-        console.log(
-          "Full API Response:",
-          JSON.stringify(response.payload.lead)
-        );
+  
         if (response && response.payload && response.payload.lead) {
           setSearchData(response.payload.lead);
-          console.log("SearchDataSender----------------", SearchData);
           console.log("Lead Data:", response.payload.lead);
         } else {
           setErrorMessage("No lead data found in the response.");
@@ -57,11 +60,13 @@ const SearchByMobileNumberFilter = () => {
       .finally(() => {
         setTimeout(() => {
           setShowModal(false);
+          setInputValue("");  // Clear input field after search
           setErrorMessage("");
           setSearchData([]);
         }, 100);
       });
   };
+  
 
   useEffect(() => {
     if (SearchData && Object.keys(SearchData).length > 0) {
@@ -90,10 +95,12 @@ const SearchByMobileNumberFilter = () => {
           )}
           <input
             type="text"
-            className="form-control"
+            className="form-control input-box"
             placeholder="Enter a Lead Id / Mobile Number"
             value={inputValue}
+            onKeyDown={handleKeyDown}
             onChange={(e) => setInputValue(e.target.value)}
+
           />
         </Modal.Body>
         <Modal.Footer>

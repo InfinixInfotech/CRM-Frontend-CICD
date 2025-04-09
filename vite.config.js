@@ -7,9 +7,9 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://192.168.1.227:5118',
+        target: 'https://crmapi.infinixinfotech.in',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/complaints/, ''),
+        rewrite: (path) => path.replace(/^\/crmapi/, ''),
       },
     },
   },

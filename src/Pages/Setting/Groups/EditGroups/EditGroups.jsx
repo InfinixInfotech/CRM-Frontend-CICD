@@ -183,7 +183,7 @@ export default function EditGroups() {
       </label>
       <input
         type="number"
-        className="form-control"
+        className="form-control input-box"
         id={path}
         value={value}
         onChange={(e) => handleChange(path, parseInt(e.target.value) || 0)}
@@ -600,7 +600,7 @@ export default function EditGroups() {
         >
           <FaUsers
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Groups
         </h2>
@@ -730,7 +730,7 @@ export default function EditGroups() {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-box"
                         id="FreeTrialDays"
                         value={groupData.FreeTrialDays}
                         onChange={(e) =>
@@ -751,7 +751,7 @@ export default function EditGroups() {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-box"
                         id="FreeTrialPerContact"
                         value={groupData.FreeTrialPerContact}
                         onChange={(e) =>
@@ -769,7 +769,7 @@ export default function EditGroups() {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-box"
                         id="TotalCRMLeadLimit"
                         value={groupData.TotalCRMLeadLimit}
                         onChange={(e) =>
@@ -786,8 +786,8 @@ export default function EditGroups() {
                         Lead Fetch Ratio
                       </label>
                       <input
-                        type="number"
-                        className="form-control"
+                        type="text"
+                        className="form-control input-box"
                         id="LeadFetchRatio"
                         value={groupData.LeadFetch.Ratio}
                         onChange={(e) =>
@@ -802,7 +802,7 @@ export default function EditGroups() {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-box"
                         id="ClientFetchRatio"
                         value={groupData.ClientFetch.Ratio}
                         onChange={(e) =>
@@ -817,7 +817,7 @@ export default function EditGroups() {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-box"
                         id="UnreadFetch"
                         value={groupData.UnreadFetch}
                         onChange={(e) =>
@@ -832,7 +832,7 @@ export default function EditGroups() {
                     <div className="mb-3">
                       <label className="form-label">Lead Fetch From</label>
                       <select
-                        className="form-select"
+                        className="form-select input-box"
                         value={groupData.LeadFetch.From}
                         onChange={(e) =>
                           handleChange("LeadFetch.From", e.target.value)
@@ -841,18 +841,19 @@ export default function EditGroups() {
                         <option value="" disabled>
                           Select Some Option
                         </option>
-                        <option value="DisposePool">Dispose Pool</option>
-                        <option value="FreshPool">Fresh Pool</option>
-                        <option value="DiamondPoolHNIPool">
-                          Diamond Pool HNI Pool
-                        </option>
+                  <option value="Additional Pool">Additional Pool</option>
+                  <option value="Fresh Pool">Fresh Pool</option>
+                        <option value="HNI Pool">HNI Pool</option>
+                        <option value="Platinum Pool">Platinum Pool</option>
+                        <option value="Diamond Pool">Diamond Pool </option>
+                        <option value="Dispose Pool">Dispose Pool</option>
                       </select>
                     </div>
 
                     <div className="mb-3">
                       <label className="form-label">Client Fetch From</label>
                       <select
-                        className="form-select"
+                        className="form-select input-box"
                         value={groupData.ClientFetch.From}
                         onChange={(e) =>
                           handleChange("ClientFetch.From", e.target.value)
@@ -861,18 +862,19 @@ export default function EditGroups() {
                         <option value="" disabled>
                           Select Some Option
                         </option>
-                        <option value="DisposePool">Dispose Pool</option>
-                        <option value="FreshPool">Fresh Pool</option>
-                        <option value="DiamondPoolHNIPool">
-                          Diamond Pool HNI Pool
-                        </option>
+                  <option value="Additional Pool">Additional Pool</option>
+                  <option value="Fresh Pool">Fresh Pool</option>
+                        <option value="HNI Pool">HNI Pool</option>
+                        <option value="Platinum Pool">Platinum Pool</option>
+                        <option value="Diamond Pool">Diamond Pool  </option>
+                        <option value="Dispose Pool">Dispose Pool</option>
                       </select>
                     </div>
                   </div>
                 </div>
               </div>
               <div className="col-12 text-center">
-                <button type="submit" className="btn mb-2 mt-3 text-white px-4 py-1" style={{backgroundColor:"#009688"}}>
+                <button type="submit" className="btn mb-2 mt-3 text-white px-4 py-1" style={{backgroundColor:"#2c3e50"}}>
                   Submit
                 </button>
               </div>

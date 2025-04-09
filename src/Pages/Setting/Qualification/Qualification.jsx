@@ -84,8 +84,8 @@ const Qualification = () => {
     e.preventDefault();
 
     if (
-      newQualification.trim() !== "" &&
-      !qualification.includes(newQualification.trim())
+      newQualification !== "" &&
+      !qualification.includes(newQualification)
     ) {
       const newAddQualification = {
         qualificationName: newQualification,
@@ -105,7 +105,7 @@ const Qualification = () => {
   };
 
   const handleEditQualification = async (id) => {
-    if (editValue.trim() !== "") {
+    if (editValue !== "") {
       try {
         const token = staticToken; // Replace with your token retrieval logic
         const response = await fetch(
@@ -181,7 +181,7 @@ const Qualification = () => {
         >
           <FaGraduationCap
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Qualification
         </h2>
@@ -210,7 +210,7 @@ const Qualification = () => {
                   <button
                     onClick={handleOpenPopup}
                     className="btn btn-sm text-white "
-                    style={{ backgroundColor: "#009688" }}
+                    style={{ backgroundColor: "#2c3e50" }}
                   >
                     <GrAdd className="text-white fs-6 fw-bold" />
                     Add Qualification
@@ -257,7 +257,7 @@ const Qualification = () => {
                               <input
                                 type="text"
                                 id="qualificationInput"
-                                className="form-control"
+                                className="form-control input-box"
                                 value={
                                   editQualification !== null
                                     ? editValue
@@ -274,7 +274,7 @@ const Qualification = () => {
                             <button
                               type="submit"
                               className="btn text-white w-100"
-                              style={{ backgroundColor: "#009688" }}
+                              style={{ backgroundColor: "#2c3e50" }}
                             >
                               {editQualification !== null ? "Update" : "Add"}
                             </button>

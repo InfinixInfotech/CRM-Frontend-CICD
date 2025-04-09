@@ -28,7 +28,7 @@ const CommonPopup = ({
       <button
         onClick={handleOpenPopup}
         className="btn btn-exp btn-sm text-white"
-        style={{ backgroundColor: "#009688" }}
+        style={{ backgroundColor: "#2c3e50" }}
       >
         <GrAdd className="text-white fs-6 fw-bold" />
         {`Add ${title}`}
@@ -71,7 +71,7 @@ const CommonPopup = ({
                   <input
                     type="text"
                     id="inputField"
-                    className="form-control"
+                    className="form-control input-box"
                     value={editStatus !== null ? editValue : newStatus}
                     onChange={(e) =>
                       editStatus !== null
@@ -84,7 +84,7 @@ const CommonPopup = ({
                 <button
                   type="submit"
                   className="btn text-white w-100"
-                  style={{ backgroundColor: "#009688" }}
+                  style={{ backgroundColor: "#2c3e50" }}
                 >
                   {editStatus !== null ? `Update ${title}` : `Add ${title}`}
                 </button>

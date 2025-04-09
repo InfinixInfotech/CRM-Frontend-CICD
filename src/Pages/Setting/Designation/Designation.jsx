@@ -170,7 +170,7 @@ const Designation = () => {
         >
           <FaIdBadge
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Designation
         </h2>
@@ -200,7 +200,7 @@ const Designation = () => {
                     <button
                       onClick={handleOpenPopup}
                       className="btn btn-exp btn-sm text-white d-flex align-items-center"
-                      style={{ backgroundColor: "#009688" }}
+                      style={{ backgroundColor: "#2c3e50" }}
                     >
                       <GrAdd className="text-white fs-6 fw-bold me-2" />
                       Add Designation
@@ -275,7 +275,7 @@ const Designation = () => {
                                   style={
                                     editDesignation === null
                                       ? {
-                                          backgroundColor: "#009688",
+                                          backgroundColor: "#2c3e50",
                                           color: "white",
                                         }
                                       : {}

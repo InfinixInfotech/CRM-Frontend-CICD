@@ -1,0 +1,322 @@
+.floating-chat-container {
+    position: fixed;
+    top: 20px;
+    right: 190px;
+    z-index: 1000;
+}
+
+.floating-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 30px;
+    padding: 15px;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Chat Box Styles */
+.chat-box {
+    width: 320px;
+    height: 40vh;
+    background-color: white;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Chat Header */
+.chat-header {
+    background: linear-gradient(135deg, #007bff, #004a99);
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Chat Messages Styling */
+.chat-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scrollbar-width: none; 
+}
+
+
+.chat-body::-webkit-scrollbar {
+    display: none; 
+}
+
+/* Individual Message */
+.chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* Sent & Received Message Styling */
+.chat-message {
+    padding: 8px 8px;
+    border-radius: 20px;
+    max-width: 75%;
+    word-wrap: break-word;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.0;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Sent messages */
+.chat-message.sent {
+    align-self: flex-end;
+    background: linear-gradient(135deg, #007bff, #004a99);
+    color: white;
+    border-radius: 20px 20px 0 20px; 
+}
+
+/* Received messages */
+.chat-message.received {
+    align-self: flex-start;
+    background: linear-gradient(135deg, #888888, #000000);
+    border-radius: 20px 20px 20px 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+/* Timestamp */
+.chat-message span {
+    font-size: 12px;
+    color: #888;
+    text-align: right;
+    margin-top: 4px;
+}
+
+/* Input Styling */
+.chat-footer {
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-top: 1px solid #ddd;
+}
+
+.chat-footer textarea {
+    flex-grow: 1; /* Ensures the textarea takes up remaining space */
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.action-icons {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.action-icons button {
+    padding: 5px 10px;
+    border: none;
+    background:rgba(255, 255, 255, 0);
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.action-icons .file-upload-label {
+    cursor: pointer;
+}
+
+.action-icons i {
+    font-size: 18px;
+    color: #555;
+}
+
+
+.chat-footer input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 25px;
+    background: #f1f1f1;
+    font-size: 14px;
+}
+
+.chat-footer button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+
+.employee-list {
+    max-height: 460px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.employee-item {
+    display: flex;
+    align-items: center;
+    textAlign:center;
+    justify-content:center
+    padding: 2px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.employee-item:hover {
+    background: linear-gradient(135deg, #007bff, #004a99);
+    color: white;
+}
+
+.employee-info {
+    display: flex;
+    align-items: center;
+
+}
+
+.profile-icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    margin-right: 10px;
+}
+
+.profile-image {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.employee-name {
+    font-size: 14px;
+    font-weight: 500;
+    textAlign: center;
+}
+
+.chat-footer {
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-top: 1px solid #ddd;
+}
+
+.chat-footer input {
+    width: 80%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.chat-footer button {
+    background: linear-gradient(135deg, #007bff, #004a99);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+hr {
+    margin-top: 10px;
+    border: 0;
+    border-top: 1px solid #ddd;
+}
+
+/* Styling for the contact list background */
+.employee-list {
+    padding: 2px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Hide scrollbar for Chrome, Safari, and Edge */
+.employee-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for Firefox */
+.employee-list {
+    scrollbar-width: none;
+}
+
+/* Hide scrollbar for IE and Edge */
+.employee-list {
+    -ms-overflow-style: none;
+}
+
+
+/* Styling for individual employee items */
+.employee-item {
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    cursor: pointer;
+    background-color: #fff; /* White background for each item */
+    margin-bottom: 10px;
+    margin-right: 6px;
+    margin-left: 6px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for each employee item */
+.employee-item:hover {
+    background-color: #e0e0e0; /* Light gray on hover */
+}
+
+/* Profile icon or image */
+.profile-icon {
+    margin-right: 10px;
+    font-size: 24px;
+}
+
+/* Employee name styling */
+.employee-name {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* Optional profile image style */
+.profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+
+
+

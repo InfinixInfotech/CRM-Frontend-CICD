@@ -45,7 +45,7 @@ const LeadSourceFilter = () => {
         <div className="dropdown w-75">
           <label>Lead Source</label>
           <select
-            className="form-select"
+            className="form-select input-box"
             aria-label="Select Lead Source"
             value={selectedLeadSource}
             name="groupName"
@@ -55,7 +55,6 @@ const LeadSourceFilter = () => {
             <option value="" disabled>
               Select Lead Source
             </option>
-
             {leadSource.length > 0 ? (
               leadSource.map((leadSrc) => (
                 <option key={leadSrc.id} value={leadSrc.leadSourceValue}>

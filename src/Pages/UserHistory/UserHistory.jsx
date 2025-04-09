@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Calendar, Clock, User, Activity, Filter, Download, Search } from "lucide-react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { emp, staticToken } from "../../Redux/Services/apiServer/ApiServer";
+import { emp, staticToken, userHistoryUrl } from "../../Redux/Services/apiServer/ApiServer";
 
 const UserHistory = () => {
   const [leadData, setLeadData] = useState(null);
@@ -14,14 +14,14 @@ const UserHistory = () => {
   useEffect(() => {
     const fetchLeadHistory = async () => {
       try {
-        
+
         const response = await fetch(
-          `http://192.168.1.227:5118/api/LeadHistory/GetByEmployeeCode?employeeCode=${emp}`,
+          `${userHistoryUrl}?Employeecode=${emp}`,
           {
             method: 'GET',
             headers: {
-              'Authorization': `Bearer ${staticToken}`, 
-              'Content-Type': 'application/json', 
+              'Authorization': `Bearer ${staticToken}`,
+              'Content-Type': 'application/json',
             },
           }
         );
@@ -37,10 +37,10 @@ const UserHistory = () => {
         setLoading(false);
       }
     };
-  
+
     fetchLeadHistory();
   }, []);
-  
+
 
   const getStatusBadge = (type) => {
     switch (type) {
@@ -69,9 +69,9 @@ const UserHistory = () => {
         <div className="alert alert-danger" role="alert">
           <h4 className="alert-heading">Error!</h4>
           <p>{error}</p>
-          <hr/>
-          <button 
-            className="btn btn-outline-danger" 
+          <hr />
+          <button
+            className="btn btn-outline-danger"
             onClick={() => window.location.reload()}
           >
             Retry
@@ -93,7 +93,7 @@ const UserHistory = () => {
                 <div className="d-flex align-items-center gap-2">
                   <User size={16} />
                   <span className="text-muted">Employee Code:</span>
-                  <span className="badge bg-secondary">{leadData.employeeCode}</span>
+                  <span className="badge bg-secondary">{leadData?.employeeCode}</span>
                 </div>
               </div>
               <div className="col-lg-6 d-flex justify-content-lg-end mt-3 mt-lg-0">
@@ -121,7 +121,7 @@ const UserHistory = () => {
                   </span>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-box"
                     placeholder="Search activities..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -130,7 +130,7 @@ const UserHistory = () => {
               </div>
               <div className="col-md-4">
                 <select
-                  className="form-select"
+                  className="form-select input-box"
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value)}
                 >
@@ -153,7 +153,7 @@ const UserHistory = () => {
                   <div>
                     <h6 className="text-muted mb-2">Total Logins</h6>
                     <h3 className="mb-0">
-                      {Object.values(leadData.loginDateTime || {}).flat().length}
+                      {Object.values(leadData?.loginDateTime || {}).flat().length}
                     </h3>
                   </div>
                   <div className="rounded-circle bg-success bg-opacity-10 p-3">
@@ -171,7 +171,7 @@ const UserHistory = () => {
                   <div>
                     <h6 className="text-muted mb-2">Total Logouts</h6>
                     <h3 className="mb-0">
-                      {Object.values(leadData.logoutDateTime || {}).flat().length}
+                      {Object.values(leadData?.logoutDateTime || {}).flat().length}
                     </h3>
                   </div>
                   <div className="rounded-circle bg-danger bg-opacity-10 p-3">
@@ -188,7 +188,7 @@ const UserHistory = () => {
                 <div className="d-flex justify-content-between align-items-center">
                   <div>
                     <h6 className="text-muted mb-2">Follow-ups</h6>
-                    <h3 className="mb-0">{leadData.followUps?.length || 0}</h3>
+                    <h3 className="mb-0">{leadData?.followUps?.length || 0}</h3>
                   </div>
                   <div className="rounded-circle bg-primary bg-opacity-10 p-3">
                     <Activity size={24} className="text-primary" />
@@ -205,7 +205,7 @@ const UserHistory = () => {
                   <div>
                     <h6 className="text-muted mb-2">Active Days</h6>
                     <h3 className="mb-0">
-                      {Object.keys(leadData.loginDateTime || {}).length}
+                      {Object.keys(leadData?.loginDateTime || {}).length}
                     </h3>
                   </div>
                   <div className="rounded-circle bg-info bg-opacity-10 p-3">
@@ -261,7 +261,7 @@ const UserHistory = () => {
                 </thead>
                 <tbody>
                   {activeTab === "login" &&
-                    leadData.loginDateTime &&
+                    leadData?.loginDateTime &&
                     Object.entries(leadData.loginDateTime).map(([date, times]) =>
                       times.map((time, timeIndex) => (
                         <tr key={`${date}-${timeIndex}`}>
@@ -287,33 +287,40 @@ const UserHistory = () => {
                       ))
                     )}
 
-                  {activeTab === "logout" &&
-                    leadData.logoutDateTime &&
-                    Object.entries(leadData.logoutDateTime).map(([date, times]) =>
-                      times.map((time, timeIndex) => (
-                        <tr key={`${date}-${timeIndex}`}>
-                          <td>
-                            <div className="d-flex align-items-center">
-                              <Calendar size={16} className="me-2 text-muted" />
-                              {date}
-                            </div>
-                          </td>
-                          <td>
-                            <div className="d-flex align-items-center">
-                              <Clock size={16} className="me-2 text-muted" />
-                              {time}
-                            </div>
-                          </td>
-                          <td>
-                            <span className={`badge ${getStatusBadge('logout')}`}>
-                              Logout
-                            </span>
-                          </td>
-                          <td>--</td>
-                        </tr>
+                  {activeTab === "logout" && leadData?.followUps && leadData.followUps.length > 0 &&
+                    leadData.followUps.map((followUp, index) =>
+                      Object.entries(followUp._Leads || {}).map(([date, leads]) => (
+                        Array.isArray(leads) ? (
+                          leads.map((lead, leadIndex) => (
+                            <tr key={`${date}-${leadIndex}`}>
+                              <td>
+                                <div className="d-flex align-items-center">
+                                  <Calendar size={16} className="me-2 text-muted" />
+                                  {date}
+                                </div>
+                              </td>
+                              <td>
+                                <div className="d-flex align-items-center">
+                                  <Clock size={16} className="me-2 text-muted" />
+                                  {lead.leadId}
+                                </div>
+                              </td>
+                              <td>
+                                <span className={`badge ${getStatusBadge(lead._LeadStatus)}`}>
+                                  {lead._LeadStatus || "N/A"}
+                                </span>
+                              </td>
+                              <td>{lead.segment || "N/A"}</td>
+                              <td>{lead.comment || "No Comment"}</td>
+                            </tr>
+                          ))
+                        ) : (
+                          <tr key={`${date}-no-leads`}>
+                            <td colSpan={5} className="text-center text-muted">No leads available for this date</td>
+                          </tr>
+                        )
                       ))
                     )}
-
                   {activeTab === "followup" &&
                     leadData.followUps &&
                     leadData.followUps.map((followUp, index) => (

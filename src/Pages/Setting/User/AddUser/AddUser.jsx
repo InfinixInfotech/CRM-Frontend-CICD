@@ -9,16 +9,42 @@ import { getAllGroupsThunk } from "../../../../Redux/Services/thunks/GroupsThunk
 import { getAllQualificationThunk } from "../../../../Redux/Services/thunks/QualificationThunk";
 import { emp } from "../../../../Redux/Services/apiServer/ApiServer";
 import { FaUserPlus } from "react-icons/fa";
+import { getAllEmpCodeNameThunk } from "../../../../Redux/Services/thunks/AdditionalApiThunk";
 
 const AddUser = () => {
   const [showAlert, setShowAlert] = useState(false);
+
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
   const [departments, setDepartments] = useState([]);
   const [groupsData, setGroupsData] = useState([]);
   const [qualification, setQualification] = useState([]);
+  const [options, setOptions] = useState([]);
+  const [allEmployeeCodes, setAllEmployeeCodes] = useState([]);
+  const { emplist, loading, error } = useSelector((state) => state.additional);
 
-  const { data, loading, error } = useSelector((state) => state.user);
+  useEffect(() => {
+    dispatch(getAllEmpCodeNameThunk());
+    // console.log("data-----------------", emplist);
+  }, [dispatch]);
+
+
+  useEffect(() => {
+    if (emplist && Array.isArray(emplist.data)) {
+      // console.log("Data received:", data);
+      // Transform the array into dropdown options
+      const transformedOptions = emplist.data.map((item) => ({
+        id: item.employeeCode,  // Unique key
+        employeeCode: item.employeeCode,
+        employeeName: item.employeeName,
+        label: `${item.employeeCode} - ${item.employeeName}`,
+      }));
+
+      setOptions(transformedOptions);
+    } else {
+      console.log("Invalid data format or no data available.");
+    }
+  }, [emplist]);
 
   const [user, setUser] = useState({
     fullName: "",
@@ -29,6 +55,7 @@ const AddUser = () => {
     userName: "",
     password: "",
     target: 0,
+    teamTarget: 0,
     groupid: "",
     departmentName: "",
     designationName: "",
@@ -79,17 +106,18 @@ const AddUser = () => {
       backDateSO: false,
       popupDisabled: false,
     },
+    emailId: "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+  
     setUser((prevUser) => ({
       ...prevUser,
-      [name]: value,
+      [name]: value, 
     }));
   };
-
+  
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
     setUser((prevState) => ({
@@ -100,7 +128,6 @@ const AddUser = () => {
       },
     }));
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     setShowAlert(true);
@@ -114,6 +141,7 @@ const AddUser = () => {
       userName: user.userName,
       password: user.password,
       target: user.target,
+      teamTarget: user.teamTarget,
       departmentName: user.departmentName ? user.departmentName.toString() : "",
       designationName: user.designationName,
       groupName: user.groupName,
@@ -131,8 +159,8 @@ const AddUser = () => {
       customFetch: [user.customFetch?.toString()],
       customFetchRatio: user.customFetchRatio,
       otpNumber: user.otpNumber,
-      dateOfBirth: user.dateOfBirth,
-      dateOfJoining: user.dateOfJoining,
+      dateOfBirth: user.dateOfBirth || 0,
+      dateOfJoining: user.dateOfJoining || 0,
       branch: user.branch,
       panNumber: user.panNumber,
       aadharNumber: user.aadharNumber,
@@ -158,13 +186,16 @@ const AddUser = () => {
     //!<-------------------------------------------------------------------------------ADD USER----------------------------------------------------------------------------------------------------------->
 
     dispatch(postUserThunk(AddNewUser))
-      .then((response) => {
-        console.log("User added successfully:", response);
-      })
-      .catch((error) => {
-        console.error("Error adding user:", error);
-      });
-  };
+    .then((response) => {
+      if (response?.payload?.success) {
+        alert(response.payload.message || "User added successfully!");
+      } else {
+        alert(response.payload.message || "Something went wrong!");
+      }
+    })
+    .catch((error) => {
+      alert(error.response?.data?.message || "Failed to add user. Please try again.");
+    })};
 
   useEffect(() => {
     if (showAlert) {
@@ -200,6 +231,8 @@ const AddUser = () => {
 
     fetchData();
   }, [dispatch]);
+
+
 
   //!<-------------------------------------------------------------------------------VIEW GROUPS----------------------------------------------------------------------------------------------------------->
 
@@ -251,6 +284,12 @@ const AddUser = () => {
     fetchQualificationData();
   }, [dispatch]);
 
+
+
+
+
+
+
   return (
     <>
       <section
@@ -275,7 +314,7 @@ const AddUser = () => {
         >
           <FaUserPlus
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Users
         </h2>
@@ -295,13 +334,13 @@ const AddUser = () => {
             Add Users
           </h5>
           <div className="formWrapper p-2">
-            <div>
+            {/* <div>
               {showAlert && (
                 <Alert variant="info" className="mt-2 text-center">
                   User Added Successfully
                 </Alert>
               )}
-            </div>
+            </div> */}
             <form onSubmit={handleSubmit}>
               <div className="formContentWrapper addUser-form">
                 <div>
@@ -312,9 +351,43 @@ const AddUser = () => {
                     name="fullName"
                     value={user.fullName}
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
+
+                <div>
+                  <label>Date Of Birth</label>
+                  <input
+                    className="ps-2 inputField inputField"
+                    type="date"
+                    name="dateOfBirth"
+                    value={
+                      user.dateOfBirth
+                      // ? user.dateOfBirth.split("/").reverse().join("-")
+                      // : ""
+                    } // Convert dd/mm/yyyy to yyyy-mm-dd for the input field
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label>Date Of Joining</label>
+                  <input
+                    className="ps-2 inputField inputField"
+                    type="date"
+                    name="dateOfJoining"
+                    value={
+                      user.dateOfJoining
+                      // ? user.dateOfJoining.split("/").reverse().join("-")
+                      // : ""
+                    } // placeholder="Date of joining"
+                    onChange={handleChange}
+                  //required
+                  />
+                </div>
+
+                {/* 
                 <div>
                   <label>Employee Code</label>
                   <input
@@ -323,9 +396,10 @@ const AddUser = () => {
                     name="employeeCode"
                     value={user.employeeCode}
                     onChange={handleChange}
-                    //required
+                  //required
                   />
-                </div>
+                </div> */}
+
                 <div>
                   <label>Father's Name</label>
                   <input
@@ -334,7 +408,7 @@ const AddUser = () => {
                     name="fatherName"
                     value={user.fatherName}
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
                 <div>
@@ -345,21 +419,40 @@ const AddUser = () => {
                     name="motherName"
                     value={user.motherName}
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
                 <div>
                   <label>Mobile Number</label>
                   <input
                     className="ps-2 inputField"
-                    type="number"
+                    type="text" 
                     name="mobileNumber"
                     value={user.mobileNumber}
-                    onChange={handleChange}
-                    //required
+                    onChange={(e) => {
+                      const value = e.target.value; 
+                      if (/^\d{0,10}$/.test(value)) {
+                        handleChange({ target: { name: "mobileNumber", value } });
+                      }
+                    }}
+                    maxLength={10} 
+                    required
                   />
                 </div>
+
                 <div>
+                  <label>Mail Box Id</label>
+                  <input
+                    className="ps-2 inputField"
+                    type="text"
+                    name="emailId"
+                    value={user.emailId}
+                    onChange={handleChange}
+                  //required
+                  />
+                </div>
+
+                {/* <div>
                   <label>User Name</label>
                   <input
                     className="ps-2 inputField"
@@ -367,20 +460,22 @@ const AddUser = () => {
                     name="userName"
                     value={user.userName}
                     onChange={handleChange}
-                    //required
+                  //required
                   />
-                </div>
+                </div> */}
+
                 <div>
                   <label>Password</label>
                   <input
                     className="ps-2 inputField"
-                    type="password"
+                    type="text"
                     name="password"
                     value={user.password}
                     onChange={handleChange}
                     required
                   />
                 </div>
+
                 <div>
                   <label>Target</label>
                   <input
@@ -389,17 +484,54 @@ const AddUser = () => {
                     name="target"
                     value={user.target}
                     onChange={handleChange}
-                    // required
+                  // required
+                  />
+                </div>
+                <div>
+                  <label>Team Target</label>
+                  <input
+                    className="ps-2 inputField"
+                    type="text"
+                    name="teamTarget"
+                    value={user.teamTarget}
+                    onChange={handleChange}
+                  // required
                   />
                 </div>
 
+
                 <div className="dropdown">
-                  <label>Reporting To:</label>
-                  <select className="inputField">
-                    <option value="">Person 1</option>
-                    <option value="">Person 2</option>
+                  <label>Reporting:</label>
+                  <select
+                    name="reportingTo"
+                    onChange={handleChange}
+                    className="inputField"
+                    value={user.reportingTo || ""}
+                  >
+                    <option value="" disabled>
+                      --Select Reporting Person--
+                    </option>
+                    {options.map((option) => (
+                      <option key={option.id} value={option.employeeCode}>
+                        {option.employeeName}
+                      </option>
+                    ))}
                   </select>
                 </div>
+
+
+                {/* <div className="dropdown mt-2">
+                  <label className="compose-label">Reporting</label>
+                  <select className="inputField" multiple onChange={handleChange}>
+                    {options.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div> */}
+
+
                 {/* //!----------------------------------------------------------------------------------------GROUP NAME---------------------------------------------------------------------------------// */}
                 <div className="dropdown">
                   <label>Group Name:</label>
@@ -437,25 +569,34 @@ const AddUser = () => {
                     <option value="" disabled>
                       {isLoading ? "Loading..." : "--Select Department--"}
                     </option>
-                    {Array.isArray(departments) &&
-                      departments.map((dept) => (
-                        <option key={dept.id} value={dept.departmentName}>
-                          {dept.departmentName}
+                    {Array.isArray(groupsData) &&
+                      groupsData.map((dept) => (
+                        <option key={dept.id} value={dept.groupName}>
+                          {dept.groupName}
                         </option>
                       ))}
                   </select>
                 </div>
 
-                <div className="dropdown">
+                <div >
                   <label>Designation Name:</label>
-                  <input
-                    className="ps-2 inputField"
-                    type="text"
-                    name="designationName"
-                    value={user.designationName}
+
+                  <input type="text" name="designationName" value={user.designationName || ""} className=" ps-2 inputField" onChange={handleChange} />
+                  {/* <select name="designationName" className="inputField"
                     onChange={handleChange}
-                    //required
-                  />
+                    value={user.designationName || ""}
+                  >
+                    <option value="" disabled>
+                      --Select Group Name--
+                    </option>
+                    <option value="BDE">BDE</option>
+                    <option value="SBDE">SBDE</option>
+                    <option value="TL">TL</option>
+                    <option value="PTL">PTL</option>
+                    <option value="ARM">ARM</option>
+                    <option value="MANAGER">MANAGER</option>
+                    <option value="DSH">DSH</option>
+                  </select> */}
                 </div>
 
                 {/* //!----------------------------------------------------------------------------------------Qualification dropdown---------------------------------------------------------------------------------// */}
@@ -490,18 +631,14 @@ const AddUser = () => {
                     <option value="" disabled>
                       --Select Segment Access
                     </option>
-                    <option value="Algo Software Monthely">
-                      Algo Software Monthely
-                    </option>
-                    <option value="Algo Software Quaterly">
-                      Algo Software Quaterly
-                    </option>
-                    <option value="Algo Software Half Yearly">
-                      Algo Software Half Yearly
-                    </option>
-                    <option value="Algo Software Yearly">
+                    <option value="Index Option">Index Option</option>
+                    <option value="Index Future">Index Future</option>
+                    <option value="Stock Option">Stock Option</option>
+                    <option value="Stock Future">Stock Future</option>
+                    <option value="Stock Cash">Stock Cash</option>
+                    {/* <option value="Algo Software Yearly">
                       Algo Software Yearly
-                    </option>
+                    </option> */}
                   </select>
                 </div>
                 <div className="dropdown">
@@ -516,13 +653,17 @@ const AddUser = () => {
                     <option value="" disabled>
                       --Select pool access--
                     </option>
+                    <option value="Additional Pool">Additional Pool</option>
                     <option value="Fresh Pool">Fresh Pool</option>
-                    <option value="Diamond Pool">Diamond Pool</option>
                     <option value="HNI Pool">HNI Pool</option>
+                    <option value="Platinum Pool">Platinum Pool</option>
+                    <option value="Diamond Pool">Diamond Pool </option>
                     <option value="Dispose Pool">Dispose Pool</option>
                   </select>
                 </div>
-                <div className="dropdown">
+
+
+                {/* <div className="dropdown">
                   <label>Group Access:</label>
                   <select
                     name="groupAccess"
@@ -541,8 +682,33 @@ const AddUser = () => {
                     <option value="Manager">Manager</option>
                     <option value="DSH">DSH</option>
                   </select>
-                </div>
+                </div>*/}
+
+
                 <div className="dropdown">
+                  <label>Group Access:</label>
+                  <select
+                    name="groupAccess"
+                    onChange={handleChange}
+                    className="inputField"
+                    value={user.groupAccess || ""}
+                  >
+                    <option value="" disabled>
+                      --Select Group Access--
+                    </option>
+                    {Array.isArray(groupsData) && groupsData.length > 0 ? (
+                      groupsData.map((dept) => (
+                        <option key={dept.id} value={dept.groupName}>
+                          {dept.groupName}
+                        </option>
+                      ))
+                    ) : (
+                      <option disabled>No Groups Available</option>
+                    )}
+                  </select>
+                </div>
+
+                {/* <div className="dropdown">
                   <label>Custom Fetch:</label>
                   <select
                     name="customFetch"
@@ -559,8 +725,9 @@ const AddUser = () => {
                     <option value="Diamond Pool">Dispose Pool</option>
                     <option value="Diamond Pool">Special Dates</option>
                   </select>
-                </div>
-                <div className="dropdown">
+                </div> */}
+
+                {/* <div className="dropdown">
                   <label>Branch:</label>
                   <select
                     name="branch"
@@ -575,8 +742,9 @@ const AddUser = () => {
                     <option value="kotakmahendraidfc">kotakmahendraidfc</option>
                     <option value="idfc">idfc</option>
                   </select>
-                </div>
-                <div className="dropdown">
+                </div> */}
+
+                {/* <div className="dropdown">
                   <label>Chat Group:</label>
                   <select
                     name="chatGroup"
@@ -591,7 +759,7 @@ const AddUser = () => {
                     <option value="Sales">Sales</option>
                     <option value="Reasearch">Reasearch</option>
                   </select>
-                </div>
+                </div> */}
 
                 <div>
                   <label>Custom Fetch Ratio</label>
@@ -601,7 +769,7 @@ const AddUser = () => {
                     name="customFetchRatio"
                     value={user.customFetchRatio}
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
                 <div>
@@ -613,7 +781,7 @@ const AddUser = () => {
                     value={user.extension}
                     onChange={handleChange}
                     pattern="[0-9]{1,5}"
-                    //required
+                  //required
                   />
                 </div>
                 <div>
@@ -625,10 +793,11 @@ const AddUser = () => {
                     value={user.didNumber}
                     // placeholder="DID Number ."
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
-                <div>
+
+                {/* <div>
                   <label>Vendor Access</label>
                   <input
                     className="ps-2 inputField"
@@ -637,10 +806,11 @@ const AddUser = () => {
                     value={user.vendorAccess}
                     // placeholder="DID Number ."
                     onChange={handleChange}
-                    //required
+                  //required
                   />
-                </div>
-                <div>
+                </div> */}
+
+                {/* <div>
                   <label>Except Vendor Access</label>
                   <input
                     className="ps-2 inputField inputField"
@@ -649,10 +819,11 @@ const AddUser = () => {
                     value={user.exceptVendorAccess}
                     // placeholder="DID Number ."
                     onChange={handleChange}
-                    //required
+                  //required
                   />
-                </div>
-                <div>
+                </div> */}
+
+                {/* <div>
                   <label>OTP Number</label>
                   <input
                     className="ps-2 inputField inputField"
@@ -661,39 +832,12 @@ const AddUser = () => {
                     value={user.otpNumber}
                     // placeholder="0 for no otp"
                     onChange={handleChange}
-                    //required
+                  //required
                   />
-                </div>
-                <div>
-                  <label>Date Of Birth</label>
-                  <input
-                    className="ps-2 inputField inputField"
-                    type="date"
-                    name="dateOfBirth"
-                    value={
-                      user.dateOfBirth
-                      // ? user.dateOfBirth.split("/").reverse().join("-")
-                      // : ""
-                    } // Convert dd/mm/yyyy to yyyy-mm-dd for the input field
-                    onChange={handleChange}
-                    required
-                  />
-                </div>
-                <div>
-                  <label>Date Of Joining</label>
-                  <input
-                    className="ps-2 inputField inputField"
-                    type="date"
-                    name="dateOfJoining"
-                    value={
-                      user.dateOfJoining
-                      // ? user.dateOfJoining.split("/").reverse().join("-")
-                      // : ""
-                    } // placeholder="Date of joining"
-                    onChange={handleChange}
-                    //required
-                  />
-                </div>
+                </div> */}
+
+
+
                 <div>
                   <label>Pan Number</label>
                   <input
@@ -704,7 +848,7 @@ const AddUser = () => {
                     value={user.panNumber}
                     // placeholder="PAN NUMBER"
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
                 <div>
@@ -716,7 +860,7 @@ const AddUser = () => {
                     value={user.aadharNumber}
                     // placeholder="PAN NUMBER"
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
                 <div>
@@ -728,7 +872,7 @@ const AddUser = () => {
                     value={user.localAddress}
                     // placeholder="PAN NUMBER"
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
                 <div>
@@ -740,7 +884,7 @@ const AddUser = () => {
                     value={user.permanentAddress}
                     // placeholder="PAN NUMBER"
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
                 <div>
@@ -752,7 +896,7 @@ const AddUser = () => {
                     value={user.bankName}
                     // placeholder="PAN NUMBER"
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
                 <div>
@@ -764,7 +908,7 @@ const AddUser = () => {
                     value={user.IFSC}
                     // placeholder="PAN NUMBER"
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
                 <div>
@@ -776,7 +920,7 @@ const AddUser = () => {
                     value={user.accountNumber}
                     // placeholder="PAN NUMBER"
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
                 <div>
@@ -788,29 +932,33 @@ const AddUser = () => {
                     value={user.esslID}
                     // placeholder="PAN NUMBER"
                     onChange={handleChange}
-                    //required
+                  //required
                   />
                 </div>
               </div>
 
               <label className="mt-2">Access:</label>
-              <div className="AdduserCheckboxes border border-2 rounded p-2 bg-white mb-2">
+              <div
+                className="AdduserCheckboxes border border-2 rounded p-2 bg-white mb-2"
+              >
                 {user.access &&
                   Object.keys(user.access).length > 0 &&
                   Object.keys(user.access).map((key) => (
-                    <div className="d-flex gap-1" key={key}>
+                    <div className="d-flex gap-1 items-center" key={key}>
                       <input
                         type="checkbox"
                         name={key}
                         checked={user.access[key]}
                         onChange={handleCheckboxChange}
+                        style={{ width: "18px", height: "18px" }} // Inline styles
                       />
-                      <label>{key}</label>
+                      <label className="text-sm">{key}</label>
                     </div>
                   ))}
               </div>
+
               <div className="d-flex justify-content-center">
-                <button className="btn text-white px-4 py-1" type="submit" style={{backgroundColor:"#009688"}}>
+                <button className="btn text-white px-4 py-1" type="submit" style={{ backgroundColor: "#2c3e50" }}>
                   Add
                 </button>
               </div>

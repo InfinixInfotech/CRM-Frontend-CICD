@@ -19,16 +19,16 @@ const SalesOrderReport = () => {
     (state) => state.grandTotal
   );
 
-  useEffect(() => {
-    dispatch(getAllTotalGrandTotalThunk());
-  }, [dispatch]);
+  // useEffect(() => {
+  //   //dispatch(getAllTotalGrandTotalThunk());
+  // }, [dispatch]);
 
-  useEffect(() => {
-    if (data?.data) {
-      console.log(data); // Debugging API response
-      setTotalData(data?.data);
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data?.data) {
+  //     console.log(data); // Debugging API response
+  //     setTotalData(data?.data);
+  //   }
+  // }, [data]);
 
   // Pagination logic
   // useEffect(() => {
@@ -68,8 +68,8 @@ const SalesOrderReport = () => {
 
       {/* Total Sales Container */}
       <div
-        className="card bg-light text-center mb-4"
-        style={{ width: "18rem", cursor: "pointer", margin: "0 auto" }}
+        className="card text-white text-center mb-4"
+        style={{ width: "18rem", cursor: "pointer", margin: "0 auto", backgroundColor:"#2c3e50"}}
         onClick={handleOpenPopup}
       >
         <div className="card-body">

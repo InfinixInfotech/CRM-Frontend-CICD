@@ -9,7 +9,8 @@ export default function SettingDashboard() {
         style={{
           position: "relative",
           textAlign: "center",
-          backgroundColor: "#fff",
+          background: "#2c3e50",
+
           borderBottom: "1px solid #E1E6EF",
           boxShadow:
             "0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24)",
@@ -23,12 +24,12 @@ export default function SettingDashboard() {
           style={{
             padding: "18px 16px",
             fontSize: "30px",
-            color: "#2D2D2D",
+            color: "white",
           }}
         >
           <FaCog
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "white" }}
           />
           Setting Dashboard
         </h2>
@@ -46,6 +47,7 @@ export default function SettingDashboard() {
         >
           {/* Card design for each NavigationButton */}
           {[
+            { label: "Users", to: "/viewuser", icon: "fas fa-user" },
             // { label: "Add Groups", to: "/addgroups", icon: "fas fa-users "  },
             { label: "Groups", to: "/viewgroups", icon: "fas fa-eye" },
             {
@@ -59,31 +61,40 @@ export default function SettingDashboard() {
               to: "/designation",
               icon: "fas fa-id-badge",
             },
-            { label: "Lead Source", to: "/leadsource", icon: "fas fa-source" },
+            // { label: "Lead Source", to: "/leadsource", icon: "fas fa-source" },
             {
               label: "Qualification",
               to: "/qualification",
               icon: "fas fa-graduation-cap",
             },
             {
-              label: "Segment Plans",
-              to: "/segmentplans",
-              icon: "fas fa-layer-group",
+              label: "UploadLeads",
+              to: "/uploadleads",
+              icon: "fas fa-upload",
             },
-            { label: "Setting Data", to: "/settingdata", icon: "fas fa-cog" },
+            // {
+            //   label: "Segment Plans",
+            //   to: "/segmentplans",
+            //   icon: "fas fa-layer-group",
+            // },
+            // { label: "Setting Data", to: "/settingdata", icon: "fas fa-cog" },
             // { label: "Add User", to: "/adduser", icon: "fas fa-user-plus" },
-            { label: "Users", to: "/viewuser", icon: "fas fa-user" },
-            {
-              label: "User Operation",
-              to: "/useroperation",
-              icon: "fas fa-tools",
-            },
-            {
-              label: "Sip Trunck",
-              to: "/siptrunck",
-              icon: "fas fa-network-wired",
-            },
-            { label: "Segment List", to: "/segmentlist", icon: "fas fa-list" },
+            // {
+            //   label: "User Operation",
+            //   to: "/useroperation",
+            //   icon: "fas fa-tools",
+            // },
+            // {
+            //   label: "Sip Trunck",
+            //   to: "/siptrunck",
+            //   icon: "fas fa-network-wired",
+            // },
+            // { label: "Segment List", to: "/segmentlist", icon: "fas fa-list" },
+            // { label: "Upload Images", to: "/uploadimages", icon: "fas fa-upload" },
+            // { label: "Upload  Polycies", to: "/uploadPolicy", icon: "fas fa-upload" },
+            { label: "Pool Access", to: "/poolaccess", icon: "fas fa-key" },
+            { label: "Lead Info", to: "/leadinfo", icon: "fas fa-info-circle" }
+
           ].map((item, index) => (
             <div
               key={index}
@@ -110,7 +121,7 @@ export default function SettingDashboard() {
               <div className="card-body d-flex flex-column align-items-center">
                 <i
                   className={`${item.icon} mb-3 `}
-                  style={{ fontSize: "24px", color: "#009688" }}
+                  style={{ fontSize: "24px", color: "#2c3e50" }}
                 ></i>
                 <h5 className="card-title text-dark">{item.label}</h5>
                 <NavigationButton label="Explore" to={item.to} />

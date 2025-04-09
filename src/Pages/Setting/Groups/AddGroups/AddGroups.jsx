@@ -287,7 +287,7 @@ export default function AddGroups() {
       </label>
       <input
         type="number"
-        className="form-control"
+        className="form-control input-box"
         id={path}
         value={value}
         onChange={(e) => handleChange(path, Number(e.target.value) || 0)}
@@ -569,7 +569,7 @@ export default function AddGroups() {
         >
           <FaUsers
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Groups
         </h2>
@@ -676,7 +676,7 @@ export default function AddGroups() {
                 {renderSection("Leads", groupData.Leads, "Leads")}
                 {renderSection("Extra", groupData.Extra, "Extra")}
               </div>
-              <div className="col-md-6 w-100">
+              {/* <div className="col-md-6 w-100">
                 <h5 className="fw-semibold">Other Settings</h5>
                 <div
                   className="rounded p-3 border border-2 border-grey"
@@ -699,7 +699,7 @@ export default function AddGroups() {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-box"
                         id="FreeTrialDays"
                         value={groupData.FreeTrialDays}
                         onChange={(e) =>
@@ -720,7 +720,7 @@ export default function AddGroups() {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-box"
                         id="FreeTrialPerContact"
                         value={groupData.FreeTrialPerContact}
                         onChange={(e) =>
@@ -738,7 +738,7 @@ export default function AddGroups() {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-box"
                         id="TotalCRMLeadLimit"
                         value={groupData.TotalCRMLeadLimit}
                         onChange={(e) =>
@@ -755,8 +755,8 @@ export default function AddGroups() {
                         Lead Fetch Ratio
                       </label>
                       <input
-                        type="number"
-                        className="form-control"
+                        type="text"
+                        className="form-control input-box"
                         id="LeadFetchRatio"
                         value={groupData.LeadFetch.Ratio}
                         onChange={(e) =>
@@ -771,7 +771,7 @@ export default function AddGroups() {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-box"
                         id="ClientFetchRatio"
                         value={groupData.ClientFetch.Ratio}
                         onChange={(e) =>
@@ -786,7 +786,7 @@ export default function AddGroups() {
                       </label>
                       <input
                         type="number"
-                        className="form-control"
+                        className="form-control input-box"
                         id="UnreadFetch"
                         value={groupData.UnreadFetch}
                         onChange={(e) =>
@@ -801,7 +801,7 @@ export default function AddGroups() {
                     <div className="mb-3">
                       <label className="form-label">Lead Fetch From</label>
                       <select
-                        className="form-select"
+                        className="form-select input-box"
                         value={groupData.LeadFetch.From}
                         onChange={(e) =>
                           handleChange("LeadFetch.From", e.target.value)
@@ -821,7 +821,7 @@ export default function AddGroups() {
                     <div className="mb-3">
                       <label className="form-label">Client Fetch From</label>
                       <select
-                        className="form-select"
+                        className="form-select input-box"
                         value={groupData.ClientFetch.From}
                         onChange={(e) =>
                           handleChange("ClientFetch.From", e.target.value)
@@ -839,9 +839,9 @@ export default function AddGroups() {
                     </div>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="col-12 text-center">
-                <button type="submit" className="btn mb-2 mt-3 text-white px-4 py-1" style={{backgroundColor:"#009688"}}>
+                <button type="submit" className="btn mb-2 mt-3 text-white px-4 py-1" style={{backgroundColor:"#2c3e50"}}>
                   Submit
                 </button>
               </div>

@@ -1,6 +1,18 @@
-
-
-:root{
+:root {
     --card-minWidth: 15rem;
-    --card-hover: gray;
+    --card-hover: #b0bec5; 
+    --primary-bg: #2c3e50; 
+    --secondary-bg: #34495e; 
+    --text-color: #ecf0f1; 
+    --hover-effect: rgba(255, 255, 255, 0.1);
+    --border-color: #2c3e50;
+    --font-family: "Tahoma", "Verdana", "Arial", sans-serif;
+    --heading-background-color: "#2c3e50";
 }
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--primary-bg);
+    color: var(--text-color);
+}
+

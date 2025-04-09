@@ -10,3 +10,16 @@
 .addleadSections{
     background-color : var(--background-color-addleadSections)
 } */
+
+.input-box {
+    height: 30px;
+    border-radius: 0;
+    border-width: 1px;
+    border-color: #2c3e50;
+    border-style: solid;
+    font-size: 12px;
+}
+
+.pagination-button {
+    border-color: #2c3e50;
+}

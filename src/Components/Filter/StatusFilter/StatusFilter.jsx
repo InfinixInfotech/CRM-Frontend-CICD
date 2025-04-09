@@ -31,7 +31,7 @@ const StatusFilter = () => {
           onChange={handleStatusChange}
           name="status"
           id="status-dropdown"
-          className="form-select"
+          className="form-select input-box"
         >
           {statusOptions.map((option) => (
             <option key={option.value} value={option.value}>

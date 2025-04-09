@@ -35,14 +35,19 @@
 
 .small-table th,
 .small-table td {
-  padding: 4px; 
-  font-size: 13px; 
+  padding: 0px; 
+  font-size: 12px; 
   line-height: 1.2; 
 }
 
 .small-table th {
   font-weight: bold;
 }
+
+.salesOrderTableFont{
+  font-size: "38px";
+}
+
 
 .salesOrder-outerBgBox{
   margin-bottom: var(--marginBottom-salesOrder-outerBgBox);
@@ -83,4 +88,8 @@
   border: var(--border-salesOrder-popup-close);
   font-size: var(--fontSize-salesOrder-popup-close);
   cursor: var(--cursor-salesOrder-popup-close);
+}
+
+.sales-card{
+  font-size: 12px;
 }

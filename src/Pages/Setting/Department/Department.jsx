@@ -79,7 +79,7 @@ const Department = () => {
 
   const handleAddDepartment = (e) => {
     e.preventDefault();
-    if (newDept.trim() !== "" && !addDepartment.includes(newDept.trim())) {
+    if (newDept !== "" && !addDepartment.includes(newDept)) {
       const newAddDept = {
         departmentName: newDept,
       };
@@ -97,7 +97,7 @@ const Department = () => {
   //!----------------------------------------------------------------------------------------------<---EDIT FUNCTIONALITY------------->------------------------------------------------------
 
   const handleEditDepartment = async (id) => {
-    if (editValue.trim() !== "") {
+    if (editValue !== "") {
       try {
         const token = staticToken; // Replace with your token retrieval logic
         const response = await fetch(`/api/Department/UpdateDepartmentAsync`, {
@@ -171,7 +171,7 @@ const Department = () => {
         >
           <FaBuilding
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Department
         </h2>

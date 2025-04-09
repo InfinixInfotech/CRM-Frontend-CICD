@@ -52,10 +52,21 @@ import LeavePolicy from "./Pages/Policies/LeavePolicy/LeavePolicy";
 import Probation from "./Pages/Policies/Probation/Probation";
 import TableSearch from "./Components/Filter/SearchByMobileNumberFilter/TableSearch/TableSearch";
 import PaidClients from "./Pages/Clients/PaidClients/PaidClients";
+import UploadImage from "./Pages/Setting/UploadImages/UploadImage";
+import UploadPolicy from "./Pages/Setting/UploadPolicy/UploadPolicy";
+import AIAssistant from "./Pages/AIAsistance/AiAsistance";
+import FilterDataShow from "./Components/FilterImport/FilterDataShow";
+import PoolAccess from "./Pages/Setting/PoolAccess/PoolAccess";
+import Monitoring from "./Pages/VoiceBox/Monitoring/Monitoring";
+import CallingReport from "./Pages/VoiceBox/Monitoring/CallingReport/callingReport";
+import FollowUpnotificationData from "./Pages/FollowUpNotification/FollowUpnotificationData";
+import LeadInfo from "./Pages/Leads/LeadInfo/LeadInfo";
 
 export default function App() {
-  const username = localStorage.getItem("username");
+  // const username = localStorage.getItem("userName");
   return (
+
+    <div style={{marginTop:"40px"}}>
     <Provider store={store}>
       <BrowserRouter>
         <Routes> 
@@ -76,9 +87,9 @@ export default function App() {
                     <Route path="/salesdashboard" element={<SalesDashboard />} />
                     <Route path="/callingdashboard" element={<CallingDashboard />} />
                     
-                    {username && ["admin", "Admin", "ADMIN"].includes(username) && (
+                    {/* {username && ["admin", "Admin", "ADMIN"].includes(username) && ( */}
                           <Route path="/settingdashboard" element={<SettingDashboard />} />
-                        )}
+                        {/* )} */}
                     <Route path="/profiledashbord" element={<ProfileDashbord />} />
                     <Route path="/viewgroups" element={<ViewGroups />} />
                     <Route path="/addgroups" element={<AddGroups />} />
@@ -121,6 +132,15 @@ export default function App() {
                     <Route path="/probation" element={<Probation/>} />
                     <Route path="/tablesearch" element={<TableSearch/>} />
                     <Route path="/paidclients" element={<PaidClients/>} />
+                    <Route path="/uploadimages" element={<UploadImage/>} />
+                    <Route path="/uploadPolicy" element={<UploadPolicy/>} />
+                    <Route path="/aiassistant" element={<AIAssistant/>} />
+                    <Route path="/filterdatashow" element={<FilterDataShow/>} />
+                    <Route path="/poolaccess" element={<PoolAccess/>} />
+                    <Route path="/monitoring" element={<Monitoring/>} />
+                    <Route path="/followupdata" element={<FollowUpnotificationData/>} />
+                    <Route path="/callingreport" element={<CallingReport/>} />
+                    <Route path="/leadinfo" element={<LeadInfo/>} />
                   </Routes>
                   </div>
                 </div>
@@ -131,5 +151,6 @@ export default function App() {
         </Routes>
       </BrowserRouter>
     </Provider>
+    </div>
   );
 }

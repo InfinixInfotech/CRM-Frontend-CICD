@@ -6,15 +6,20 @@ import { Alert } from "react-bootstrap";
 import BackButton from "../../Components/Button/BackButton/BackButton";
 import { putLeadPaymentRaiseThunk } from "../../Redux/Services/thunks/LeadPaymentRaiseThunk";
 import { useDispatch } from "react-redux";
-import { FaBuilding } from "react-icons/fa";
+// import { FaBuilding } from "react-icons/fa";
 import { FiEdit } from "react-icons/fi";
+import { HashLoader } from "react-spinners";
 const EditPaymentRaise = () => {
   const [AddPaymentRaise, setAddPaymentRaise] = useState({});
   const { state } = useLocation();
   const [showAlert, setShowAlert] = useState(false);
   const paymentData = state?.paymentObj;
+  const [apiMessage, setApiMessage] = useState(null);
+  const [apiError, setApiError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  //!<--------------------------------------------------------------------------- HANDLE FIELDS CHANGE --------------------------------------------------------------------------
+
+  //!<---------------------------------------------------------------------------HANDLE FIELDS CHANGE--------------------------------------------------------------------------
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAddPaymentRaise((prevState) => ({
@@ -29,10 +34,20 @@ const EditPaymentRaise = () => {
       file: uploadedFile,
     }));
   };
-  console.log(
-    "paymentData.clientDetails?.remark --------------",
-    paymentData.clientDetails?.remark
-  );
+  // console.log(
+  //   "paymentData.clientDetails?.remark --------------",
+  //   paymentData.clientDetails?.remark
+  // );
+  const indianStates = [
+    "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh",
+    "Goa", "Gujarat", "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka",
+    "Kerala", "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
+    "Mizoram", "Nagaland", "Odisha", "Punjab", "Rajasthan", "Sikkim",
+    "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", "Uttarakhand",
+    "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", "Dadra and Nagar Haveli and Daman and Diu",
+    "Lakshadweep", "Delhi", "Puducherry"
+  ];
+
   useEffect(() => {
     if (paymentData) {
       setAddPaymentRaise({
@@ -74,9 +89,9 @@ const EditPaymentRaise = () => {
     e.preventDefault();
     setShowAlert(true);
 
-    console.log(AddPaymentRaise.employeeName);
-    console.log(AddPaymentRaise.leadId);
-    
+    // console.log(AddPaymentRaise.employeeName);
+    // console.log(AddPaymentRaise.leadId);
+
 
     const updatedPR = {
       id: AddPaymentRaise.id,
@@ -85,31 +100,31 @@ const EditPaymentRaise = () => {
       employeeName: AddPaymentRaise.employeeName,
       leadId: AddPaymentRaise.leadId,
       clientDetails: {
-          name: AddPaymentRaise.clientName,
-          fatherName: AddPaymentRaise.fathersName,
-          motherName: AddPaymentRaise.mothersName,
-          mobile: AddPaymentRaise.mobile,
-          email: AddPaymentRaise.email,
-          dob: AddPaymentRaise.dob,
-          remark: AddPaymentRaise.remark
+        name: AddPaymentRaise.clientName,
+        fatherName: AddPaymentRaise.fathersName,
+        motherName: AddPaymentRaise.mothersName,
+        mobile: AddPaymentRaise.mobile,
+        email: AddPaymentRaise.email,
+        dob: AddPaymentRaise.dob ? new Date(AddPaymentRaise.dob).toISOString().split("T")[0] : null,
+        remark: AddPaymentRaise.remark
       },
       productDetails: {
-          segment: AddPaymentRaise.segment,
-          netAmount: AddPaymentRaise.netAmount ? parseFloat(AddPaymentRaise.netAmount) : 0,
-          paidAmount: AddPaymentRaise.paidAmount ? parseFloat(AddPaymentRaise.paidAmount) : 0
+        segment: AddPaymentRaise.segment,
+        netAmount: AddPaymentRaise.netAmount ? parseFloat(AddPaymentRaise.netAmount) : 0,
+        paidAmount: AddPaymentRaise.paidAmount ? parseFloat(AddPaymentRaise.paidAmount) : 0
       },
       paymentDetails: {
-          paymentDate: AddPaymentRaise.paymentDate,
-          modeOfPayment: AddPaymentRaise.paymentMode,
-          bankName: AddPaymentRaise.bankName,
-          transactionInfo: AddPaymentRaise.transactionId,
-          panNo: AddPaymentRaise.panNo,
-          state: AddPaymentRaise.state,
-          city: AddPaymentRaise.city
+        paymentDate: AddPaymentRaise.paymentDate,
+        modeOfPayment: AddPaymentRaise.paymentMode,
+        bankName: AddPaymentRaise.bankName,
+        transactionInfo: AddPaymentRaise.transactionId,
+        panNo: AddPaymentRaise.panNo,
+        state: AddPaymentRaise.state,
+        city: AddPaymentRaise.city
       },
       transactionReceipt: AddPaymentRaise.transactionReceipt,
       paymentStatus: AddPaymentRaise.paymentStatus
-  };
+    };
 
     // try {
     //   const token = staticToken;
@@ -132,16 +147,21 @@ const EditPaymentRaise = () => {
     //   console.error("Error updating user:", error);
     //   alert("Failed to update user.");
     // }
+    setLoading(true)
     dispatch(putLeadPaymentRaiseThunk(updatedPR))
       .then((response) => {
         if (response.payload === null) {
-          console.error("No data received from the server");
+          setApiError("No data received from the server");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+          setApiMessage(response.payload.message || "Payment Raise Updated!");
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
-        alert("Payment Raise Updated!");
-        console.log("Added successfully:", response);
       })
       .catch((error) => {
-        console.error("Error adding:", error);
+        setApiError(error.message || "An error occurred while updating payment raise");
+      }).finally(() => {
+        setLoading(false);
       });
   };
   return (
@@ -169,7 +189,7 @@ const EditPaymentRaise = () => {
         >
           <FiEdit
             className="fs-1"
-            style={{ marginRight: "8px", color: "#009688" }}
+            style={{ marginRight: "8px", color: "#2c3e50" }}
           />
           Edit Payment Raise
         </h2>
@@ -177,9 +197,33 @@ const EditPaymentRaise = () => {
       <div className="mt-2">
         {/* //!<--------------------------------------------------------------------------- PERSONAL DETAILS SECTIONS -------------------------------------------------------------------------- */}
         <div>
-          {showAlert && (
-            <Alert variant="info" className="mt-2 text-center">
-              PR Updated Successfully
+
+          <div>
+            {loading &&  (
+              <div
+                style={{
+                  position: "fixed",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                  zIndex: 9999,
+                  backgroundColor: "transparent",
+                }}
+              >
+                <HashLoader color="#0060f1" size={50} />
+              </div>
+            )} 
+          </div>
+
+
+          {apiMessage && (
+            <Alert variant="success" className="mt-2 text-center">
+              {apiMessage}
+            </Alert>
+          )}
+          {apiError && (
+            <Alert variant="danger" className="mt-2 text-center">
+              {apiError}
             </Alert>
           )}
         </div>
@@ -202,7 +246,7 @@ const EditPaymentRaise = () => {
                   <label className="form-label">Client Name</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-box"
                     name="clientName"
                     value={AddPaymentRaise.clientName}
                     onChange={handleInputChange}
@@ -213,7 +257,7 @@ const EditPaymentRaise = () => {
                   <label className="form-label">Father's Name</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-box"
                     name="fathersName"
                     value={AddPaymentRaise.fathersName}
                     onChange={handleInputChange}
@@ -224,7 +268,7 @@ const EditPaymentRaise = () => {
                   <label className="form-label">Mother's Name</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-box"
                     name="mothersName"
                     value={AddPaymentRaise.mothersName}
                     onChange={handleInputChange}
@@ -235,7 +279,7 @@ const EditPaymentRaise = () => {
                   <label className="form-label">Mobile</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-box"
                     name="mobile"
                     value={AddPaymentRaise.mobile}
                     onChange={handleInputChange}
@@ -246,7 +290,7 @@ const EditPaymentRaise = () => {
                   <label className="form-label">Email</label>
                   <input
                     type="email"
-                    className="form-control"
+                    className="form-control input-box"
                     name="email"
                     value={AddPaymentRaise.email}
                     onChange={handleInputChange}
@@ -257,7 +301,7 @@ const EditPaymentRaise = () => {
                   <label className="form-label">DOB</label>
                   <input
                     type="date"
-                    className="form-control"
+                    className="form-control input-box"
                     name="dob"
                     value={AddPaymentRaise.dob}
                     onChange={handleInputChange}
@@ -267,7 +311,7 @@ const EditPaymentRaise = () => {
                   <label className="form-label">Remark</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-box"
                     name="remark"
                     value={AddPaymentRaise.remark}
                     onChange={handleInputChange}
@@ -296,7 +340,7 @@ const EditPaymentRaise = () => {
                 <div className="col-md-4">
                   <label className="form-label">Segment</label>
                   <select
-                    className="form-select"
+                    className="form-select input-box"
                     name="segment"
                     value={AddPaymentRaise.segment}
                     onChange={handleInputChange}
@@ -309,7 +353,7 @@ const EditPaymentRaise = () => {
                   <label className="form-label">Net Amount</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-box"
                     name="netAmount"
                     value={AddPaymentRaise.netAmount}
                     onChange={handleInputChange}
@@ -320,7 +364,7 @@ const EditPaymentRaise = () => {
                   <label className="form-label">Paid Amount</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-box"
                     name="paidAmount"
                     value={AddPaymentRaise.paidAmount}
                     onChange={handleInputChange}
@@ -330,7 +374,7 @@ const EditPaymentRaise = () => {
                 <div className="col-md-4 ">
                   <label className="form-label">Upload CSV File</label>
                   <input
-                    className="form-control"
+                    className="form-control input-box"
                     type="file"
                     accept=".csv"
                     onChange={handleFileChange}
@@ -343,7 +387,7 @@ const EditPaymentRaise = () => {
             </div>
           </div>
         </div>
-{/* //!<--------------------------------------------------------------------------- PAYMENT DETAILS SECTION -------------------------------------------------------------------------- */}
+        {/* //!<--------------------------------------------------------------------------- PAYMENT DETAILS SECTION -------------------------------------------------------------------------- */}
         <div className="addleadSections field-container mt-2 border me-0 ms-0 border-1 border-gray rounded mb-0">
           <h5
             className="text-dark border border-1  p-3"
@@ -362,7 +406,7 @@ const EditPaymentRaise = () => {
                   <label className="form-label">Payment Date</label>
                   <input
                     type="date"
-                    className="form-control"
+                    className="form-control input-box"
                     name="paymentDate"
                     value={AddPaymentRaise.paymentDate}
                     onChange={handleInputChange}
@@ -372,26 +416,27 @@ const EditPaymentRaise = () => {
                 <div className="col-md-4">
                   <label className="form-label">Mode Of Payment</label>
                   <select
-                    className="form-select"
+                    className="form-select input-box"
                     name="paymentMode"
                     value={AddPaymentRaise.paymentMode}
                     onChange={handleInputChange}
                   >
                     <option>Select Mode Of Payment...</option>
                     <option>online</option>
+                    <option>Payment Gatway</option>
+                    <option>Cash</option>
                   </select>
                 </div>
                 <div className="col-md-4">
                   <label className="form-label">Bank Name</label>
-                  <select
-                    className="form-select"
+                  <input
+                    type="text"
+                    className="form-control input-box"
                     name="bankName"
                     value={AddPaymentRaise.bankName}
                     onChange={handleInputChange}
-                  >
-                    <option>Select Bank Name...</option>
-                    <option>Kotak Mahendra</option>
-                  </select>
+                    placeholder="Enter Bank Name"
+                  />
                 </div>
                 <div className="col-md-4">
                   <label className="form-label">
@@ -399,7 +444,7 @@ const EditPaymentRaise = () => {
                   </label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-box"
                     name="transactionId"
                     value={AddPaymentRaise.transactionId}
                     onChange={handleInputChange}
@@ -417,10 +462,10 @@ const EditPaymentRaise = () => {
                     placeholder="Enter PAN No"
                   />
                 </div>
-                <div className="col-md-4">
+                {/* <div className="col-md-4">
                   <label className="form-label">State</label>
                   <select
-                    className="form-select"
+                    className="form-select input-box"
                     name="state"
                     value={AddPaymentRaise.state}
                     onChange={handleInputChange}
@@ -428,12 +473,31 @@ const EditPaymentRaise = () => {
                     <option>Select State Here..</option>
                     <option>Madhya Pradesh</option>
                   </select>
+                </div> */}
+
+
+                <div className="col-md-4">
+                  <label>State</label>
+                  <select
+                    name="personalDetails.address.state"
+                    value={AddPaymentRaise.state || ""}
+                    onChange={handleInputChange}
+                    className="form-control input-box"
+                  >
+                    <option value="" disabled>-- Select State --</option>
+                    {indianStates.map((state, index) => (
+                      <option key={index} value={state}>
+                        {state}
+                      </option>
+                    ))}
+                  </select>
                 </div>
+
                 <div className="col-md-4">
                   <label className="form-label">City</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className="form-control input-box"
                     name="city"
                     value={AddPaymentRaise.city}
                     onChange={handleInputChange}
@@ -449,7 +513,7 @@ const EditPaymentRaise = () => {
             type="submit"
             className="btn btn-sm px-4 text-white mb-2 mt-2 fs-6"
             onClick={handleSubmit}
-            style={{ backgroundColor: "#009688" }}
+            style={{ backgroundColor: "#2c3e50" }}
           >
             Submit
           </button>

@@ -4,6 +4,9 @@ import { getByIdUploadBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThu
 import { fetchAllUploadBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThunk";
 import { UpdateBulkLeadThunk } from "../Services/thunks/UploadBulkLeadThunk";
 import { getCampaignNameThunk } from "../Services/thunks/UploadBulkLeadThunk";
+import { getFollowUpDetailsThunk } from "../Services/thunks/UploadBulkLeadThunk";
+import { disposeDataThunk } from "../Services/thunks/UploadBulkLeadThunk";
+// import { getFollowUpDetailsFilterTillDateThunk } from "../Services/thunks/UploadBulkLeadThunk";
 
 const uploadBulkLeadReducer = createSlice({
   name: "uploadbulklead",
@@ -77,6 +80,51 @@ const uploadBulkLeadReducer = createSlice({
         state.data = action.payload; 
       })
       .addCase(getCampaignNameThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+      
+      .addCase(getFollowUpDetailsThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getFollowUpDetailsThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload; 
+      })
+      .addCase(getFollowUpDetailsThunk.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+
+
+
+
+      // .addCase(getFollowUpDetailsFilterTillDateThunk.pending, (state) => {
+      //   state.loading = true;
+      //   state.error = null;
+      // })
+      // .addCase(getFollowUpDetailsFilterTillDateThunk.fulfilled, (state, action) => {
+      //   state.loading = false;
+      //   state.data = action.payload; 
+      // })
+      // .addCase(getFollowUpDetailsFilterTillDateThunk.rejected, (state, action) => {
+      //   state.loading = false;
+      //   state.error = action.payload;
+      // })
+
+
+      
+      .addCase(disposeDataThunk.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(disposeDataThunk.fulfilled, (state, action) => {
+        state.loading = false;
+        state.data = action.payload; 
+      })
+      .addCase(disposeDataThunk.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

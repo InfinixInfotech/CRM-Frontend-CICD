@@ -15,11 +15,20 @@
   --fontWeight-viewLead-tableHeader : 100 ;
   --fontWeight-viewLead-viewLeadButton : 600;
   --borderRadius-viewLead-viewLeadButton : 0;
-  --backgroundColor-viewLead-viewLeadButton : #758694;
+  /* --backgroundColor-viewLead-viewLeadButton : #758694; */
   --color-viewLead-viewLeadButton : white;
-  --fontSize-viewLead-viewLeadButton : 12px;
+  --fontSize-viewLead-viewLeadButton : 10px;
   --border-viewLead-viewLeadButton : 1px solid grey;
 
+}
+
+.table th, .table td {
+  padding: 4px !important;
+}
+
+.blue-striped tbody tr:nth-of-type(odd) {
+  background-color: #ecf3e8 !important; /* Light blue stripe */
+  /* background-color: rgb(232, 241, 243); */
 }
 
 .Box-View-Leads{
@@ -30,11 +39,11 @@
   /* background-color: var(--backgroundColor-viewLead-outerBgBox); */
 }
 
-.ViewLeadFormLable{
+/* .ViewLeadFormLable{ */
   /* font-size: var(--fontSize-ViewLeadFormLable); */
-}
+/* } */
 
-.formControl{
+/* .formControl{ */
    /* height: var(--height-formControl);
    font-size: var(--fontSize-formControl);
    padding: var(--padding-formControl);
@@ -43,7 +52,7 @@
    background-color: var(--backgroundColor-formControl);
    border: var(--border-formControl);
    border-radius: var(--borderRadius); */
-}
+/* } */
 
 .viewLead-ViewLeadsTableFont{
    font-size: var(--fontSize-viewLead-ViewLeadsTableFont);

@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAllUploadBulkLead, getByIdUploadBulkLead, postUploadBulkLead, UpdateBulkLead } from "../apis/UploadBulkLeadApi";
+import { disposeData, fetchAllUploadBulkLead, getByIdUploadBulkLead, getFollowupDetailsById, postUploadBulkLead, UpdateBulkLead } from "../apis/UploadBulkLeadApi";
 
 
 export const postUploadBulkLeadThunk = createAsyncThunk(
@@ -21,7 +21,7 @@ export const getByIdUploadBulkLeadThunk = createAsyncThunk(
         try {
             const response = await getByIdUploadBulkLead(param);
             if (response?.success) {
-                return response.data;
+                return response;
             }
             return rejectWithValue(response?.message || 'Failed to fetch lead by ID');
         } catch (error) {
@@ -29,12 +29,52 @@ export const getByIdUploadBulkLeadThunk = createAsyncThunk(
         }
     }
 );
+export const getFollowUpDetailsThunk = createAsyncThunk(
+    'uploadbulklead/getFollowupDetailsById',
+    async(param, {rejectWithValue}) => {
+        try {
+            const response = await getFollowupDetailsById(param);
+            if (response?.success) {
+                return response;
+            }
+            return rejectWithValue(response?.message || 'Failed to fetch lead by ID');
+        } catch (error) {
+            return rejectWithValue(error.message || 'An error occurred while fetching lead by ID');
+        }
+    }
+);
+// export const getFollowUpDetailsFilterTillDateThunk = createAsyncThunk(
+//     'uploadbulklead/getFollowupDetailsFilterTillDate',
+//     async(param, {rejectWithValue}) => {
+//         try {
+//             const response = await getFollowupDetailsFilterTillDate(param);
+//             if (response?.success) {
+//                 return response;
+//             }
+//             return rejectWithValue(response?.message || 'Failed to fetch lead by ID');
+//         } catch (error) {
+//             return rejectWithValue(error.message || 'An error occurred while fetching lead by ID');
+//         }
+//     }
+// );
 
 export const fetchAllUploadBulkLeadThunk = createAsyncThunk(
     'uploadbulklead/getAllUploadBulkLead',
     async(params, {rejectWithValue})=>{
         try {
             const response = await fetchAllUploadBulkLead(params);
+            return response;
+        } catch (error) {
+           return rejectWithValue(error);
+        }
+    }
+);
+
+export const disposeDataThunk = createAsyncThunk(
+    'uploadbulklead/disposeData',
+    async(params, {rejectWithValue})=>{
+        try {
+            const response = await disposeData(params);
             return response;
         } catch (error) {
            return rejectWithValue(error);

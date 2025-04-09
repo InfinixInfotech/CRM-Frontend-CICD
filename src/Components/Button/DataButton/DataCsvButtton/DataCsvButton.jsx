@@ -16,7 +16,7 @@ const handleCsv = (tableId) => {
     rows.forEach((row) => {
       const cells = row.querySelectorAll("td, th");
       const rowData = Array.from(cells)
-        .map(cell => cell.textContent.trim()) // Get the text content from each cell
+        .map(cell => cell.textContent) // Get the text content from each cell
         .join(","); // Join them with commas
       csvContent += rowData + "\n"; // Add a new line after each row
     });
