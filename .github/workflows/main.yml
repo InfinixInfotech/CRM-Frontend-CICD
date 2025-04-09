@@ -9,11 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install sshpass (for password auth)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y sshpass
-
       - name: Upload files to server
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -r dist/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/frontend/
