@@ -1,7 +1,7 @@
-name: Deploy React Frontend
+name: Deploy Pre-Built Frontend
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   deploy:
@@ -9,35 +9,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Install Node.js and dependencies
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      # Build React app (generates `dist/` or `build/`)
-      - name: Install and Build
+      - name: Install sshpass (for password auth)
         run: |
-          npm install
-          npm run build  # Assumes React script builds to `build/` (CRA) or `dist/` (Vite)
+          sudo apt-get update
+          sudo apt-get install -y sshpass
 
-      # Deploy to Ubuntu server
-      - name: Upload to Server
-        uses: appleboy/scp-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "build/**"           # CRA: `build/` | Vite: `dist/`
-          target: "/var/www/frontend/"
-          overwrite: true
+      - name: Upload files to server
+        run: |
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -r dist/* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/frontend/
 
-      # Optional: Restart Nginx (if serving frontend)
-      - name: Reload Nginx
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            sudo systemctl restart nginx
+      - name: Restart Nginx
+        run: |
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo systemctl restart nginx"
